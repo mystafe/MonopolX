@@ -1686,6 +1686,77 @@
                 }
             }
 
+            /* LANDSCAPE EXPERIENCE - PREMIUM 3-COLUMN LAYOUT */
+            @media (max-height: 500px) and (orientation: landscape) {
+                .game-wrapper {
+                    flex-direction: row !important;
+                    height: 100vh !important;
+                    overflow: hidden !important;
+                    display: flex !important;
+                }
+
+                .mobile-header,
+                .mobile-bottom-bar {
+                    display: none !important;
+                }
+
+                .side-panel {
+                    display: flex !important;
+                    width: 200px !important;
+                    padding: 8px !important;
+                    background: rgba(10, 10, 15, 0.98);
+                    border: none !important;
+                    border-right: 1px solid rgba(255, 215, 0, 0.2) !important;
+                }
+
+                .side-panel h1,
+                .side-panel h2 {
+                    font-size: 1.1rem !important;
+                    margin: 2px 0 !important;
+                }
+
+                .player-card {
+                    padding: 6px 10px !important;
+                    margin-bottom: 4px !important;
+                }
+
+                .center-panel {
+                    padding: 0 !important;
+                    height: 100vh !important;
+                    flex: 1;
+                    background: #000;
+                    display: flex !important;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .board-container {
+                    width: 96vh !important;
+                    height: 96vh !important;
+                    margin: auto;
+                }
+
+                .side-panel:last-child {
+                    display: flex !important;
+                    width: 200px !important;
+                    border-left: 1px solid rgba(255, 215, 0, 0.2) !important;
+                }
+
+                .controls-vertical {
+                    gap: 5px !important;
+                }
+
+                .controls-vertical .btn {
+                    height: 36px !important;
+                    font-size: 0.65rem !important;
+                }
+
+                .game-log {
+                    font-size: 0.6rem !important;
+                    flex: 1;
+                }
+            }
+
             .player-type-select {
                 padding: 8px;
                 border-radius: 6px;
@@ -1887,6 +1958,9 @@
             <div onclick="location.reload()"
                 style="font-family:'Bebas Neue'; color:var(--gold); font-size:1.4rem; letter-spacing:2px; cursor:pointer;">
                 MONOPOLX</div>
+            <button class="btn btn-secondary"
+                style="padding:0; min-width:38px; height:38px; border-radius:10px; font-size:1.1rem; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05);"
+                onclick="document.getElementById('quickSettingsModal').classList.add('active')">⚙️</button>
         </div>
 
         <!-- Sol Panel: Oyuncu Listesi -->
@@ -1972,8 +2046,8 @@
                     </div>
                     <label
                         style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px; display:block; margin-bottom:5px;">HIZ:
-                        <span id="speedVal" style="color:var(--gold)">Normal</span></label>
-                    <input type="range" id="speedRange" min="50" max="350" value="150" step="10"
+                        <span id="speedVal" style="color:var(--gold)">ŞİMŞEK</span></label>
+                    <input type="range" id="speedRange" min="50" max="350" value="350" step="10"
                         style="width: 100%; cursor: pointer; accent-color: var(--gold);" oninput="updateSpeedDisp()">
                 </div>
                 <button class="btn btn-end" id="endBtn" onclick="endTurn()" disabled>⏭️ TURU BİTİR</button>
@@ -2088,6 +2162,40 @@
                     class="btn btn-secondary" onclick="closeModal('tradeModal')">İptal</button></div>
         </div>
     </div>
+    <div class="modal-overlay" id="quickSettingsModal">
+        <div class="modal" style="max-width: 320px;">
+            <div style="text-align:center; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0; font-size:1.4rem;">⚙️ HIZLI AYARLAR</h2>
+            </div>
+            <div class="ui-settings"
+                style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <span style="font-size:0.75rem; font-weight:700; opacity:0.6;">TEMA DEĞİŞTİR</span>
+                    <div style="display:flex; gap:10px;">
+                        <div onclick="setTheme('premium')"
+                            style="width:22px; height:22px; border-radius:50%; background:#12141d; border:2px solid #d4af37; cursor:pointer;">
+                        </div>
+                        <div onclick="setTheme('marble')"
+                            style="width:22px; height:22px; border-radius:50%; background:#fff; border:2px solid #aaa; cursor:pointer;">
+                        </div>
+                        <div onclick="setTheme('parchment')"
+                            style="width:22px; height:22px; border-radius:50%; background:#f4e4bc; border:2px solid #8d6e63; cursor:pointer;">
+                        </div>
+                    </div>
+                </div>
+                <label style="font-size:0.75rem; font-weight:700; opacity:0.6; display:block; margin-bottom:8px;">OYUN
+                    HIZI</label>
+                <input type="range" id="speedRangeMob" min="50" max="350" value="350" step="10"
+                    style="width: 100%; cursor: pointer; accent-color: var(--gold);"
+                    oninput="document.getElementById('speedRange').value = this.value; updateSpeedDisp()">
+            </div>
+            <div class="modal-buttons" style="margin-top:20px;">
+                <button class="btn btn-secondary" style="width:100%"
+                    onclick="closeModal('quickSettingsModal')">KAPAT</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="auctionModal">
         <div class="modal">
             <h2>🔨 Açık Artırma</h2>
@@ -2411,7 +2519,7 @@
         function updateSpeedDisp() {
             const v = document.getElementById('speedRange').value;
             const lbl = document.getElementById('speedVal');
-            if (v >= 350) lbl.textContent = "Işık Hızı";
+            if (v >= 350) lbl.textContent = "ŞİMŞEK ⚡";
             else if (v >= 250) lbl.textContent = "Hızlı";
             else if (v >= 150) lbl.textContent = "Normal";
             else lbl.textContent = "Yavaş";
