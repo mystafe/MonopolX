@@ -180,16 +180,16 @@
         }
 
         .setup-container {
-            width: min(900px, 95vw);
+            width: min(850px, 95vw);
             display: grid;
             grid-template-columns: 1.2fr 1fr;
-            gap: 30px;
-            background: rgba(26, 26, 46, 0.6);
+            gap: 20px;
+            background: rgba(18, 18, 32, 0.7);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
+            border-radius: 20px;
+            padding: 30px;
             border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 400px 100px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
             animation: setupIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
@@ -1503,218 +1503,215 @@
             color: #f44336;
         }
 
-        /* MOBILE RESPONSIVE - MASTER DESIGN */
+        /* MOBILE RESPONSIVE - MASTER DESIGN (Optimized) */
         @media (max-width: 900px) {
             .game-wrapper {
                 flex-direction: column;
                 height: 100vh;
                 height: -webkit-fill-available;
-                overflow: hidden;
+                padding: 0;
                 gap: 0;
                 background: var(--bg-dark);
+                overflow: hidden;
             }
 
+            /* Hide Desktop Side Panels */
             .side-panel {
-                width: 100% !important;
-                height: auto !important;
-                min-height: auto !important;
-                padding: 8px !important;
-                border: none !important;
-                background: rgba(0, 0, 0, 0.85) !important;
-                backdrop-filter: blur(15px);
-                z-index: 100;
-            }
-
-            /* Hide decorative side titles on mobile */
-            .side-panel h1,
-            .side-panel h2 {
                 display: none !important;
             }
 
-            .players-side {
-                order: -1;
-                padding: 5px 10px !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            /* Show Mobile Specific Header */
+            .mobile-header {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                padding: 0 15px;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.2);
             }
 
-            #playersPanel {
-                flex-direction: row !important;
-                overflow-x: auto;
-                gap: 8px !important;
-                padding-bottom: 5px;
-                scrollbar-width: none;
-                -webkit-overflow-scrolling: touch;
+            .mobile-player-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
-            #playersPanel::-webkit-scrollbar {
-                display: none;
+            .mobile-money {
+                color: var(--gold);
+                font-weight: 800;
+                font-size: 1.1rem;
             }
 
-            .player-card {
-                min-width: 120px;
-                margin: 0 !important;
-                padding: 6px !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-            }
-
+            /* Center Panel Layout */
             .center-panel {
-                flex: 1;
-                width: 100%;
+                padding-top: 50px !important;
+                padding-bottom: 75px !important;
+                height: 100vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 5px !important;
-                overflow: hidden;
-            }
-
-            .board-container {
-                width: 94vmin !important;
-                height: 94vmin !important;
-                max-width: none !important;
-                max-height: none !important;
-            }
-
-            /* Fixed Bottom Bar - HIDE ON MOBILE TO PREVENT DUPLICATION */
-            .side-panel:last-child {
-                display: none !important;
             }
 
             .board-container {
                 width: 90vmin !important;
                 height: 90vmin !important;
+                margin: auto;
             }
 
+            /* Board Refinements */
             .square-name {
-                font-size: 0.45rem !important;
-                line-height: 1;
-                margin-top: 1px !important;
+                font-size: 0.42rem !important;
+                line-height: 1.1;
+                font-weight: 700 !important;
             }
 
             .square-price {
-                font-size: 0.4rem !important;
-                margin-bottom: 1px !important;
+                font-size: 0.38rem !important;
+                font-weight: 700 !important;
             }
 
             .token {
                 width: 14px !important;
                 height: 14px !important;
-                font-size: 0.6rem !important;
+                font-size: 0.55rem !important;
             }
 
-            .board-center {
-                padding: 5px !important;
-            }
-
-            .board-center .dice-container {
-                margin: 4px 0 !important;
-                transform: scale(0.9);
-            }
-
-            .center-logo {
-                font-size: 1.2rem !important;
-                margin-bottom: 2px !important;
-                cursor: pointer;
-                pointer-events: auto;
-            }
-
-            #mobileActions {
-                gap: 4px;
-            }
-
-            #mobileActions button {
-                padding: 4px 6px !important;
-                font-size: 0.6rem !important;
-                min-height: 32px !important;
-            }
-
-            /* Setup Screen */
+            /* Setup Responsive - Compact */
             .setup-screen {
-                padding: 10px;
-                align-items: stretch;
-                justify-content: flex-start;
-                overflow-y: auto;
+                padding: 15px;
+                justify-content: safe flex-start;
+                align-items: center;
             }
 
             .setup-container {
                 grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 25px;
-                margin: 0 auto;
-                border-radius: 24px;
-                max-width: 100%;
+                padding: 20px;
+                gap: 15px;
+                width: 100%;
+                border-radius: 16px;
+                margin: 10px 0;
             }
 
             .setup-right {
                 border-left: none !important;
                 padding-left: 0 !important;
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
-                padding-top: 25px;
+                padding-top: 15px;
             }
 
-            .setup-title {
+            h1 {
                 font-size: 2.8rem !important;
-                letter-spacing: 10px !important;
-                margin-bottom: 20px !important;
+                letter-spacing: 12px !important;
             }
 
             .player-config-slot {
+                padding: 10px !important;
                 gap: 15px !important;
-                padding: 12px !important;
             }
 
             .token-preview {
-                width: 65px !important;
-                height: 65px !important;
-                font-size: 2rem !important;
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 1.5rem !important;
             }
 
-            .icon-modal-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .player-card {
-                min-width: 115px;
+            .btn-roll {
+                height: 55px !important;
+                font-size: 1rem !important;
             }
 
-            .controls-vertical>* {
-                min-width: 75px;
-                height: 44px !important;
+            .board-center {
+                padding: 2px !important;
             }
 
-            .square-name {
-                font-size: 0.5rem !important;
+            .center-logo {
+                font-size: 0.9rem !important;
+                margin-bottom: 0 !important;
             }
-        }
 
-        .player-type-select {
-            padding: 8px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-family: 'Montserrat', sans-serif;
-            cursor: pointer;
-            outline: none;
-        }
+            .dice-container {
+                transform: scale(0.65);
+                margin: 0 !important;
+            }
 
-        .player-type-select option {
-            background: #1a1a2e;
-            color: white;
-        }
+            /* Mobile Bottom Bar */
+            .mobile-bottom-bar {
+                display: flex !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(18, 20, 29, 0.95);
+                backdrop-filter: blur(15px);
+                padding: 10px 15px env(safe-area-inset-bottom);
+                z-index: 1000;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                justify-content: space-around;
+                align-items: center;
+                gap: 8px;
+            }
 
-        .ai-badge {
-            font-size: 0.7em;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: var(--gold);
-            color: #000;
-            font-weight: bold;
-            margin-left: 5px;
-            vertical-align: middle;
+            .mobile-bottom-bar .btn {
+                padding: 8px 12px !important;
+                font-size: 0.7rem !important;
+                height: 48px;
+                flex: 1;
+            }
+
+            .btn-roll-mob {
+                flex: 1.5 !important;
+                background: linear-gradient(135deg, var(--gold), #aa8a2e) !important;
+                color: #000 !important;
+            }
+
+            @media (max-width: 480px) {
+                .player-card {
+                    min-width: 115px;
+                }
+
+                .controls-vertical>* {
+                    min-width: 75px;
+                    height: 44px !important;
+                }
+
+                .square-name {
+                    font-size: 0.4rem !important;
+                }
+            }
+
+            .player-type-select {
+                padding: 8px;
+                border-radius: 6px;
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                font-family: 'Montserrat', sans-serif;
+                cursor: pointer;
+                outline: none;
+            }
+
+            .player-type-select option {
+                background: #1a1a2e;
+                color: white;
+            }
+
+            .ai-badge {
+                font-size: 0.7em;
+                padding: 2px 6px;
+                border-radius: 4px;
+                background: var(--gold);
+                color: #000;
+                font-weight: bold;
+                margin-left: 5px;
+                vertical-align: middle;
+            }
         }
     </style>
 </head>
@@ -1722,19 +1719,20 @@
 <body>
     <div class="setup-screen" id="setupScreen">
         <div class="setup-container">
-            <div style="grid-column: 1 / -1; text-align: center; margin-bottom: 20px;">
+            <div style="grid-column: 1 / -1; text-align: center; margin-bottom: 15px;">
                 <h1
-                    style="font-family: 'Bebas Neue'; font-size: 6rem; letter-spacing: 20px; color: var(--gold); margin: 0; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));">
+                    style="font-family: 'Bebas Neue'; font-size: 4rem; letter-spacing: 12px; color: var(--gold); margin: 0; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.8));">
                     MONOPOLX</h1>
                 <p
-                    style="opacity: 0.4; font-size: 0.9rem; letter-spacing: 5px; font-weight: 800; color: white; margin-top: 10px;">
+                    style="opacity: 0.4; font-size: 0.75rem; letter-spacing: 3px; font-weight: 800; color: white; margin-top: 5px;">
                     PREMIUM EDITION</p>
-                <div style="width: 60px; height: 3px; background: var(--gold); margin: 20px auto; border-radius: 2px;">
+                <div style="width: 40px; height: 2px; background: var(--gold); margin: 12px auto; border-radius: 2px;">
                 </div>
             </div>
             <div class="setup-left">
-                <h3 style="margin-bottom:20px; color:var(--gold); display:flex; align-items:center; gap:10px;">🌟 OYUNCU
-                    KURULUMU</h3>
+                <h3
+                    style="margin-bottom:12px; color:var(--gold); display:flex; align-items:center; gap:8px; font-size:1rem;">
+                    🌟 OYUNCULAR</h3>
                 <div id="playerConfigs">
                     <!-- Player Slots -->
                     <div class="player-config-slot" data-p="1"
@@ -1877,6 +1875,20 @@
             2024 Elegant Edition</p>
     </div>
     <div class="game-wrapper" id="gameContainer" style="display:none">
+        <!-- Mobile Header (Hidden on Desktop) -->
+        <div class="mobile-header" style="display:none">
+            <div class="mobile-player-info">
+                <div id="mobCurrentIcon" style="font-size:1.5rem">🚗</div>
+                <div>
+                    <div id="mobCurrentName" style="font-weight:800; font-size:0.9rem;">Mustafa</div>
+                    <div id="mobCurrentMoney" class="mobile-money">1500₺</div>
+                </div>
+            </div>
+            <div onclick="location.reload()"
+                style="font-family:'Bebas Neue'; color:var(--gold); font-size:1.4rem; letter-spacing:2px; cursor:pointer;">
+                MONOPOLX</div>
+        </div>
+
         <!-- Sol Panel: Oyuncu Listesi -->
         <div class="side-panel players-side">
             <div
@@ -1895,12 +1907,19 @@
         </div>
 
         <!-- Orta Panel: Board -->
-        <div class="center-panel"
-            style="flex: 1; display:flex; align-items:center; justify-content:center; padding: 10px; overflow: hidden;">
-            <div class="board-container"
-                style="max-height: 96vh; aspect-ratio: 1; width: auto; height: 100%; display: flex; align-items: center; justify-content: center;">
-                <div class="board" id="board" style="width: 100%; height: 100%;"></div>
+        <div class="center-panel">
+            <div class="board-container">
+                <div class="board" id="board"></div>
             </div>
+        </div>
+
+        <!-- Mobile Bottom Bar (Hidden on Desktop) -->
+        <div class="mobile-bottom-bar" style="display:none">
+            <button class="btn btn-secondary" onclick="openTrade()" title="Takas">🔄</button>
+            <button class="btn btn-secondary" onclick="openBuild()" title="Ev/Otel">🏗️</button>
+            <button class="btn btn-roll btn-roll-mob" id="mobRollBtn" onclick="rollDice()">🎲 ZAR AT</button>
+            <button class="btn btn-action" id="mobBuyBtn" onclick="buyProp()" disabled>🏠 AL</button>
+            <button class="btn btn-end" id="mobEndBtn" onclick="endTurn()" disabled>⏭️</button>
         </div>
 
         <!-- Sağ Panel: Kontroller ve Log -->
@@ -2568,15 +2587,6 @@
                     <div class="dice" id="d1" onclick="rollDice()"></div>
                     <div class="dice" id="d2" onclick="rollDice()"></div>
                 </div>
-                <div id="mobileActions" class="mobile-only-flex" style="display:none; gap:5px; margin-top:5px; flex-wrap:wrap; justify-content:center; width: 90%;"></div>
-                <div class="game-log" id="gameLog"></div>
-                <style>
-                    @media (max-width: 900px) {
-                        #mobileActions { display: flex !important; }
-                        #diceContainer { margin: 5px 0 !important; }
-                        .game-log { display: none !important; }
-                    }
-                </style>
             `;
             b.appendChild(c);
 
@@ -3254,31 +3264,22 @@
                     }
                 }
 
-                // Sync Mobile Center UI
+                // Sync Mobile Header & Bottom Bar
                 if (window.innerWidth <= 900) {
-                    const mobArea = document.getElementById('mobileActions');
-                    if (mobArea) {
-                        // Crucial turn info for mobile center
-                        const turnIndicator = `
-                            <div style="width:100%; text-align:center; font-size:0.8rem; color:var(--gold); margin-bottom:5px; font-weight:800;">
-                                ${p.isAI ? '🤖 AI SIYARI' : '🎯 SENİN SIRAN'}
-                            </div>
-                        `;
+                    const mobName = document.getElementById('mobCurrentName');
+                    const mobMoney = document.getElementById('mobCurrentMoney');
+                    const mobIcon = document.getElementById('mobCurrentIcon');
+                    if (mobName) mobName.textContent = p.name;
+                    if (mobMoney) mobMoney.textContent = p.money.toLocaleString() + '₺';
+                    if (mobIcon) mobIcon.textContent = p.icon;
 
-                        // Action buttons sync
-                        const rollBtn = document.getElementById('rollBtn');
-                        const buyBtn = document.getElementById('buyBtn');
-                        const buildBtn = document.getElementById('buildBtn');
-                        const endBtn = document.getElementById('endBtn');
+                    const mobRoll = document.getElementById('mobRollBtn');
+                    const mobBuy = document.getElementById('mobBuyBtn');
+                    const mobEnd = document.getElementById('mobEndBtn');
 
-                        mobArea.innerHTML = `
-                            ${turnIndicator}
-                            <button class="btn btn-roll" style="flex:2; height:50px !important;" onclick="rollDice()" ${rollBtn.disabled ? 'disabled' : ''}>🎲 ZAR</button>
-                            <button class="btn btn-action" style="flex:1" onclick="buyProp()" ${buyBtn.disabled ? 'disabled' : ''}>🏠 AL</button>
-                            <button class="btn btn-action" style="flex:1" onclick="openBuild()" ${buildBtn.disabled ? 'disabled' : ''}>🏗️ EV</button>
-                            <button class="btn btn-end" style="width:100%; height:45px !important;" onclick="endTurn()" ${endBtn.disabled ? 'disabled' : ''}>⏭️ BİTİR</button>
-                        `;
-                    }
+                    if (mobRoll) mobRoll.disabled = G.rolled || p.isAI;
+                    if (mobBuy) mobBuy.disabled = document.getElementById('buyBtn').disabled;
+                    if (mobEnd) mobEnd.disabled = document.getElementById('endBtn').disabled;
                 }
             }
         }
