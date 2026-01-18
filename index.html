@@ -1229,14 +1229,18 @@
         }
 
         .token-preview {
-            width: 70px !important;
-            height: 70px !important;
-            font-size: 2.2rem !important;
+            width: 55px !important;
+            height: 55px !important;
+            font-size: 1.6rem !important;
             cursor: pointer;
             position: relative;
             transition: all 0.3s;
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
         }
 
         .token-preview:hover {
@@ -1702,8 +1706,8 @@
 
                 .side-panel {
                     display: flex !important;
-                    width: 200px !important;
-                    padding: 8px !important;
+                    width: 170px !important;
+                    padding: 4px !important;
                     background: rgba(10, 10, 15, 0.98);
                     border: none !important;
                     border-right: 1px solid rgba(255, 215, 0, 0.2) !important;
@@ -1711,13 +1715,33 @@
 
                 .side-panel h1,
                 .side-panel h2 {
-                    font-size: 1.1rem !important;
+                    font-size: 0.85rem !important;
                     margin: 2px 0 !important;
                 }
 
                 .player-card {
-                    padding: 6px 10px !important;
-                    margin-bottom: 4px !important;
+                    padding: 4px 6px !important;
+                    margin-bottom: 3px !important;
+                    border-radius: 8px !important;
+                }
+
+                .player-header {
+                    gap: 5px !important;
+                    margin-bottom: 2px !important;
+                }
+
+                .player-token-icon {
+                    width: 22px !important;
+                    height: 22px !important;
+                    border-width: 1.5px !important;
+                }
+
+                .player-name {
+                    font-size: 0.65rem !important;
+                }
+
+                .player-money {
+                    font-size: 0.75rem !important;
                 }
 
                 .center-panel {
@@ -1731,24 +1755,26 @@
                 }
 
                 .board-container {
-                    width: 96vh !important;
-                    height: 96vh !important;
+                    width: 98vh !important;
+                    height: 98vh !important;
                     margin: auto;
                 }
 
                 .side-panel:last-child {
                     display: flex !important;
-                    width: 200px !important;
+                    width: 170px !important;
                     border-left: 1px solid rgba(255, 215, 0, 0.2) !important;
                 }
 
                 .controls-vertical {
-                    gap: 5px !important;
+                    gap: 3px !important;
                 }
 
                 .controls-vertical .btn {
-                    height: 36px !important;
-                    font-size: 0.65rem !important;
+                    height: 28px !important;
+                    padding: 0 4px !important;
+                    font-size: 0.55rem !important;
+                    min-width: 0 !important;
                 }
 
                 .game-log {
@@ -1958,9 +1984,15 @@
             <div onclick="location.reload()"
                 style="font-family:'Bebas Neue'; color:var(--gold); font-size:1.4rem; letter-spacing:2px; cursor:pointer;">
                 MONOPOLX</div>
-            <button class="btn btn-secondary"
-                style="padding:0; min-width:38px; height:38px; border-radius:10px; font-size:1.1rem; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05);"
-                onclick="document.getElementById('quickSettingsModal').classList.add('active')">⚙️</button>
+            <div style="display:flex; gap:5px;">
+                <button class="btn btn-secondary"
+                    style="padding:0; min-width:38px; height:38px; border-radius:10px; font-size:1.1rem; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05);"
+                    onclick="openStats()" title="İstatistikler">📊</button>
+                <button class="btn btn-secondary"
+                    style="padding:0; min-width:38px; height:38px; border-radius:10px; font-size:1.1rem; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.05);"
+                    onclick="document.getElementById('quickSettingsModal').classList.add('active')"
+                    title="Ayarlar">⚙️</button>
+            </div>
         </div>
 
         <!-- Sol Panel: Oyuncu Listesi -->
@@ -1989,6 +2021,7 @@
 
         <!-- Mobile Bottom Bar (Hidden on Desktop) -->
         <div class="mobile-bottom-bar" style="display:none">
+            <button class="btn btn-secondary" onclick="openStats()" title="Bilgi">📊</button>
             <button class="btn btn-secondary" onclick="openTrade()" title="Takas">🔄</button>
             <button class="btn btn-secondary" onclick="openBuild()" title="Ev/Otel">🏗️</button>
             <button class="btn btn-roll btn-roll-mob" id="mobRollBtn" onclick="rollDice()">🎲 ZAR AT</button>
@@ -2192,6 +2225,21 @@
             <div class="modal-buttons" style="margin-top:20px;">
                 <button class="btn btn-secondary" style="width:100%"
                     onclick="closeModal('quickSettingsModal')">KAPAT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="statsModal">
+        <div class="modal" style="max-width: 450px;">
+            <div style="text-align:center; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">📊 OYUN İSTATİSTİKLERİ</h2>
+            </div>
+            <div id="statsContent"
+                style="display:flex; flex-direction:column; gap:15px; max-height:60vh; overflow-y:auto; padding-right:5px;">
+                <!-- Player Stat Cards -->
+            </div>
+            <div class="modal-buttons" style="margin-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('statsModal')">KAPAT</button>
             </div>
         </div>
     </div>
@@ -3166,6 +3214,48 @@
             });
             if (!c.innerHTML) c.innerHTML = '<p style="text-align:center;opacity:0.6;padding:15px">İnşa edilebilecek mülk yok</p>';
             document.getElementById('buildModal').classList.add('active')
+        }
+
+        function openStats() {
+            const stats = document.getElementById('statsContent');
+            stats.innerHTML = '';
+            G.players.forEach(p => {
+                if (p.out) return;
+                const card = document.createElement('div');
+                card.style.background = 'rgba(18, 20, 29, 0.98)';
+                card.style.padding = '15px';
+                card.style.borderRadius = '12px';
+                card.style.border = `1px solid ${COLORS[p.color]}44`;
+                card.style.marginBottom = '12px';
+                card.style.boxShadow = `0 4px 15px rgba(0,0,0,0.3)`;
+
+                const propGroups = {};
+                p.props.forEach(id => {
+                    const s = window.activeSQ[id];
+                    const color = s.color || (s.type === 'railroad' ? '#333' : '#9c27b0');
+                    if (!propGroups[color]) propGroups[color] = [];
+                    propGroups[color].push(s.name);
+                });
+
+                let propHTML = '';
+                Object.keys(propGroups).forEach(color => {
+                    propHTML += `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;">`;
+                    propGroups[color].forEach(name => {
+                        propHTML += `<span style="background:${color}; color:${(color === '#fff' || color === '#ffeb3b') ? '#000' : '#fff'}; padding:3px 8px; border-radius:5px; font-size:0.65rem; font-weight:700; border:1px solid rgba(255,255,255,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.2);">${name}</span>`;
+                    });
+                    propHTML += `</div>`;
+                });
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+                        <span style="font-weight:900; color:${COLORS[p.color]}; font-size:1rem; display:flex; align-items:center; gap:8px;">${p.icon} <span style="letter-spacing:0.5px;">${p.name.toUpperCase()}</span></span>
+                        <span style="font-weight:900; color:var(--gold); font-size:1.1rem; filter:drop-shadow(0 0 5px rgba(212,175,55,0.3));">${p.money.toLocaleString('tr-TR')}₺</span>
+                    </div>
+                    ${propHTML || '<div style="opacity:0.4; font-size:0.75rem; margin-top:10px; font-style:italic;">Henüz mülk yok...</div>'}
+                `;
+                stats.appendChild(card);
+            });
+            document.getElementById('statsModal').classList.add('active');
         }
         function buildHouse(id) {
             const p = G.players[G.cur], s = window.activeSQ[id], pr = G.props[id];
