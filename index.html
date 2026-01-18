@@ -2839,7 +2839,14 @@
                 passBid();
             }
         }
-        function placeBid(a) { const b = AUC.parts[AUC.idx]; AUC.bid += a; AUC.bidder = b.id; log(`💰 ${b.name}: ${AUC.bid}₺`); nextBidder() }
+        function placeBid(a) {
+            const b = AUC.parts[AUC.idx];
+            if (AUC.bid + a > b.money) return;
+            AUC.bid += a;
+            AUC.bidder = b.id;
+            log(`💰 ${b.name}: ${AUC.bid}₺`);
+            nextBidder()
+        }
         function passBid() { const b = AUC.parts[AUC.idx]; b.pass = true; log(`❌ ${b.name} çekildi`); nextBidder() }
         function nextBidder() { const act = AUC.parts.filter(x => !x.pass); if (act.length <= 1) { endAuc(); return } do { AUC.idx = (AUC.idx + 1) % AUC.parts.length } while (AUC.parts[AUC.idx].pass); updateAuc() }
         function endAuc() {
@@ -2958,7 +2965,41 @@
             }
         }
         function goJail() { const p = G.players[G.cur]; p.pos = 10; p.jail = true; p.jt = 0; G.doubles = 0; log(`🔒 ${p.name} HAPİSTE!`, true); updateUI() }
-        function updateOwners() { Object.entries(G.props).forEach(([id, pr]) => { const el = document.getElementById('own-' + id); const info = document.getElementById('own-info-' + id); const sq = document.getElementById('sq-' + id); if (el) { el.style.background = COLORS[G.players[pr.owner].color]; el.style.opacity = pr.mort ? '0.3' : '0.6' } if (info) { info.textContent = G.players[pr.owner].name; info.style.opacity = pr.mort ? '0.5' : '1' } if (sq) { sq.classList.add('owned'); if (pr.mort) sq.style.filter = 'grayscale(0.5)'; else sq.style.filter = 'none' } }) }
+        function updateOwners() {
+            window.activeSQ.forEach((s, i) => {
+                const pr = G.props[i];
+                const el = document.getElementById('own-' + i);
+                const info = document.getElementById('own-info-' + i);
+                const sq = document.getElementById('sq-' + i);
+                if (el) {
+                    if (pr) {
+                        el.style.background = COLORS[G.players[pr.owner].color];
+                        el.style.opacity = pr.mort ? '0.3' : '0.6';
+                    } else {
+                        el.style.background = '';
+                        el.style.opacity = '1';
+                    }
+                }
+                if (info) {
+                    if (pr) {
+                        info.textContent = G.players[pr.owner].name;
+                        info.style.opacity = pr.mort ? '0.5' : '1';
+                    } else {
+                        info.textContent = '';
+                    }
+                }
+                if (sq) {
+                    if (pr) {
+                        sq.classList.add('owned');
+                        if (pr.mort) sq.style.filter = 'grayscale(0.5)';
+                        else sq.style.filter = 'none';
+                    } else {
+                        sq.classList.remove('owned');
+                        sq.style.filter = 'none';
+                    }
+                }
+            });
+        }
         function updateBuildBtn() {
             const p = G.players[G.cur];
             if (!p || p.isAI) return;
@@ -3121,13 +3162,12 @@
                 log(`💀 ${p.name} iflas etti! Tüm varlıkları ${creditor.name} oyuncusuna devredildi.`, true);
 
                 // Devret parayı
-                if (p.money > 0) chgMoney(creditor, p.money);
+                if (p.money > 0) chgMoney(creditor, Math.max(0, p.money));
 
                 // Devret mülkleri
                 p.props.forEach(id => {
                     creditor.props.push(id);
                     G.props[id].owner = creditor.id;
-                    // Evleri koru ama ipoteği kaldırabiliriz (veya olduğu gibi bırakabiliriz)
                 });
 
                 // Devret hapis kartlarını
@@ -3136,8 +3176,7 @@
                 // Bankaya iflas
                 p.props.forEach(id => {
                     delete G.props[id];
-                    const el = document.getElementById('own-' + id);
-                    if (el) el.style.background = '';
+                    updateBld(id); // Reset houses/hotels on board
                 });
                 log(`💀 ${p.name} bankaya borcu yüzünden İFLAS etti!`, true);
             }
