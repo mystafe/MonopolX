@@ -2022,9 +2022,14 @@
                     onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 30px rgba(212,175,55,0.4)'"
                     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
                     onclick="startGame()">OYUNA BAŞLA</button>
+                <button id="resumeBtn" class="btn btn-secondary"
+                    style="width:100%; margin-top:10px; height:50px; font-size:1rem; letter-spacing:2px; border-radius:12px; display:none;"
+                    onclick="loadGame()">ÖNCEKİ OYUNA DEVAM ET</button>
+
             </div>
         </div>
-        <div class="credit-badge">MADE BY <span>MUSTAFA EVLEKSİZ</span> ✨</div>
+        <div class="credit-badge">MADE BY <span>MUSTAFA EVLEKSİZ</span> <small
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.0.1</small> ✨</div>
         <p style="margin-top:20px; opacity:0.6; font-size:0.8rem; letter-spacing:1px; font-weight:700;">MonopolX v3.0 |
             2024 Elegant Edition</p>
     </div>
@@ -2530,6 +2535,10 @@
                 jailCards: 0
             }));
 
+            // Initialize customRules if missing property
+            if (!G.customRules) G.customRules = { salary: 200, parkingPool: true };
+
+
             G.cur = 0;
             G.rolled = false;
             G.props = {};
@@ -2575,40 +2584,25 @@
         }
 
         function checkAI() {
+            if (document.querySelector('.modal-overlay.active')) {
+                setTimeout(checkAI, 1000);
+                return;
+            }
             const p = G.players[G.cur];
-            if (p.out) { endTurn(); return; }
+            if (!p || p.out) { endTurn(); return; }
             if (p.isAI) {
+                if (G.rolled) {
+                    // AI already rolled but turn didn't end? Possible catch-up
+                    setTimeout(aiPostTurn, 1000);
+                    return;
+                }
                 log(`🤖 ${p.name} düşünüyor...`);
                 setTimeout(() => playAITurn(p), 1500);
             }
         }
 
-        function playAITurn(p) {
-            if (p.jail) {
-                const staySafe = p.difficulty === 'hard' && G.players.some(op => op.id !== p.id && op.props.some(pid => G.props[pid] && G.props[pid].houses > 0));
 
-                // AI prioritize card then fine if rich
-                if (p.jailCards > 0) {
-                    useJailCard();
-                    return;
-                }
 
-                if (p.money > 1000 && p.difficulty !== 'easy') {
-                    payJail();
-                    return;
-                }
-
-                if (p.difficulty === 'easy' || (p.difficulty === 'medium' && p.money < 1000) || staySafe) {
-                    rollDice();
-                } else {
-                    if (p.money >= 50) {
-                        payJail();
-                    } else { rollDice(); }
-                }
-                return;
-            }
-            rollDice();
-        }
 
         function aiHandleProp(s) {
             const p = G.players[G.cur];
@@ -2694,12 +2688,16 @@
             });
 
             // AI Takas Başlatma Kontrolü (Sık olmasın)
+            let tradePending = false;
             if (Math.random() < 0.2) {
-                aiInitiateTrade(p);
+                tradePending = aiInitiateTrade(p);
             }
 
-            setTimeout(endTurn, speed * 5);
+            if (!tradePending) {
+                setTimeout(endTurn, speed * 5);
+            }
         }
+
 
         function openTradeOffer(sender, receiver, data) {
             const modal = document.getElementById('tradeOfferModal');
@@ -2731,14 +2729,21 @@
             document.getElementById('acceptTradeBtn').onclick = () => {
                 executeTrade(sender, receiver, data.myProps, data.theirProps, data.myMoney, data.theirMoney);
                 closeModal('tradeOfferModal');
+                if (sender.isAI && G.cur === sender.id) {
+                    setTimeout(endTurn, 1000);
+                }
             };
             document.getElementById('rejectTradeBtn').onclick = () => {
                 log(`❌ ${receiver.name} teklifi reddetti.`);
                 closeModal('tradeOfferModal');
+                if (sender.isAI && G.cur === sender.id) {
+                    setTimeout(endTurn, 1000);
+                }
             };
 
             modal.classList.add('active');
         }
+
 
         function aiInitiateTrade(p) {
             for (const [g, ids] of Object.entries(GR)) {
@@ -2760,12 +2765,14 @@
                             } else {
                                 openTradeOffer(p, targetOwner, { myProps: [], theirProps: [missing], myMoney: offer, theirMoney: 0 });
                             }
-                            return;
+                            return true; // Modal opened
                         }
                     }
                 }
             }
+            return false;
         }
+
 
         function aiEvaluateTrade(sender, receiver, data) {
             const sValue = data.myMoney + data.myProps.reduce((sum, id) => sum + (window.activeSQ[id].price || 0), 0);
@@ -2824,7 +2831,9 @@
             log(`🔄 Takas başarıyla gerçekleşti!`, true);
             updateUI();
             updateOwners();
+            autoSave();
         }
+
 
         function buildBoard() {
             const b = document.getElementById('board');
@@ -2887,7 +2896,12 @@
         function moneyAnim(pid, amt, pos) { const el = document.querySelector(`.player-card:nth-child(${pid + 1})`); if (!el) return; const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = `money-float ${pos ? 'pos' : 'neg'}`; f.textContent = `${pos ? '+' : '-'}${Math.abs(amt)}₺`; f.style.left = r.left + r.width / 2 + 'px'; f.style.top = r.top + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 800); const m = el.querySelector('.player-money'); if (m) { m.classList.remove('up', 'down'); void m.offsetWidth; m.classList.add(pos ? 'up' : 'down') } }
         function chgMoney(p, amt) { p.money += amt; moneyAnim(p.id, amt, amt > 0) }
         function rollDice() {
-            if (G.rolled) return;
+            if (G.rolled) {
+                console.log("Dice already rolled for this turn.");
+                return;
+            }
+            if (document.querySelector('.modal-overlay.active')) return;
+
             const p = G.players[G.cur]; if (p.out) return;
             document.getElementById('rollBtn').disabled = true;
             document.getElementById('jailControls').style.display = 'none';
@@ -3482,8 +3496,54 @@
             document.querySelectorAll('.square').forEach(x => x.classList.remove('current'));
             log(`▶️ ${G.players[G.cur].name}'ın sırası!`, true);
             updateUI();
+            autoSave();
             checkAI();
         }
+
+        function autoSave() {
+            try {
+                const data = {
+                    G: G,
+                    CHANCE: CHANCE,
+                    CHEST: CHEST,
+                    mapKey: document.getElementById('mapSelect') ? document.getElementById('mapSelect').value : 'turkiye',
+                    gameLog: document.getElementById('gameLog').innerHTML
+                };
+                localStorage.setItem('monopolx_autosave', JSON.stringify(data));
+            } catch (e) { console.error("AutoSave failed", e); }
+        }
+
+        function loadGame() {
+            try {
+                const raw = localStorage.getItem('monopolx_autosave');
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                G = data.G;
+                CHANCE = data.CHANCE;
+                CHEST = data.CHEST;
+                window.activeSQ = getMapSQ(data.mapKey || 'turkiye');
+                document.getElementById('setupScreen').classList.add('hidden');
+                document.getElementById('gameContainer').style.display = 'flex';
+                buildBoard();
+                document.getElementById('gameLog').innerHTML = data.gameLog;
+                updateOwners();
+                updateUI();
+                log("🎮 Oyun kaldığı yerden devam ediyor!", true);
+                if (G.players[G.cur].isAI && !G.rolled) {
+                    checkAI();
+                }
+            } catch (e) {
+                console.error("Load failed", e);
+                alert("Kayıt dosyası yüklenirken hata oluştu.");
+            }
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('monopolx_autosave')) {
+                document.getElementById('resumeBtn').style.display = 'block';
+            }
+        }
+
         function updateUI() {
             updateTokens();
             updatePanel();
