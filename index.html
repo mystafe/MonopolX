@@ -1550,7 +1550,7 @@
             .mobile-money {
                 color: var(--gold);
                 font-weight: 800;
-                font-size: 1.1rem;
+                font-size: 0.95rem;
             }
 
             /* Center Panel Layout */
@@ -1571,13 +1571,13 @@
 
             /* Board Refinements */
             .square-name {
-                font-size: 0.42rem !important;
+                font-size: 0.38rem !important;
                 line-height: 1.1;
                 font-weight: 700 !important;
             }
 
             .square-price {
-                font-size: 0.38rem !important;
+                font-size: 0.35rem !important;
                 font-weight: 700 !important;
             }
 
@@ -1611,7 +1611,7 @@
             }
 
             h1 {
-                font-size: 2.8rem !important;
+                font-size: 2.2rem !important;
                 letter-spacing: 12px !important;
             }
 
@@ -1628,7 +1628,7 @@
 
             .btn-roll {
                 height: 55px !important;
-                font-size: 1rem !important;
+                font-size: 0.9rem !important;
             }
 
             .board-center {
@@ -1664,7 +1664,7 @@
 
             .mobile-bottom-bar .btn {
                 padding: 8px 12px !important;
-                font-size: 0.7rem !important;
+                font-size: 0.65rem !important;
                 height: 48px;
                 flex: 1;
             }
@@ -1675,140 +1675,196 @@
                 color: #000 !important;
             }
 
-            @media (max-width: 480px) {
-                .player-card {
-                    min-width: 115px;
-                }
-
-                .controls-vertical>* {
-                    min-width: 75px;
-                    height: 44px !important;
-                }
-
-                .square-name {
-                    font-size: 0.4rem !important;
-                }
+            .modal h2 {
+                font-size: 1.4rem !important;
             }
 
-            /* LANDSCAPE EXPERIENCE - PREMIUM 3-COLUMN LAYOUT */
-            @media (max-height: 500px) and (orientation: landscape) {
-                .game-wrapper {
-                    flex-direction: row !important;
-                    height: 100vh !important;
-                    overflow: hidden !important;
-                    display: flex !important;
-                }
+            .modal p {
+                font-size: 0.8rem !important;
+            }
+        }
 
-                .mobile-header,
-                .mobile-bottom-bar {
-                    display: none !important;
-                }
-
-                .side-panel {
-                    display: flex !important;
-                    width: 170px !important;
-                    padding: 4px !important;
-                    background: rgba(10, 10, 15, 0.98);
-                    border: none !important;
-                    border-right: 1px solid rgba(255, 215, 0, 0.2) !important;
-                }
-
-                .side-panel h1,
-                .side-panel h2 {
-                    font-size: 0.85rem !important;
-                    margin: 2px 0 !important;
-                }
-
-                .player-card {
-                    padding: 4px 6px !important;
-                    margin-bottom: 3px !important;
-                    border-radius: 8px !important;
-                }
-
-                .player-header {
-                    gap: 5px !important;
-                    margin-bottom: 2px !important;
-                }
-
-                .player-token-icon {
-                    width: 22px !important;
-                    height: 22px !important;
-                    border-width: 1.5px !important;
-                }
-
-                .player-name {
-                    font-size: 0.65rem !important;
-                }
-
-                .player-money {
-                    font-size: 0.75rem !important;
-                }
-
-                .center-panel {
-                    padding: 0 !important;
-                    height: 100vh !important;
-                    flex: 1;
-                    background: #000;
-                    display: flex !important;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .board-container {
-                    width: 98vh !important;
-                    height: 98vh !important;
-                    margin: auto;
-                }
-
-                .side-panel:last-child {
-                    display: flex !important;
-                    width: 170px !important;
-                    border-left: 1px solid rgba(255, 215, 0, 0.2) !important;
-                }
-
-                .controls-vertical {
-                    gap: 3px !important;
-                }
-
-                .controls-vertical .btn {
-                    height: 28px !important;
-                    padding: 0 4px !important;
-                    font-size: 0.55rem !important;
-                    min-width: 0 !important;
-                }
-
-                .game-log {
-                    font-size: 0.6rem !important;
-                    flex: 1;
-                }
+        /* PREMIUM LANDSCAPE EXPERIENCE - WORLD CLASS UX (Root Level) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .game-wrapper {
+                flex-direction: row !important;
+                height: 100vh !important;
+                overflow: hidden !important;
+                display: flex !important;
+                background: #020205 !important;
             }
 
-            .player-type-select {
-                padding: 8px;
-                border-radius: 6px;
-                background: rgba(255, 255, 255, 0.2);
-                color: white;
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                font-family: 'Montserrat', sans-serif;
-                cursor: pointer;
-                outline: none;
+            .mobile-header,
+            .mobile-bottom-bar {
+                display: none !important;
             }
 
-            .player-type-select option {
-                background: #1a1a2e;
-                color: white;
+            .side-panel {
+                display: flex !important;
+                width: 105px !important;
+                min-width: 105px !important;
+                padding: 3px !important;
+                background: rgba(10, 10, 15, 0.95) !important;
+                backdrop-filter: blur(25px);
+                border: none !important;
+                border-right: 1px solid rgba(212, 175, 55, 0.1) !important;
+                z-index: 20;
             }
 
-            .ai-badge {
-                font-size: 0.7em;
-                padding: 2px 6px;
-                border-radius: 4px;
-                background: var(--gold);
-                color: #000;
-                font-weight: bold;
-                margin-left: 5px;
-                vertical-align: middle;
+            /* Remove all bulky waste */
+            .side-panel>div:first-child,
+            .side-panel h1,
+            .side-panel h2 {
+                display: none !important;
             }
+
+            .player-card {
+                padding: 2px !important;
+                margin-bottom: 2px !important;
+                border-radius: 4px !important;
+            }
+
+            .player-header {
+                gap: 3px !important;
+            }
+
+            .player-token-icon {
+                width: 12px !important;
+                height: 12px !important;
+                border-width: 1px !important;
+            }
+
+            .player-name {
+                font-size: 0.38rem !important;
+                font-weight: 800 !important;
+            }
+
+            .player-money {
+                font-size: 0.48rem !important;
+                color: var(--gold) !important;
+            }
+
+            .player-props {
+                gap: 1px !important;
+                margin-top: 1px !important;
+            }
+
+            .prop-dot {
+                width: 3px !important;
+                height: 3px !important;
+                border-radius: 1px !important;
+            }
+
+            .center-panel {
+                flex: 1 !important;
+                padding: 0 !important;
+                height: 100vh !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                background: #000 !important;
+            }
+
+            .board-container {
+                width: min(98vh, calc(100vw - 230px)) !important;
+                height: min(98vh, calc(100vw - 230px)) !important;
+                margin: auto !important;
+                box-shadow: 0 0 100px rgba(0, 0, 0, 1);
+            }
+
+            /* Board Text Scale */
+            .square-name {
+                font-size: 0.23rem !important;
+                line-height: 1 !important;
+            }
+
+            .square-price {
+                font-size: 0.23rem !important;
+            }
+
+            .token {
+                width: 8px !important;
+                height: 8px !important;
+                font-size: 0.28rem !important;
+            }
+
+            .dice-container {
+                transform: scale(0.42) !important;
+            }
+
+            .center-logo {
+                font-size: 0.9rem !important;
+                letter-spacing: 5px !important;
+            }
+
+            .side-panel:last-child {
+                width: 115px !important;
+                min-width: 115px !important;
+                border-left: 1px solid rgba(212, 175, 55, 0.1) !important;
+                border-right: none !important;
+            }
+
+            .controls-vertical {
+                gap: 1px !important;
+                padding: 0 !important;
+            }
+
+            .controls-vertical .btn {
+                height: 18px !important;
+                font-size: 0.35rem !important;
+                padding: 0 4px !important;
+                border-radius: 3px !important;
+                min-width: 0 !important;
+            }
+
+            #turnIndicator {
+                padding: 2px !important;
+                margin-bottom: 2px !important;
+            }
+
+            #currentPlayerName {
+                font-size: 0.48rem !important;
+            }
+
+            .ui-settings {
+                display: none !important;
+            }
+
+            .game-log {
+                font-size: 0.32rem !important;
+                flex: 1;
+                margin-top: 2px !important;
+                padding: 2px !important;
+                background: rgba(0, 0, 0, 0.6) !important;
+                line-height: 1.1 !important;
+            }
+        }
+
+        .player-type-select {
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .player-type-select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .ai-badge {
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--gold);
+            color: #000;
+            font-weight: bold;
+            margin-left: 5px;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -1856,8 +1912,8 @@
                             <select id="t2" class="player-type-select" style="width:100%" onchange="autoName(2)">
                                 <option value="human">👤 İnsan</option>
                                 <option value="ai-easy">🤖 Kolay AI</option>
-                                <option value="ai-medium" selected>🤖 Orta AI</option>
-                                <option value="ai-hard">🤖 Zor AI</option>
+                                <option value="ai-medium">🤖 Orta AI</option>
+                                <option value="ai-hard" selected>🤖 Zor AI</option>
                             </select>
                         </div>
                     </div>
@@ -1882,12 +1938,12 @@
                         style="display:flex; align-items:center; gap:25px; background:rgba(255,255,255,0.02); padding:15px; border-radius:15px; border:1px solid rgba(255,255,255,0.05); margin-top:15px;">
                         <div class="token-preview token-yellow" id="preview-p4" onclick="openIconPicker(4)">🦖</div>
                         <div style="flex:1">
-                            <input type="text" id="p4" placeholder="Oyuncu 4" maxlength="10"
+                            <input type="text" id="p4" value="Robot-3" maxlength="10"
                                 style="width:100%; margin-bottom:10px; background:transparent; border:none; border-bottom:1.5px solid rgba(255,255,255,0.1); color:white; font-size:1.1rem; padding:5px 0;">
                             <select id="t4" class="player-type-select" style="width:100%" onchange="autoName(4)">
-                                <option value="none" selected>--- (Kapalı)</option>
+                                <option value="none">--- (Kapalı)</option>
                                 <option value="human">👤 İnsan</option>
-                                <option value="ai-easy">🤖 Kolay AI</option>
+                                <option value="ai-easy" selected>🤖 Kolay AI</option>
                                 <option value="ai-medium">🤖 Orta AI</option>
                                 <option value="ai-hard">🤖 Zor AI</option>
                             </select>
@@ -1907,7 +1963,8 @@
                     </select>
                     <div
                         style="background:rgba(255, 61, 0, 0.1); padding:10px; border-radius:12px; border:1px solid rgba(255, 61, 0, 0.2); display:flex; align-items:center; gap:8px;">
-                        <input type="checkbox" id="challengeMode" style="width:18px; height:18px; cursor:pointer;">
+                        <input type="checkbox" id="challengeMode" style="width:18px; height:18px; cursor:pointer;"
+                            checked>
                         <label for="challengeMode"
                             style="font-size:0.7rem; font-weight:800; color:#ff3d00; cursor:pointer;">🔥 CHALLENGE
                             MODE</label>
@@ -1920,7 +1977,7 @@
                     style="margin-bottom:20px; color:rgba(255,255,255,0.5); font-size:0.8rem; letter-spacing:2px; text-transform:uppercase;">
                     🏛️ Görünüm Teması</h3>
                 <div class="theme-preview">
-                    <div class="theme-card selected" id="theme-premium" onclick="setTheme('premium')">
+                    <div class="theme-card" id="theme-premium" onclick="setTheme('premium')">
                         <div style="background:var(--bg-dark); border:1px solid var(--gold)"></div>
                         <span>Premium Dark</span>
                     </div>
@@ -1928,7 +1985,7 @@
                         <div style="background:var(--marble-bg); border:1px solid #ccc"></div>
                         <span>Luxury Marble</span>
                     </div>
-                    <div class="theme-card" id="theme-parchment" onclick="setTheme('parchment')">
+                    <div class="theme-card selected" id="theme-parchment" onclick="setTheme('parchment')">
                         <div style="background:var(--paper-bg); border:1px solid #8d6e63"></div>
                         <span>Classic Paper</span>
                     </div>
@@ -1957,7 +2014,7 @@
                     <div class="rule-item"
                         style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
                         <label style="font-size: 0.7rem; opacity: 0.6;">RASTGELE BAŞLANGIÇ</label>
-                        <div class="rule-toggle" id="toggleRandomStart" onclick="this.classList.toggle('on')"></div>
+                        <div class="rule-toggle on" id="toggleRandomStart" onclick="this.classList.toggle('on')"></div>
                     </div>
                 </div>
                 <button class="btn btn-roll"
@@ -2268,6 +2325,45 @@
         </div>
     </div>
     <script>
+        // GLOBAL FUNCTIONS - ATTACH TO WINDOW FOR RELIABILITY
+        window.openStats = function () {
+            const stats = document.getElementById('statsContent');
+            if (!stats) return;
+            stats.innerHTML = '';
+            G.players.forEach(p => {
+                if (p.out) return;
+                const card = document.createElement('div');
+                card.style.cssText = 'background:rgba(20,20,30,0.98); padding:10px; border-radius:10px; border:1px solid ' + COLORS[p.color] + '44; margin-bottom:8px; box-shadow:0 4px 15px rgba(0,0,0,0.4);';
+
+                const propGroups = {};
+                p.props.forEach(id => {
+                    const s = window.activeSQ[id];
+                    const color = s.color || (s.type === 'railroad' ? '#333' : '#9c27b0');
+                    if (!propGroups[color]) propGroups[color] = [];
+                    propGroups[color].push(s.name);
+                });
+
+                let propHTML = '';
+                Object.keys(propGroups).forEach(color => {
+                    propHTML += '<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:8px;">';
+                    propGroups[color].forEach(name => {
+                        propHTML += '<span style="background:' + color + '; color:' + ((color === '#fff' || color === '#ffeb3b') ? '#000' : '#fff') + '; padding:2px 5px; border-radius:3px; font-size:0.5rem; font-weight:800; border:1px solid rgba(255,255,255,0.1);">' + name + '</span>';
+                    });
+                    propHTML += '</div>';
+                });
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:900; color:${COLORS[p.color]}; font-size:0.75rem;">${p.icon} ${p.name.toUpperCase()}</span>
+                        <span style="font-weight:900; color:var(--gold); font-size:0.85rem;">${p.money.toLocaleString()}₺</span>
+                    </div>
+                    ${propHTML || '<div style="opacity:0.4; font-size:0.6rem; margin-top:5px;">Mülk yok</div>'}
+                `;
+                stats.appendChild(card);
+            });
+            document.getElementById('statsModal').classList.add('active');
+        };
+
         let selectedIcons = { 1: '🚗', 2: '🎩', 3: '🐕', 4: '🦖' }; // Default icons
         const TOKEN_ICONS_ALL = ['🚗', '🎩', '🐕', '🚢', '🦖', '👞', '🧺', '🐈', '🚀', '🚁', '🚂', '🐎', '🦢', '🐢', '🐙', '👾', '🤖', '👻', '👽', '👑', '💎', '💰', '🔑', '🔔', '⚓', '⛵', '🌟', '⚡', '🔥', '💧', '🌿', '🌸', '🍄', '🌈', '☀️', '🌙', '⭐', '🌍', '💡', '⚙️', '⚖️', '🛠️', '🛡️', '⚔️', '🔮', '🪄', '🎲', '🧩', '🎯', '🎳', '🎤', '🎧', '🎸', '🎹', '🥁', '🎺', '🎻', '🎨', '🎭', '🎬', '📸', '🎥', '💻', '📱', '⌚', '💾', '🖨️', '🖱️', '⌨️', '📞', '📠', '📡', '🛰️', '💡', '🔌', '🔋', '🧲', '🧪', '🔬', '🔭', '🧬', '🦠', '💉', '💊', '🩹', '🩺', '🌡️', '🩸', '🩻', '🩼', '🩽', '🩾', '🩿', '🪀', '🪁', '🪂', '🪃', '🪄', '🪅', '🪆', '🪇', '🪈', '🪉', '🪊', '🪋', '🪌', '🪍', '🪎', '🪏', '🪐', '🪑', '🪒', '🪓', '🪔', '🪕', '🪖', '🪗', '🪘', '🪙', '🪚', '🪛', '🪜', '🪝', '🪞', '🪟', '🪠', '🪡', '🪢', '🧶', '🧵', '🪟', '🪠', '🪡', '🪢', '🧶', '🧵', '🪧', '🪨', '🪩', '🪪', '🪫', '🪬', '🪭', '🪮', '🪯', '🪰', '🪱', '🪲', '🪳', '🪴', '🪵', '🪶', '🪷', '🪸', '🪹', '🪺', '🪻', '🪼', '🪽', '🪾', '🪿', '🫀', '🫁', '🫂', '🫃', '🫄', '🫅', '🫆', '🫇', '🫈', '🫉', '🫊', '🫋', '🫌', '🫍', '🫎', '🫏', '🫐', '🫑', '🫒', '🫓', '🫔', '🫕', '🫖', '🫗', '🫘', '🫙', '🫚', '🫛', '🫜', '🫝', '🫞', '🫟', '🫠', '🫡', '🫢', '🫣', '🫤', '🫥', '🫠', '🫧', '🫨', '🫩', '🫪', '🫫', '🫬', '🫭', '🫮', '🫯', '🫰', '🫱', '🫲', '🫳', '🫴', '🫵', '🫶', '🫷', '🫸', '🫹', '🫺', '🫻', '🫼', '🫽', '🫾', '🫿', '🬀', '🬁', '🬂', '🬃', '🬄', '🬅', '🬆', '🬇', '🬈', '🬉', '🬊', '🬋', '🬌', '🬍', '🬎', '🬏', '🬐', '🬑', '🬒', '🬓', '🬔', '🬕', '🬖', '🬗', '🬘', '🬙', '🬚', '🬛', '🬜', '🬝', '🬞', '🬟', '🬠', '🬡', '🬢', '🬣', '🬤', '🬥', '🬦', '🬧', '🬨', '🬩', '🬪', '🬫', '🬬', '🬭', '🬮', '🬯', '🬰', '🬱', '🬲', '🬳', '🬴', '🬵', '🬶', '🬷', '🬸', '🬹', '🬺', '🬻', '🬼', '🬽', '🬾', '🬿', '🭀', '🭁', '🭂', '🭃', '🭄', '🭅', '🭆', '🭇', '🭈', '🭉', '🭊', '🭋', '🭌', '🭍', '🭎', '🭏', '🭐', '🭑', '🭒', '🭓', '🭔', '🭕', '🭖', '🭗', '🭘', '🭙', '🭚', '🭛', '🭜', '🭝', '🭞', '🭟', '🭠', '🭡', '🭢', '🭣', '🭤', '🭥', '🭦', '🭧', '🭨', '🭩', '🭪', '🭫', '🭬', '🭭', '🭮', '🭯', '🭰', '🭱', '🭲', '🭳', '🭴', '🭵', '🭶', '🭷', '🭸', '🭹', '🭺', '🭻', '🭼', '🭽', '🭾', '🭿', '🮀', '🮁', '🮂', '🮃', '🮄', '🮅', '🮆', '🮇', '🮈', '🮉', '🮊', '🮋', '🮌', '🮍', '🮎', '🮏', '🮐', '🮑', '🮒', '🮓', '🮔', '🮕', '🮖', '🮗', '🮘', '🮙', '🮚', '🮛', '🮜', '🮝', '🮞', '🮟', '🮠', '🮡', '🮢', '🮣', '🮤', '🮥', '🮦', '🮧', '🮨', '🮩', '🮪', '🮫', '🮬', '🮭', '🮮', '🮯', '🮰', '🮱', '🮲', '🮳', '🮴', '🮵', '🮶', '🮷', '🮸', '🮹', '🮺', '🮻', '🮼', '🮽', '🮾', '🮿', '🯀', '🯁', '🯂', '🯃', '🯄', '🯅', '🯆', '🯇', '🯈', '🯉', '🯊', '🯋', '🯌', '🯍', '🯎', '🯏', '🯐', '🯑', '🯒', '🯓', '🯔', '🯕', '🯖', '🯗', '🯘', '🯙', '🯚', '🯛', '🯜', '🯝', '🯞', '🯟', '🯠', '🯡', '🯢', '🯣', '🯤', '🯥', '🯦', '🯧', '🯨', '🯩', '🯪', '🯫', '🯬', '🯭', '🯮', '🯯', '🯰', '🯱', '🯲', '🯳', '🯴', '🯵', '🯶', '🯷', '🯸', '🯹', '🯺', '🯻', '🯼', '🯽', '🯾', '🯿'];
 
@@ -3216,47 +3312,6 @@
             document.getElementById('buildModal').classList.add('active')
         }
 
-        function openStats() {
-            const stats = document.getElementById('statsContent');
-            stats.innerHTML = '';
-            G.players.forEach(p => {
-                if (p.out) return;
-                const card = document.createElement('div');
-                card.style.background = 'rgba(18, 20, 29, 0.98)';
-                card.style.padding = '15px';
-                card.style.borderRadius = '12px';
-                card.style.border = `1px solid ${COLORS[p.color]}44`;
-                card.style.marginBottom = '12px';
-                card.style.boxShadow = `0 4px 15px rgba(0,0,0,0.3)`;
-
-                const propGroups = {};
-                p.props.forEach(id => {
-                    const s = window.activeSQ[id];
-                    const color = s.color || (s.type === 'railroad' ? '#333' : '#9c27b0');
-                    if (!propGroups[color]) propGroups[color] = [];
-                    propGroups[color].push(s.name);
-                });
-
-                let propHTML = '';
-                Object.keys(propGroups).forEach(color => {
-                    propHTML += `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;">`;
-                    propGroups[color].forEach(name => {
-                        propHTML += `<span style="background:${color}; color:${(color === '#fff' || color === '#ffeb3b') ? '#000' : '#fff'}; padding:3px 8px; border-radius:5px; font-size:0.65rem; font-weight:700; border:1px solid rgba(255,255,255,0.1); box-shadow: 0 2px 4px rgba(0,0,0,0.2);">${name}</span>`;
-                    });
-                    propHTML += `</div>`;
-                });
-
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
-                        <span style="font-weight:900; color:${COLORS[p.color]}; font-size:1rem; display:flex; align-items:center; gap:8px;">${p.icon} <span style="letter-spacing:0.5px;">${p.name.toUpperCase()}</span></span>
-                        <span style="font-weight:900; color:var(--gold); font-size:1.1rem; filter:drop-shadow(0 0 5px rgba(212,175,55,0.3));">${p.money.toLocaleString('tr-TR')}₺</span>
-                    </div>
-                    ${propHTML || '<div style="opacity:0.4; font-size:0.75rem; margin-top:10px; font-style:italic;">Henüz mülk yok...</div>'}
-                `;
-                stats.appendChild(card);
-            });
-            document.getElementById('statsModal').classList.add('active');
-        }
         function buildHouse(id) {
             const p = G.players[G.cur], s = window.activeSQ[id], pr = G.props[id];
             chgMoney(p, -s.hc);
@@ -3528,7 +3583,7 @@
         // Initialize setup screen UI
         window.addEventListener('load', () => {
             initIconSelectors();
-            setTheme('premium');
+            setTheme('parchment');
             autoName(3); autoName(4); // Trigger opacity update for inactive players
         });
     </script>
