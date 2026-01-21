@@ -2028,8 +2028,8 @@
 
             </div>
         </div>
-        <div class="credit-badge">MADE BY <span>MUSTAFA EVLEKSİZ</span> <small
-                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.0.1</small> ✨</div>
+        <div class="credit-badge">MADE BY <span>MUSTAFA EVLEKSİZ</span> <small id="ver1"
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.2.1</small> ✨</div>
         <p style="margin-top:20px; opacity:0.6; font-size:0.8rem; letter-spacing:1px; font-weight:700;">MonopolX v3.0 |
             2024 Elegant Edition</p>
     </div>
@@ -2064,8 +2064,8 @@
                 <h1 style="font-family: 'Bebas Neue'; font-size: 2.2rem; letter-spacing: 4px; color: var(--gold); margin: 0; cursor:pointer;"
                     onclick="location.reload()">
                     MONOPOLX</h1>
-                <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">BY MUSTAFA EVLEKSİZ <span
-                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.0.1</span></div>
+                <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">BY MUSTAFA EVLEKSİZ <span id="ver2"
+                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.2.1</span></div>
             </div>
             <h2 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.3rem; letter-spacing: 2px;">👥
                 OYUNCULAR</h2>
@@ -2149,6 +2149,13 @@
                             EFEKTLERİ</span>
                         <div class="rule-toggle on" id="toggleSound" onclick="toggleSoundEffect()"
                             style="transform:scale(0.8)"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">DİL /
+                            LANG</span>
+                        <div onclick="toggleLang()"
+                            style="cursor:pointer; font-size:0.7rem; font-weight:700; color:var(--gold); border:1px solid var(--gold); padding:2px 8px; border-radius:4px;"
+                            id="langLabel">TR</div>
                     </div>
                 </div>
 
@@ -2539,6 +2546,112 @@
 
         const COLORS = { red: '#f44336', blue: '#2196f3', green: '#4caf50', yellow: '#ffeb3b' };
         const TOKEN_ICONS = ['🚗', '🎩', '🐕', '🚢', '🦖', '👞', '🧺', '🐈'];
+        const LANGS = {
+            tr: {
+                start: "OYUNA BAŞLA",
+                resume: "ÖNCEKİ OYUNA DEVAM ET",
+                roll: "ZAR AT",
+                buy: "SATIN AL",
+                auction: "İHALE",
+                house: "EV",
+                mortgage: "İPOTEK",
+                trade: "TAKAS YAP",
+                endTurn: "TURU BİTİR",
+                thinking: "düşünüyor...",
+                jail: "HAPİS",
+                jailPay: "CEZA ÖDE",
+                jailCard: "KART KULLAN",
+                stats: "İSTATİSTİKLER",
+                theme: "GÖRÜNÜM TEMASI",
+                speed: "HIZ",
+                sound: "SES EFEKTLERİ",
+                lang: "DİL",
+                earned: "Toplam Kazanç",
+                rentPaid: "Ödenen Kira",
+                rentReceived: "Alınan Kira",
+                taxPaid: "Vergi/Ceza",
+                jailTurns: "Hapiste Geçen",
+                doubles: "Çift Atma",
+                lands: "Basılan Kare",
+                winner: "kazandı!",
+                ai_tycoon: "Kodaman",
+                ai_banker: "Bankacı",
+                ai_opportunist: "Fırsatçı",
+                human: "İnsan",
+                set_break: "Setimi bozamam!",
+                not_fair: "Teklifi yetersiz buldu."
+            },
+            en: {
+                start: "START GAME",
+                resume: "RESUME PREVIOUS GAME",
+                roll: "ROLL DICE",
+                buy: "BUY",
+                auction: "AUCTION",
+                house: "HOUSE",
+                mortgage: "MORTGAGE",
+                trade: "TRADE",
+                endTurn: "END TURN",
+                thinking: "thinking...",
+                jail: "JAIL",
+                jailPay: "PAY FINE",
+                jailCard: "USE CARD",
+                stats: "STATISTICS",
+                theme: "APPEARANCE THEME",
+                speed: "SPEED",
+                sound: "SOUND EFFECTS",
+                lang: "LANGUAGE",
+                earned: "Total Earned",
+                rentPaid: "Rent Paid",
+                rentReceived: "Rent Received",
+                taxPaid: "Tax/Fine",
+                jailTurns: "Jail Turns",
+                doubles: "Dice Doubles",
+                lands: "Squares Landed",
+                winner: "won!",
+                ai_tycoon: "Tycoon",
+                ai_banker: "Banker",
+                ai_opportunist: "Opportunist",
+                human: "Human",
+                set_break: "I can't break my set!",
+                not_fair: "Found the offer insufficient."
+            }
+        };
+
+        let currLang = 'tr';
+        function t(key) { return LANGS[currLang][key] || key; }
+
+        function toggleLang() {
+            currLang = currLang === 'tr' ? 'en' : 'tr';
+            document.getElementById('langLabel').textContent = currLang.toUpperCase();
+            updateLangUI();
+            autoSave();
+        }
+
+        function updateLangUI() {
+            // Update setup screen
+            const startBtn = document.querySelector('button[onclick="startGame()"]');
+            if (startBtn) startBtn.textContent = t('start');
+            const resBtn = document.getElementById('resumeBtn');
+            if (resBtn) resBtn.textContent = t('resume');
+
+            // Update game UI
+            document.getElementById('rollBtn').innerHTML = `🎲 ${t('roll')}`;
+            document.getElementById('buyBtn').innerHTML = `🏠 ${t('buy')}`;
+            document.getElementById('auctionBtn').innerHTML = `🔨 ${t('auction')}`;
+            document.getElementById('buildBtn').innerHTML = `🏗️ ${t('house')}`;
+            const endBtn = document.getElementById('endBtn');
+            if (endBtn) endBtn.innerHTML = `⏭️ ${t('endTurn')}`;
+
+            // Labels in settings
+            const settingsLabels = document.querySelectorAll('.ui-settings span');
+            if (settingsLabels[0]) settingsLabels[0].textContent = t('theme');
+            if (settingsLabels[1]) settingsLabels[1].textContent = t('sound');
+            if (settingsLabels[2]) settingsLabels[2].textContent = t('lang');
+
+            const speedLabel = document.querySelector('label[for="speedRange"]'); // if added
+            // ... more mappings if needed
+        }
+
         let G = { players: [], cur: 0, rolled: false, doubles: 0, park: 0, pending: null };
         let AUC = { on: false, prop: null, bid: 0, bidder: null, parts: [], idx: 0 };
         let TR = { my: [], their: [] };
@@ -3638,7 +3751,8 @@
                     gameLog: document.getElementById('gameLog').innerHTML,
                     selectedIcons: selectedIcons,
                     theme: themeMatch ? themeMatch[1] : 'premium',
-                    sound: SND.enabled
+                    sound: SND.enabled,
+                    lang: currLang
                 };
 
                 localStorage.setItem('monopolx_autosave', JSON.stringify(data));
@@ -3653,6 +3767,13 @@
                 G = data.G;
                 CHANCE = data.CHANCE;
                 CHEST = data.CHEST;
+
+                if (data.lang) {
+                    currLang = data.lang;
+                    const lLbl = document.getElementById('langLabel');
+                    if (lLbl) lLbl.textContent = currLang.toUpperCase();
+                    updateLangUI();
+                }
 
                 if (data.sound !== undefined) {
                     SND.enabled = data.sound;
