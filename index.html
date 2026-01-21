@@ -2144,7 +2144,14 @@
                         <span id="speedVal" style="color:var(--gold)">ŞİMŞEK</span></label>
                     <input type="range" id="speedRange" min="50" max="350" value="350" step="10"
                         style="width: 100%; cursor: pointer; accent-color: var(--gold);" oninput="updateSpeedDisp()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">SES
+                            EFEKTLERİ</span>
+                        <div class="rule-toggle on" id="toggleSound" onclick="toggleSoundEffect()"
+                            style="transform:scale(0.8)"></div>
+                    </div>
                 </div>
+
                 <button class="btn btn-end" id="endBtn" onclick="endTurn()" disabled>⏭️ TURU BİTİR</button>
             </div>
             <h2
@@ -2461,6 +2468,75 @@
         const GR = { brown: [1, 3], lightblue: [6, 8, 9], pink: [11, 13, 14], orange: [16, 18, 19], red: [21, 23, 24], yellow: [26, 27, 29], green: [31, 32, 34], darkblue: [37, 39], railroad: [5, 15, 25, 35], utility: [12, 28] };
         let CHANCE = [{ t: "Başlangıca git, 200₺ al!", a: "goto", to: 0, c: 200 }, { t: "Haydarpaşa'ya git.", a: "goto", to: 5 }, { t: "3 kare geri.", a: "move", s: -3 }, { t: "Hapise git!", a: "jail" }, { t: "50₺ kazan!", a: "get", m: 50 }, { t: "15₺ ceza.", a: "pay", m: 15 }, { t: "150₺ kazan!", a: "get", m: 150 }, { t: "Tamir: Ev 25₺, Otel 100₺", a: "repair", h: 25, o: 100 }, { t: "Ücretsiz Hapisten Çıkış Kartı!", a: "jailfree" }];
         let CHEST = [{ t: "Başlangıca git, 200₺ al!", a: "goto", to: 0, c: 200 }, { t: "Banka hatası: 200₺!", a: "get", m: 200 }, { t: "Doktor: 50₺", a: "pay", m: 50 }, { t: "Hisse: 50₺", a: "get", m: 50 }, { t: "Hapise git!", a: "jail" }, { t: "Tatil: 100₺", a: "get", m: 100 }, { t: "Vergi iadesi: 20₺", a: "get", m: 20 }, { t: "Miras: 100₺", a: "get", m: 100 }, { t: "Ücretsiz Hapisten Çıkış Kartı!", a: "jailfree" }];
+
+        const SND = {
+            ctx: null,
+            enabled: true,
+            init() {
+                if (!this.ctx) {
+                    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { }
+                }
+            },
+            play(type) {
+                if (!this.enabled) return;
+                this.init();
+                if (!this.ctx) return;
+                const o = this.ctx.createOscillator();
+                const g = this.ctx.createGain();
+                o.connect(g); g.connect(this.ctx.destination);
+                const now = this.ctx.currentTime;
+                if (type === 'dice') {
+                    o.type = 'square';
+                    o.frequency.setValueAtTime(120, now);
+                    o.frequency.exponentialRampToValueAtTime(10, now + 0.15);
+                    g.gain.setValueAtTime(0.05, now);
+                    g.gain.linearRampToValueAtTime(0, now + 0.15);
+                    o.start(); o.stop(now + 0.15);
+                } else if (type === 'coin') {
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(800, now);
+                    o.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                    g.gain.setValueAtTime(0.05, now);
+                    g.gain.linearRampToValueAtTime(0, now + 0.15);
+                    o.start(); o.stop(now + 0.15);
+                } else if (type === 'buy') {
+                    o.type = 'triangle';
+                    o.frequency.setValueAtTime(400, now);
+                    o.frequency.linearRampToValueAtTime(800, now + 0.4);
+                    g.gain.setValueAtTime(0.05, now);
+                    g.gain.linearRampToValueAtTime(0, now + 0.4);
+                    o.start(); o.stop(now + 0.4);
+                } else if (type === 'jail') {
+                    o.type = 'sawtooth';
+                    o.frequency.setValueAtTime(200, now);
+                    o.frequency.linearRampToValueAtTime(50, now + 0.5);
+                    g.gain.setValueAtTime(0.05, now);
+                    g.gain.linearRampToValueAtTime(0, now + 0.5);
+                    o.start(); o.stop(now + 0.5);
+                }
+            }
+        };
+
+        function toggleSoundEffect() {
+            SND.enabled = !SND.enabled;
+            const btn = document.getElementById('toggleSound');
+            if (btn) btn.classList.toggle('on', SND.enabled);
+            autoSave();
+        }
+
+        function spawnConfetti() {
+            for (let i = 0; i < 40; i++) {
+                const c = document.createElement('div');
+                c.style.cssText = `position:fixed; width:8px; height:8px; background-color:${['#FFD700', '#C41E3A', '#2196F3', '#4CAF50', '#E91E63'][Math.floor(Math.random() * 5)]}; top:-10px; left:${Math.random() * 100}vw; z-index:9999; border-radius:1px;`;
+                document.body.appendChild(c);
+                const anim = c.animate([
+                    { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translateY(100vh) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], { duration: 1500 + Math.random() * 2000, easing: 'cubic-bezier(0,.5,.5,1)' });
+                anim.onfinish = () => c.remove();
+            }
+        }
+
         const COLORS = { red: '#f44336', blue: '#2196f3', green: '#4caf50', yellow: '#ffeb3b' };
         const TOKEN_ICONS = ['🚗', '🎩', '🐕', '🚢', '🦖', '👞', '🧺', '🐈'];
         let G = { players: [], cur: 0, rolled: false, doubles: 0, park: 0, pending: null };
@@ -2894,7 +2970,12 @@
         }
         function dFace(v) { const p = { 1: [0, 0, 0, 0, 1, 0, 0, 0, 0], 2: [1, 0, 0, 0, 0, 0, 0, 0, 1], 3: [1, 0, 0, 0, 1, 0, 0, 0, 1], 4: [1, 0, 1, 0, 0, 0, 1, 0, 1], 5: [1, 0, 1, 0, 1, 0, 1, 0, 1], 6: [1, 0, 1, 1, 0, 1, 1, 0, 1] }; return p[v].map(x => `<div class="dot ${x ? 'active' : ''}"></div>`).join('') }
         function moneyAnim(pid, amt, pos) { const el = document.querySelector(`.player-card:nth-child(${pid + 1})`); if (!el) return; const r = el.getBoundingClientRect(); const f = document.createElement('div'); f.className = `money-float ${pos ? 'pos' : 'neg'}`; f.textContent = `${pos ? '+' : '-'}${Math.abs(amt)}₺`; f.style.left = r.left + r.width / 2 + 'px'; f.style.top = r.top + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 800); const m = el.querySelector('.player-money'); if (m) { m.classList.remove('up', 'down'); void m.offsetWidth; m.classList.add(pos ? 'up' : 'down') } }
-        function chgMoney(p, amt) { p.money += amt; moneyAnim(p.id, amt, amt > 0) }
+        function chgMoney(p, amt) {
+            p.money += amt;
+            moneyAnim(p.id, amt, amt > 0);
+            if (amt !== 0) SND.play('coin');
+        }
+
         function rollDice() {
             if (G.rolled) {
                 console.log("Dice already rolled for this turn.");
@@ -2906,7 +2987,9 @@
             document.getElementById('rollBtn').disabled = true;
             document.getElementById('jailControls').style.display = 'none';
             const d1 = document.getElementById('d1'), d2 = document.getElementById('d2');
+            SND.play('dice');
             d1.classList.add('rolling'); d2.classList.add('rolling');
+
             setTimeout(() => {
                 let v1 = Math.floor(Math.random() * 6) + 1, v2 = Math.floor(Math.random() * 6) + 1;
                 // Cheat for fast dice if rule on
@@ -3080,7 +3163,10 @@
             chgMoney(p, -s.price); p.props.push(s.id);
             G.props[s.id] = { owner: p.id, houses: 0, mort: false };
             log(`✅ ${p.name} ${s.name} aldı!`, true);
+            SND.play('buy');
+            spawnConfetti();
             document.getElementById('buyBtn').disabled = true;
+
             document.getElementById('auctionBtn').disabled = true;
             document.getElementById('auctionBtn').style.display = 'none';
             G.pending = null;
@@ -3240,7 +3326,8 @@
                 setTimeout(aiPostTurn, 1600);
             }
         }
-        function goJail() { const p = G.players[G.cur]; p.pos = 10; p.jail = true; p.jt = 0; G.doubles = 0; log(`🔒 ${p.name} HAPİSTE!`, true); updateUI() }
+        function goJail() { const p = G.players[G.cur]; p.pos = 10; p.jail = true; p.jt = 0; G.doubles = 0; log(`🔒 ${p.name} HAPİSTE!`, true); SND.play('jail'); updateUI() }
+
         function updateOwners() {
             window.activeSQ.forEach((s, i) => {
                 const pr = G.props[i];
@@ -3466,7 +3553,10 @@
             if (act.length === 1) {
                 document.getElementById('winText').textContent = `${act[0].name} ${act[0].money.toLocaleString('tr-TR')}₺ ile kazandı!`;
                 document.getElementById('winModal').classList.add('active');
+                spawnConfetti();
+                setInterval(spawnConfetti, 2000);
             }
+
             updateOwners();
             updateUI();
         }
@@ -3510,8 +3600,10 @@
                     mapKey: document.getElementById('mapSelect') ? document.getElementById('mapSelect').value : 'turkiye',
                     gameLog: document.getElementById('gameLog').innerHTML,
                     selectedIcons: selectedIcons,
-                    theme: themeMatch ? themeMatch[1] : 'premium'
+                    theme: themeMatch ? themeMatch[1] : 'premium',
+                    sound: SND.enabled
                 };
+
                 localStorage.setItem('monopolx_autosave', JSON.stringify(data));
             } catch (e) { console.error("AutoSave failed", e); }
         }
@@ -3524,6 +3616,13 @@
                 G = data.G;
                 CHANCE = data.CHANCE;
                 CHEST = data.CHEST;
+
+                if (data.sound !== undefined) {
+                    SND.enabled = data.sound;
+                    const btn = document.getElementById('toggleSound');
+                    if (btn) btn.classList.toggle('on', SND.enabled);
+                }
+
 
                 if (data.selectedIcons) {
                     Object.assign(selectedIcons, data.selectedIcons);
