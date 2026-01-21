@@ -2595,21 +2595,36 @@
             };
 
             // const availableIcons = shuffle([...TOKEN_ICONS]); // No longer needed, using selectedIcons
-            G.players = activePlayers.map((c, i) => ({
-                id: i,
-                name: c.name.trim(),
-                color: c.color,
-                icon: c.icon, // Use selected icon
-                money: G.customRules.startMoney,
-                pos: 0,
-                props: [],
-                jail: false,
-                jt: 0,
-                out: false,
-                isAI: c.type.startsWith('ai'),
-                difficulty: c.type.split('-')[1] || null,
-                jailCards: 0
-            }));
+            G.players = activePlayers.map((c, i) => {
+                const types = ['Tycoon', 'Banker', 'Opportunist'];
+                const personality = c.type.startsWith('ai') ? types[Math.floor(Math.random() * types.length)] : 'Human';
+                return {
+                    id: i,
+                    name: c.name.trim(),
+                    color: c.color,
+                    icon: c.icon,
+                    money: G.customRules.startMoney,
+                    pos: 0,
+                    props: [],
+                    jail: false,
+                    jt: 0,
+                    out: false,
+                    isAI: c.type.startsWith('ai'),
+                    difficulty: c.type.split('-')[1] || null,
+                    personality: personality,
+                    jailCards: 0,
+                    stats: {
+                        earned: G.customRules.startMoney,
+                        rentPaid: 0,
+                        rentReceived: 0,
+                        jailTurns: 0,
+                        doubles: 0,
+                        taxPaid: 0,
+                        lands: 0
+                    }
+                };
+            });
+
 
             // Initialize customRules if missing property
             if (!G.customRules) G.customRules = { salary: 200, parkingPool: true };
@@ -2686,14 +2701,19 @@
             const price = s.price;
             let shouldBuy = false;
 
-            // AI Karar Mantığı
+            // AI Karar Mantığı + Kişilik Etkisi
+            let safeMargin = 150;
+            if (p.personality === 'Banker') safeMargin = 500;
+            if (p.personality === 'Tycoon') safeMargin = 0;
+
             if (p.difficulty === 'easy') {
                 shouldBuy = pool >= price && Math.random() > 0.5;
             } else if (p.difficulty === 'medium') {
-                shouldBuy = pool >= price + 150; // Biraz nakit sakla
+                shouldBuy = pool >= price + safeMargin;
             } else if (p.difficulty === 'hard') {
-                shouldBuy = pool >= price; // Agresif satın al
+                shouldBuy = pool >= price + (p.personality === 'Banker' ? 300 : -50);
             }
+
 
             if (shouldBuy) {
                 buyProp();
@@ -2755,13 +2775,18 @@
                 if (all) {
                     ids.forEach(x => {
                         const s = window.activeSQ[x], pr = G.props[x];
-                        const limit = 5; // G.customRules.infHouses ? 99 : 5; // infHouses removed from UI
-                        if (pr.houses < limit && p.money >= s.hc + 300) { // Daha güvenli bir para limiti
+                        const limit = 5;
+                        let margin = 300;
+                        if (p.personality === 'Tycoon') margin = 100;
+                        if (p.personality === 'Banker') margin = 700;
+
+                        if (pr.houses < limit && p.money >= s.hc + margin) {
                             buildHouse(x);
                         }
                     });
                 }
             });
+
 
             // AI Takas Başlatma Kontrolü (Sık olmasın)
             let tradePending = false;
@@ -2999,9 +3024,18 @@
                 const dbl = v1 === v2, tot = v1 + v2;
                 log(`🎲 ${p.name}: ${v1}+${v2}=${tot}${dbl ? ' ÇİFT!' : ''}`, dbl);
                 if (p.jail) {
+                    p.stats.jailTurns++;
                     if (dbl) { p.jail = false; p.jt = 0; log(`🔓 ${p.name} çift atarak çıktı!`, true); G.rolled = true; animMove(tot) }
-                    else { p.jt++; if (p.jt >= 3) { chgMoney(p, -50); p.jail = false; p.jt = 0; log(`⚖️ ${p.name} 3 tur bekleyip 50₺ ödedi`); G.rolled = true; document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn(); } else { log(`🔒 Hapiste (${p.jt}/3)`); G.rolled = true; document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn(); } }
-                } else { if (dbl) { G.doubles++; if (G.doubles >= 3) { log(`⚠️ ${p.name} 3 çift - HAPİS!`, true); goJail(); G.rolled = true; document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn(); return } } else { G.doubles = 0; G.rolled = true } animMove(tot) } updateUI()
+                    else { p.jt++; if (p.jt >= 3) { chgMoney(p, -50, 'tax'); p.jail = false; p.jt = 0; log(`⚖️ ${p.name} 3 tur bekleyip 50₺ ödedi`); G.rolled = true; document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn(); } else { log(`🔒 Hapiste (${p.jt}/3)`); G.rolled = true; document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn(); } }
+                } else {
+                    if (dbl) {
+                        p.stats.doubles++;
+                        G.doubles++;
+                        if (G.doubles >= 3) { log(`⚠️ ${p.name} 3 çift - HAPİS!`, true); goJail(); G.rolled = true; document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn(); return }
+                    } else { G.doubles = 0; G.rolled = true }
+                    animMove(tot)
+                } updateUI()
+
             }, 500)
         }
 
@@ -3130,8 +3164,10 @@
             } else {
                 document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
             }
+            p.stats.lands++;
             updateUI();
         }
+
         function handleProp(s) {
             const p = G.players[G.cur], pr = G.props[s.id];
             if (!pr) {
@@ -3147,12 +3183,13 @@
                 if (!ow.out && !pr.mort) {
                     const r = calcRent(s, pr);
                     if (p.money >= r) {
-                        chgMoney(p, -r); chgMoney(ow, r);
+                        chgMoney(p, -r, 'rent'); chgMoney(ow, r, 'rent');
                         playRentAnim(p.id, ow.id, r);
                         log(`💰 ${p.name} → ${ow.name}: ${r}₺ kira`);
                     } else bankrupt(ow.id)
                 }
                 document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
+
             } else {
                 log(`🏠 Kendi mülkünün üzerindesin: ${s.name}`); document.getElementById('endBtn').disabled = false; updateBuildBtn(); if (p.isAI) aiPostTurn();
             }
