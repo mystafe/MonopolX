@@ -104,14 +104,10 @@
             background: var(--board-bg);
             border: 12px solid #1a3317;
             border-radius: 15px;
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
             position: relative;
-            transform: rotateX(5deg);
-            transition: transform 0.5s ease;
-        }
-
-        .board:hover {
-            transform: rotateX(0deg);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
         }
 
 
@@ -184,9 +180,16 @@
             justify-content: center;
             z-index: 5000;
             overflow-y: auto;
+            transition: opacity 1s, visibility 1s;
             background-image:
                 radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 80% 80%, rgba(196, 30, 58, 0.1) 0%, transparent 40%);
+        }
+
+        .setup-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
         .setup-container {
@@ -594,18 +597,42 @@
         }
 
         .player-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
             padding: 12px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
         .player-card.active {
             border-color: var(--gold);
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
-            background: rgba(255, 215, 0, 0.08);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2), inset 0 0 15px rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.05);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .player-card.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: cardShine 3s infinite;
+        }
+
+        @keyframes cardShine {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         .player-card.bankrupt {
@@ -2079,7 +2106,7 @@
             </div>
         </div>
         <div class="credit-badge">MADE BY <span>MUSTAFA EVLEKSİZ</span> <small id="ver1"
-                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.3.1</small> ✨</div>
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.3.2</small> ✨</div>
 
     </div>
     <div class="game-wrapper" id="gameContainer" style="display:none">
@@ -2114,7 +2141,7 @@
                     onclick="location.reload()">
                     MONOPOLX</h1>
                 <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">BY MUSTAFA EVLEKSİZ <span id="ver2"
-                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.3.1</span></div>
+                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.3.2</span></div>
             </div>
             <h2 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.3rem; letter-spacing: 2px;">👥
                 OYUNCULAR</h2>
@@ -3973,10 +4000,8 @@
         // Keyboard Shortcuts
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
-                // Focuslanan bir input varsa space tuşunu engelleme (yazı yazılabilsin)
                 if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-
-                e.preventDefault(); // Sayfa kaymasını engelle
+                e.preventDefault();
 
                 const rollBtn = document.getElementById('rollBtn');
                 const endBtn = document.getElementById('endBtn');
@@ -3988,6 +4013,18 @@
                 }
             }
         });
+
+        // Dynamic 3D Board Tilt
+        document.addEventListener('mousemove', e => {
+            const board = document.querySelector('.board');
+            const setup = document.getElementById('setupScreen');
+            if (!board || (setup && !setup.classList.contains('hidden'))) return;
+
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            board.style.transform = `rotateX(${5 + y}deg) rotateY(${-x}deg)`;
+        });
+
         // Initialize setup screen UI
         window.addEventListener('load', () => {
             initIconSelectors();
