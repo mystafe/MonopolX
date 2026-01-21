@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MonopolX by Mustafa Evleksiz</title>
+    <meta name="theme-color" content="#FFD700">
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
+            });
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700;800&display=swap"
         rel="stylesheet">
     <style>
@@ -26,6 +35,7 @@
             min-height: 100vh;
             color: #fff;
             overflow-x: hidden;
+            font-size: 0.85rem;
         }
 
         /* Layout */
@@ -80,8 +90,8 @@
 
         .board-container {
             position: relative;
-            width: min(85vh, 85vw);
-            height: min(85vh, 85vw);
+            width: min(90vh, 90vw);
+            height: min(90vh, 90vw);
             perspective: 1200px;
         }
 
@@ -491,15 +501,15 @@
 
         @keyframes tokenPulse {
             0% {
-                transform: translateY(0) scale(1.1);
+                transform: translateY(0) scale(1.05);
             }
 
             50% {
-                transform: translateY(-5px) scale(1.3);
+                transform: translateY(-3px) scale(1.15);
             }
 
             100% {
-                transform: translateY(0) scale(1.1);
+                transform: translateY(0) scale(1.05);
             }
         }
 
@@ -517,12 +527,16 @@
 
             0%,
             100% {
-                transform: translateY(0);
+                transform: translateY(0) scale(1.1);
             }
 
             50% {
-                transform: translateY(-10px);
+                transform: translateY(-20px) scale(1.3);
             }
+        }
+
+        .token.jumping {
+            animation: tokenBounce 0.3s ease-in-out;
         }
 
         .token-red {
@@ -615,11 +629,11 @@
 
         .player-name {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
 
         .player-money {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 800;
             color: var(--gold);
         }
@@ -1894,12 +1908,21 @@
                         <div style="flex:1">
                             <input type="text" id="p1" value="Mustafa" maxlength="10"
                                 style="width:100%; margin-bottom:10px; background:transparent; border:none; border-bottom:1.5px solid rgba(255,255,255,0.1); color:white; font-size:1.1rem; padding:5px 0;">
-                            <select id="t1" class="player-type-select" style="width:100%" onchange="autoName(1)">
-                                <option value="human" selected>👤 İnsan</option>
-                                <option value="ai-easy">🤖 Kolay AI</option>
-                                <option value="ai-medium">🤖 Orta AI</option>
-                                <option value="ai-hard">🤖 Zor AI</option>
-                            </select>
+                            <div style="display:flex; gap:5px;">
+                                <select id="t1" class="player-type-select" style="flex:1"
+                                    onchange="autoName(1);togglePers(1)">
+                                    <option value="human" selected>👤 İnsan</option>
+                                    <option value="ai-easy">🤖 Kolay AI</option>
+                                    <option value="ai-medium">🤖 Orta AI</option>
+                                    <option value="ai-hard">🤖 Zor AI</option>
+                                </select>
+                                <select id="pers1" class="player-type-select" style="flex:1; display:none;">
+                                    <option value="Random">🎲 Rastgele</option>
+                                    <option value="Tycoon">💼 Kodaman</option>
+                                    <option value="Banker">🏦 Bankacı</option>
+                                    <option value="Opportunist">🦊 Fırsatçı</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -1909,12 +1932,21 @@
                         <div style="flex:1">
                             <input type="text" id="p2" value="Robot-1" maxlength="10"
                                 style="width:100%; margin-bottom:10px; background:transparent; border:none; border-bottom:1.5px solid rgba(255,255,255,0.1); color:white; font-size:1.1rem; padding:5px 0;">
-                            <select id="t2" class="player-type-select" style="width:100%" onchange="autoName(2)">
-                                <option value="human">👤 İnsan</option>
-                                <option value="ai-easy">🤖 Kolay AI</option>
-                                <option value="ai-medium">🤖 Orta AI</option>
-                                <option value="ai-hard" selected>🤖 Zor AI</option>
-                            </select>
+                            <div style="display:flex; gap:5px;">
+                                <select id="t2" class="player-type-select" style="flex:1"
+                                    onchange="autoName(2);togglePers(2)">
+                                    <option value="human">👤 İnsan</option>
+                                    <option value="ai-easy">🤖 Kolay AI</option>
+                                    <option value="ai-medium">🤖 Orta AI</option>
+                                    <option value="ai-hard" selected>🤖 Zor AI</option>
+                                </select>
+                                <select id="pers2" class="player-type-select" style="flex:1;">
+                                    <option value="Random">🎲 Rastgele</option>
+                                    <option value="Tycoon">💼 Kodaman</option>
+                                    <option value="Banker">🏦 Bankacı</option>
+                                    <option value="Opportunist">🦊 Fırsatçı</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -1924,13 +1956,22 @@
                         <div style="flex:1">
                             <input type="text" id="p3" value="Robot-2" maxlength="10"
                                 style="width:100%; margin-bottom:10px; background:transparent; border:none; border-bottom:1.5px solid rgba(255,255,255,0.1); color:white; font-size:1.1rem; padding:5px 0;">
-                            <select id="t3" class="player-type-select" style="width:100%" onchange="autoName(3)">
-                                <option value="none">--- (Kapalı)</option>
-                                <option value="human">👤 İnsan</option>
-                                <option value="ai-easy">🤖 Kolay AI</option>
-                                <option value="ai-medium">🤖 Orta AI</option>
-                                <option value="ai-hard" selected>🤖 Zor AI</option>
-                            </select>
+                            <div style="display:flex; gap:5px;">
+                                <select id="t3" class="player-type-select" style="flex:1"
+                                    onchange="autoName(3);togglePers(3)">
+                                    <option value="none">--- (Kapalı)</option>
+                                    <option value="human">👤 İnsan</option>
+                                    <option value="ai-easy">🤖 Kolay AI</option>
+                                    <option value="ai-medium">🤖 Orta AI</option>
+                                    <option value="ai-hard" selected>🤖 Zor AI</option>
+                                </select>
+                                <select id="pers3" class="player-type-select" style="flex:1;">
+                                    <option value="Random">🎲 Rastgele</option>
+                                    <option value="Tycoon">💼 Kodaman</option>
+                                    <option value="Banker">🏦 Bankacı</option>
+                                    <option value="Opportunist">🦊 Fırsatçı</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -1940,13 +1981,22 @@
                         <div style="flex:1">
                             <input type="text" id="p4" value="Robot-3" maxlength="10"
                                 style="width:100%; margin-bottom:10px; background:transparent; border:none; border-bottom:1.5px solid rgba(255,255,255,0.1); color:white; font-size:1.1rem; padding:5px 0;">
-                            <select id="t4" class="player-type-select" style="width:100%" onchange="autoName(4)">
-                                <option value="none">--- (Kapalı)</option>
-                                <option value="human">👤 İnsan</option>
-                                <option value="ai-easy" selected>🤖 Kolay AI</option>
-                                <option value="ai-medium">🤖 Orta AI</option>
-                                <option value="ai-hard">🤖 Zor AI</option>
-                            </select>
+                            <div style="display:flex; gap:5px;">
+                                <select id="t4" class="player-type-select" style="flex:1"
+                                    onchange="autoName(4);togglePers(4)">
+                                    <option value="none">--- (Kapalı)</option>
+                                    <option value="human">👤 İnsan</option>
+                                    <option value="ai-easy" selected>🤖 Kolay AI</option>
+                                    <option value="ai-medium">🤖 Orta AI</option>
+                                    <option value="ai-hard">🤖 Zor AI</option>
+                                </select>
+                                <select id="pers4" class="player-type-select" style="flex:1;">
+                                    <option value="Random">🎲 Rastgele</option>
+                                    <option value="Tycoon">💼 Kodaman</option>
+                                    <option value="Banker">🏦 Bankacı</option>
+                                    <option value="Opportunist">🦊 Fırsatçı</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2029,7 +2079,7 @@
             </div>
         </div>
         <div class="credit-badge">MADE BY <span>MUSTAFA EVLEKSİZ</span> <small id="ver1"
-                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.2.2</small> ✨</div>
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 5px;">v3.3.1</small> ✨</div>
 
     </div>
     <div class="game-wrapper" id="gameContainer" style="display:none">
@@ -2064,7 +2114,7 @@
                     onclick="location.reload()">
                     MONOPOLX</h1>
                 <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">BY MUSTAFA EVLEKSİZ <span id="ver2"
-                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.2.2</span></div>
+                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.3.1</span></div>
             </div>
             <h2 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.3rem; letter-spacing: 2px;">👥
                 OYUNCULAR</h2>
@@ -2407,6 +2457,11 @@
         };
 
         let currentPickingPlayer = null;
+        function togglePers(pIdx) {
+            const t = document.getElementById('t' + pIdx).value;
+            const pers = document.getElementById('pers' + pIdx);
+            if (pers) pers.style.display = t.startsWith('ai') ? 'block' : 'none';
+        }
 
         function initIconSelectors() {
             // No longer populates inline lists. Just initializes default previews.
@@ -2612,7 +2667,8 @@
                 ai_opportunist: "Opportunist",
                 human: "Human",
                 set_break: "I can't break my set!",
-                not_fair: "Found the offer insufficient."
+                not_fair: "Found the offer insufficient.",
+                counter: "suggests a better price:"
             }
         };
 
@@ -2688,10 +2744,10 @@
             window.activeSQ = getMapSQ(mapKey); // Globally accessible SQ for current game
 
             const configs = [
-                { id: 1, name: document.getElementById('p1').value, type: document.getElementById('t1').value, color: 'red', icon: selectedIcons[1] },
-                { id: 2, name: document.getElementById('p2').value, type: document.getElementById('t2').value, color: 'blue', icon: selectedIcons[2] },
-                { id: 3, name: document.getElementById('p3').value, type: document.getElementById('t3').value, color: 'green', icon: selectedIcons[3] },
-                { id: 4, name: document.getElementById('p4').value, type: document.getElementById('t4').value, color: 'yellow', icon: selectedIcons[4] }
+                { id: 1, name: document.getElementById('p1').value, type: document.getElementById('t1').value, color: 'red', icon: selectedIcons[1], pers: document.getElementById('pers1').value },
+                { id: 2, name: document.getElementById('p2').value, type: document.getElementById('t2').value, color: 'blue', icon: selectedIcons[2], pers: document.getElementById('pers2').value },
+                { id: 3, name: document.getElementById('p3').value, type: document.getElementById('t3').value, color: 'green', icon: selectedIcons[3], pers: document.getElementById('pers3').value },
+                { id: 4, name: document.getElementById('p4').value, type: document.getElementById('t4').value, color: 'yellow', icon: selectedIcons[4], pers: document.getElementById('pers4').value }
             ];
 
             const activePlayers = configs.filter(c => c.type !== 'none' && c.name.trim() !== '');
@@ -2709,7 +2765,10 @@
             // const availableIcons = shuffle([...TOKEN_ICONS]); // No longer needed, using selectedIcons
             G.players = activePlayers.map((c, i) => {
                 const types = ['Tycoon', 'Banker', 'Opportunist'];
-                const personality = c.type.startsWith('ai') ? types[Math.floor(Math.random() * types.length)] : 'Human';
+                let personality = 'Human';
+                if (c.type.startsWith('ai')) {
+                    personality = c.pers === 'Random' ? types[Math.floor(Math.random() * types.length)] : c.pers;
+                }
                 return {
                     id: i,
                     name: c.name.trim(),
@@ -3021,7 +3080,13 @@
                 log(`✅ ${receiver.name} takas teklifini kabul etti.`);
                 return true;
             } else {
-                log(`❌ ${receiver.name} takas teklifini yetersiz buldu. (Daha yüksek teklif bekliyor)`);
+                // Counter-offer logic: If price is close (within 20%), suggest a slightly higher price
+                if (data.myMoney > 0 && sValue >= rValue * threshold * 0.8 && !valuableToAI) {
+                    const suggested = Math.floor(rValue * threshold * 1.1);
+                    log(`🤔 ${receiver.name}: "${t('counter')} ${suggested}₺"`);
+                } else {
+                    log(`❌ ${receiver.name} ${t('not_fair')}`);
+                }
                 return false;
             }
         }
@@ -3205,6 +3270,16 @@
 
                 currentStep++;
                 p.pos = (p.pos + direction + 40) % 40;
+
+                // Visual Jump Effect
+                const b = document.getElementById('tok-' + p.pos);
+                if (b) {
+                    const jumpToken = document.createElement('div');
+                    jumpToken.className = `token token-${p.color} jumping`;
+                    jumpToken.innerHTML = p.icon;
+                    b.appendChild(jumpToken);
+                    setTimeout(() => jumpToken.remove(), 300);
+                }
 
                 if (direction > 0 && p.pos === 0) {
                     const sal = G.customRules.salary;

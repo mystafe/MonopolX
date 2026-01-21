@@ -1,0 +1,17 @@
+{
+  "name": "MonopolX",
+  "short_name": "MonopolX",
+  "description": "Premium Online Monopoly Experience",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050510",
+  "theme_color": "#FFD700",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2830/2830305.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
