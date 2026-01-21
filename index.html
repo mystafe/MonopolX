@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MonopolX by Mustafa Evleksiz</title>
     <meta name="theme-color" content="#FFD700">
-    <link rel="manifest" href="manifest.json">
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
-            });
+        // Only run Service Worker and manifest if on a server (avoids CORS errors on file://)
+        if (window.location.protocol.startsWith('http')) {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
+                });
+            }
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = 'manifest.json';
+            document.head.appendChild(link);
         }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700;800&display=swap"
@@ -49,10 +55,17 @@
         }
 
         .side-panel {
-            width: 300px;
+            width: 320px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         .center-panel {
@@ -90,9 +103,12 @@
 
         .board-container {
             position: relative;
-            width: min(90vh, 90vw);
-            height: min(90vh, 90vw);
-            perspective: 1200px;
+            width: min(88vh, 88vw);
+            height: min(88vh, 88vw);
+            perspective: 2000px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .board {
@@ -101,20 +117,40 @@
             display: grid;
             grid-template-columns: repeat(11, 1fr);
             grid-template-rows: repeat(11, 1fr);
-            background: var(--board-bg);
-            border: 12px solid #1a3317;
-            border-radius: 15px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+            background: #fff;
+            border: 15px solid #1a1a1a;
+            border-radius: 12px;
+            box-shadow:
+                0 40px 100px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(212, 175, 55, 0.2);
             position: relative;
+            transform: rotateX(25deg) rotateZ(0deg);
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* 3D Sides of the board */
+        .board::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            transform: translateZ(-30px);
+            border-radius: 12px;
+        }
+
+        .board-container:hover .board {
+            transform: rotateX(20deg) rotateZ(-2deg);
         }
 
 
         .board-center {
             grid-column: 2 / 11;
             grid-row: 2 / 11;
-            background: #D7F5D7;
+            background: transparent;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -126,12 +162,17 @@
             font-size: clamp(1.3rem, 4vw, 2rem);
             color: #c41e3a;
             transform: rotate(-15deg);
+            pointer-events: none;
+            /* Prevent blocking dice clicks */
+            user-select: none;
         }
 
         .dice-container {
             display: flex;
-            gap: 12px;
-            margin: 12px 0;
+            gap: 15px;
+            margin: 15px 0 5px 0;
+            pointer-events: auto;
+            /* Ensure dice remain clickable */
         }
 
         .dice {
@@ -173,14 +214,14 @@
         .setup-screen {
             position: fixed;
             inset: 0;
-            background: #020205;
+            z-index: 5000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 5000;
             overflow-y: auto;
-            transition: opacity 1.5s ease-in-out, visibility 1.5s;
+            background: #020205;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s, background 0.5s ease;
             padding: 40px 20px;
         }
 
@@ -188,11 +229,18 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: url('monopolx_hero_bg') no-repeat center center/cover;
-            opacity: 0.4;
-            filter: blur(5px) scale(1.1);
-            z-index: -1;
-            animation: bgZoom 20s infinite alternate ease-in-out;
+            /* Subtler gradient to let the amazing AI image shine through */
+            background: linear-gradient(to bottom, rgba(5, 5, 15, 0.3), rgba(5, 5, 15, 0.6)),
+                url('hero-bg.jpg') no-repeat center center/cover;
+            z-index: 0;
+            animation: bgZoom 40s infinite alternate ease-in-out;
+            opacity: 1;
+            filter: saturate(1.1) brightness(0.9);
+        }
+
+        .setup-screen>* {
+            position: relative;
+            z-index: 5;
         }
 
         @keyframes bgZoom {
@@ -209,25 +257,72 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transform: scale(1.1);
+            transform: scale(1.02);
         }
 
         .setup-container {
-            width: min(1000px, 95vw);
+            width: min(1050px, 95vw);
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 40px;
-            background: rgba(10, 10, 20, 0.4);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-radius: 30px;
-            padding: 50px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 30px;
+            background: rgba(10, 10, 25, 0.35);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
+            border-radius: 28px;
+            padding: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
             box-shadow:
-                0 50px 100px rgba(0, 0, 0, 0.8),
+                0 50px 100px rgba(0, 0, 0, 0.7),
                 inset 0 0 100px rgba(255, 215, 0, 0.05);
             position: relative;
             overflow: hidden;
+            animation: setupFadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes setupFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .setup-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+        }
+
+        .player-config-slot {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .player-config-slot:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .player-config-slot .token-preview {
+            width: 48px !important;
+            height: 48px !important;
+            font-size: 1.4rem !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .setup-container::after {
@@ -361,21 +456,23 @@
         }
 
         .square {
-            background: #f8fff9;
-            border: 1px solid #2d5a27;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.15);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: visible;
             cursor: pointer;
             font-size: clamp(6px, 1.2vw, 10px);
-            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, background 0.3s;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
         }
 
         .square:hover {
             z-index: 100;
-            transform: scale(1.15);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(1.1) translateZ(20px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+            background: #fff;
         }
 
         .square.owned {
@@ -391,12 +488,12 @@
 
             0%,
             100% {
-                box-shadow: 0 0 15px var(--gold);
+                box-shadow: 0 0 20px var(--gold);
                 outline: 3px solid var(--gold);
             }
 
             50% {
-                box-shadow: 0 0 30px var(--gold);
+                box-shadow: 0 0 35px var(--gold);
                 outline: 5px solid var(--gold);
             }
         }
@@ -961,13 +1058,105 @@
 
         @keyframes modalIn {
             from {
-                transform: scale(0.9);
+                transform: scale(0.85) translateY(30px);
                 opacity: 0;
             }
 
             to {
-                transform: scale(1);
+                transform: scale(1) translateY(0);
                 opacity: 1;
+            }
+        }
+
+        /* Physical Card Visuals and Animation */
+        #cardModal.active .modal {
+            animation: cardFlipIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #fff !important;
+            color: #222 !important;
+            border: none !important;
+            max-width: 340px;
+            padding: 0 !important;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
+        }
+
+        #cardModal .modal h2 {
+            margin: 0;
+            padding: 20px;
+            background: #ff9800;
+            color: white !important;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 2px;
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        #cardModal .card-inner {
+            padding: 35px 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: #fff;
+        }
+
+        #cardModal .card-icon {
+            font-size: 4rem;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            margin-bottom: 5px;
+        }
+
+        #cardModal .card-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: #333;
+            margin: 0;
+        }
+
+        #cardModal .modal-buttons {
+            padding: 15px 20px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+        }
+
+        #cardModal .btn-roll {
+            height: 48px !important;
+            font-size: 0.95rem !important;
+            padding: 0 !important;
+            width: 100%;
+        }
+
+        @keyframes cardFlipIn {
+            0% {
+                transform: rotateY(90deg) scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: rotateY(0deg) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 0 0 20px rgba(212, 175, 55, 0.4);
+            animation: goldPulse 2s infinite alternate;
+        }
+
+        @keyframes goldPulse {
+            from {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1.05);
             }
         }
 
@@ -1055,9 +1244,7 @@
             --font-main: 'Montserrat', sans-serif;
         }
 
-        .setup-screen.hidden {
-            display: none !important;
-        }
+
 
         /* Branding Badge */
         .credit-badge {
@@ -1144,6 +1331,17 @@
             border: 1px solid #ddd;
         }
 
+        body.theme-marble .board-center {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(5px);
+        }
+
+        body.theme-marble .dice {
+            background: #fff;
+            border: 2px solid #ccc;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
         body.theme-marble .btn-secondary:hover {
             background: #e5e5e5;
         }
@@ -1155,8 +1353,26 @@
         }
 
         body.theme-parchment .board {
-            border: 20px solid #3e2723;
+            border: 24px solid #3e2723;
             background: #fdf5e6 url('https://www.transparenttextures.com/patterns/old-mathematics.png') !important;
+            box-shadow:
+                0 30px 90px rgba(0, 0, 0, 0.4),
+                inset 0 0 100px rgba(62, 39, 35, 0.1);
+        }
+
+        body.theme-parchment .board-center {
+            background: rgba(253, 245, 230, 0.7) !important;
+            backdrop-filter: blur(3px);
+        }
+
+        body.theme-parchment .dice {
+            background: #fdf5e6;
+            border: 2px solid #a1887f;
+            box-shadow: 0 4px 10px rgba(62, 39, 35, 0.2);
+        }
+
+        body.theme-parchment .dice-dot {
+            background: #3e2723 !important;
         }
 
         body.theme-parchment .square {
@@ -1226,28 +1442,25 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        body.theme-premium .setup-container {
-            background: rgba(18, 20, 29, 0.4);
+
+
+        body.theme-premium .board {
+            background: #0f1118;
+            border: 15px solid #000;
+            box-shadow:
+                0 50px 120px rgba(0, 0, 0, 0.9),
+                0 0 60px rgba(212, 175, 55, 0.15);
         }
 
         body.theme-premium .board-center {
-            background: rgba(18, 20, 29, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.1);
-        }
-
-        body.theme-premium .square {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        body.theme-premium .square-name {
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            background: radial-gradient(circle, rgba(22, 33, 62, 0.4) 0%, rgba(7, 7, 10, 0.8) 100%);
+            backdrop-filter: blur(15px);
         }
 
         body.theme-premium .side-panel {
-            background: #0c0d12;
-            border-color: #1a1c23;
+            background: rgba(12, 13, 18, 0.8);
+            border-color: rgba(255, 215, 0, 0.1);
+            backdrop-filter: blur(20px);
         }
 
         body.theme-premium .player-card {
@@ -1260,32 +1473,9 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
-        .setup-screen {
-            position: fixed;
-            inset: 0;
-            background: #050508;
-            background-image: radial-gradient(circle at 50% 20%, #1a1c2c 0%, #050508 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 20px;
-            overflow-y: auto;
-        }
 
-        .setup-container {
-            background: rgba(18, 20, 29, 0.4);
-            backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-            padding: 40px;
-            border-radius: 30px;
-            max-width: 1100px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
+
+
 
         .icon-modal-grid {
             display: grid;
@@ -1383,24 +1573,30 @@
 
         .theme-card {
             flex: 1;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             cursor: pointer;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .theme-card.selected {
             border-color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .theme-card.selected span {
+            color: var(--gold);
+            font-weight: 700;
         }
 
         .theme-card div {
-            height: 40px;
-            border-radius: 5px;
-            margin-bottom: 8px;
+            height: 36px;
+            border-radius: 6px;
+            margin-bottom: 6px;
         }
 
 
@@ -1676,45 +1872,53 @@
             /* Setup Responsive - Compact */
             .setup-screen {
                 padding: 15px;
-                justify-content: safe flex-start;
+                padding-bottom: 30px;
+                justify-content: flex-start;
                 align-items: center;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .setup-container {
                 grid-template-columns: 1fr;
-                padding: 20px;
-                gap: 15px;
+                padding: 18px;
+                padding-bottom: 30px;
+                gap: 12px;
                 width: 100%;
-                border-radius: 16px;
-                margin: 10px 0;
+                border-radius: 20px;
+                margin: 5px 0;
+                max-height: none;
+                overflow: visible;
             }
 
             .setup-right {
                 border-left: none !important;
                 padding-left: 0 !important;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                padding-top: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                padding-top: 12px;
             }
 
             h1 {
-                font-size: 2.2rem !important;
-                letter-spacing: 12px !important;
+                font-size: 2rem !important;
+                letter-spacing: 10px !important;
             }
 
             .player-config-slot {
-                padding: 10px !important;
-                gap: 15px !important;
+                padding: 8px 12px !important;
+                gap: 10px !important;
+                border-radius: 12px;
             }
 
             .token-preview {
-                width: 50px !important;
-                height: 50px !important;
-                font-size: 1.5rem !important;
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1.3rem !important;
             }
 
             .btn-roll {
-                height: 55px !important;
-                font-size: 0.9rem !important;
+                height: 50px !important;
+                font-size: 0.85rem !important;
+                border-radius: 12px !important;
             }
 
             .board-center {
@@ -1767,6 +1971,39 @@
 
             .modal p {
                 font-size: 0.8rem !important;
+            }
+
+            /* Icon Picker Modal Mobil */
+            #iconModal .modal {
+                max-width: 95vw !important;
+                max-height: 80vh !important;
+                padding: 15px !important;
+            }
+
+            #iconModal .icon-modal-grid {
+                grid-template-columns: repeat(6, 1fr) !important;
+                gap: 8px !important;
+                max-height: 40vh !important;
+                overflow-y: auto !important;
+            }
+
+            #iconModal .icon-opt-big {
+                font-size: 1.5rem !important;
+                padding: 8px !important;
+            }
+
+            /* Rules-scroll mobil düzeltmesi */
+            .rules-scroll {
+                max-height: none !important;
+                overflow-y: visible !important;
+            }
+
+            /* Start button daha belirgin */
+            .setup-right .btn-roll {
+                min-height: 55px !important;
+                font-size: 1rem !important;
+                font-weight: 800 !important;
+                margin-top: 15px;
             }
         }
 
@@ -1971,14 +2208,12 @@
                     <span style="font-size: 1.4rem;">👥</span> RAKİPLERİNİZİ SEÇİN
                 </h3>
                 <div id="playerConfigs" style="display: flex; flex-direction: column; gap: 15px;">
-                    <div class="player-config-slot" data-p="1"
-                        style="display:flex; align-items:center; gap:20px; background:rgba(255,255,255,0.03); padding:18px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); transition: 0.3s;">
-                        <div class="token-preview token-red" id="preview-p1" onclick="openIconPicker(1)"
-                            style="cursor: pointer; transform: scale(1.2);">🚗</div>
+                    <div class="player-config-slot" data-p="1">
+                        <div class="token-preview token-red" id="preview-p1" onclick="openIconPicker(1)">🚗</div>
                         <div style="flex:1">
                             <input type="text" id="p1" value="Mustafa" maxlength="10" placeholder="İsim Girin"
-                                style="width:100%; margin-bottom:8px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:1rem; padding:5px 0; font-weight: 600; outline: none;">
-                            <div style="display:flex; gap:8px;">
+                                style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
+                            <div style="display:flex; gap:6px;">
                                 <select id="t1" class="player-type-select" style="flex:1"
                                     onchange="autoName(1);togglePers(1)">
                                     <option value="human" selected>👤 İnsan</option>
@@ -1996,14 +2231,12 @@
                         </div>
                     </div>
                     <!-- P2 -->
-                    <div class="player-config-slot" data-p="2"
-                        style="display:flex; align-items:center; gap:20px; background:rgba(255,255,255,0.03); padding:18px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); transition: 0.3s;">
-                        <div class="token-preview token-blue" id="preview-p2" onclick="openIconPicker(2)"
-                            style="cursor: pointer; transform: scale(1.2);">🎩</div>
+                    <div class="player-config-slot" data-p="2">
+                        <div class="token-preview token-blue" id="preview-p2" onclick="openIconPicker(2)">🎩</div>
                         <div style="flex:1">
                             <input type="text" id="p2" value="Robot-1" maxlength="10"
-                                style="width:100%; margin-bottom:8px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:1rem; padding:5px 0; font-weight: 600; outline: none;">
-                            <div style="display:flex; gap:8px;">
+                                style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
+                            <div style="display:flex; gap:6px;">
                                 <select id="t2" class="player-type-select" style="flex:1"
                                     onchange="autoName(2);togglePers(2)">
                                     <option value="human">👤 İnsan</option>
@@ -2021,14 +2254,12 @@
                         </div>
                     </div>
                     <!-- P3 -->
-                    <div class="player-config-slot" data-p="3"
-                        style="display:flex; align-items:center; gap:20px; background:rgba(255,255,255,0.03); padding:18px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); transition: 0.3s;">
-                        <div class="token-preview token-green" id="preview-p3" onclick="openIconPicker(3)"
-                            style="cursor: pointer; transform: scale(1.2);">🐕</div>
+                    <div class="player-config-slot" data-p="3">
+                        <div class="token-preview token-green" id="preview-p3" onclick="openIconPicker(3)">🐕</div>
                         <div style="flex:1">
                             <input type="text" id="p3" value="Robot-2" maxlength="10"
-                                style="width:100%; margin-bottom:8px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:1rem; padding:5px 0; font-weight: 600; outline: none;">
-                            <div style="display:flex; gap:8px;">
+                                style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
+                            <div style="display:flex; gap:6px;">
                                 <select id="t3" class="player-type-select" style="flex:1"
                                     onchange="autoName(3);togglePers(3)">
                                     <option value="none">--- (Kapalı)</option>
@@ -2047,14 +2278,12 @@
                         </div>
                     </div>
                     <!-- P4 -->
-                    <div class="player-config-slot" data-p="4"
-                        style="display:flex; align-items:center; gap:20px; background:rgba(255,255,255,0.03); padding:18px; border-radius:20px; border:1px solid rgba(255,255,255,0.05); transition: 0.3s;">
-                        <div class="token-preview token-yellow" id="preview-p4" onclick="openIconPicker(4)"
-                            style="cursor: pointer; transform: scale(1.2);">🦖</div>
+                    <div class="player-config-slot" data-p="4">
+                        <div class="token-preview token-yellow" id="preview-p4" onclick="openIconPicker(4)">🦖</div>
                         <div style="flex:1">
                             <input type="text" id="p4" value="Robot-3" maxlength="10"
-                                style="width:100%; margin-bottom:8px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:1rem; padding:5px 0; font-weight: 600; outline: none;">
-                            <div style="display:flex; gap:8px;">
+                                style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
+                            <div style="display:flex; gap:6px;">
                                 <select id="t4" class="player-type-select" style="flex:1"
                                     onchange="autoName(4);togglePers(4)">
                                     <option value="none">--- (Kapalı)</option>
@@ -2081,8 +2310,10 @@
                     <select id="mapSelect" class="player-type-select"
                         style="flex:1; height:50px; border-color:rgba(255,255,255,0.1); background:rgba(255,255,255,0.05);">
                         <option value="turkiye" selected>🇹🇷 Türkiye Turu</option>
+                        <option value="superlig">⚽ Süper Lig</option>
                         <option value="istanbul">🏙️ İstanbul Boğazı</option>
                         <option value="world">🗺️ Global Cities</option>
+                        <option value="mars">🚀 Mars Kolonisi</option>
                     </select>
                     <div
                         style="background:rgba(255, 61, 0, 0.1); padding:10px; border-radius:12px; border:1px solid rgba(255, 61, 0, 0.2); display:flex; align-items:center; gap:8px;">
@@ -2138,31 +2369,24 @@
                         <label>RASTGELE BAŞLANGIÇ</label>
                         <div class="rule-toggle on" id="toggleRandomStart" onclick="this.classList.toggle('on')"></div>
                     </div>
-                    <div class="rule-item"
-                        style="border-color: rgba(255, 61, 0, 0.3); display:flex; justify-content:space-between; align-items:center;">
-                        <label style="color: #ff3d00;">🔥 CHALLENGE MODE</label>
-                        <input type="checkbox" id="challengeMode"
-                            style="width:20px; height:20px; accent-color: #ff3d00;">
+                    <div class="rule-item">
+                        <label>OTOMATİK TUR GEÇİŞİ</label>
+                        <div class="rule-toggle" id="toggleAutoEnd" onclick="this.classList.toggle('on')"></div>
                     </div>
                 </div>
 
-                <button class="btn btn-roll"
-                    style="width:100%; height:75px; font-size:1.4rem; letter-spacing:6px; border-radius:20px; background: linear-gradient(135deg, #FFD700, #B8860B); color:#000; font-weight:900; border:none; cursor:pointer; transition:all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3);"
-                    onmouseover="this.style.transform='translateY(-5px) scale(1.02)'; this.style.boxShadow='0 25px 50px rgba(212,175,55,0.5)'"
-                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 40px rgba(212, 175, 55, 0.3)'"
-                    onclick="startGame()">OYUNA BAŞLA</button>
+                <button class="btn btn-roll" style="width:100%" onclick="startGame()">OYUNA BAŞLA</button>
 
                 <button id="resumeBtn" class="btn btn-secondary"
-                    style="width:100%; margin-top:15px; height:50px; font-size:0.8rem; letter-spacing:2px; border-radius:15px; display:none; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1);"
+                    style="width:100%; margin-top:12px; height:50px; border-radius:15px; display:none;"
                     onclick="loadGame()">ÖNCEKİ OYUNA DEVAM ET</button>
             </div>
         </div>
 
-        <div class="credit-badge"
-            style="margin-top: 40px; background: rgba(0,0,0,0.4); padding: 12px 25px; border-radius: 50px; border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px);">
+        <div class="credit-badge">
             MADE BY <span style="color: var(--gold); font-weight: 800;">MUSTAFA EVLEKSİZ</span>
             <small id="ver1"
-                style="opacity: 0.6; font-size: 0.6rem; margin-left: 10px; font-weight: 900; letter-spacing: 1px;">v3.5.0</small>
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 10px; font-weight: 900;">v3.5.7</small>
         </div>
     </div>
     <div class="game-wrapper" id="gameContainer" style="display:none">
@@ -2276,6 +2500,12 @@
                         <span id="speedVal" style="color:var(--gold)">ŞİMŞEK</span></label>
                     <input type="range" id="speedRange" min="50" max="350" value="350" step="10"
                         style="width: 100%; cursor: pointer; accent-color: var(--gold);" oninput="updateSpeedDisp()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">3D TAHTA
+                            EFEKTİ</span>
+                        <div class="rule-toggle on" id="toggle3D" onclick="toggle3DEffect()"
+                            style="transform:scale(0.8)"></div>
+                    </div>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
                         <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">SES
                             EFEKTLERİ</span>
@@ -2427,8 +2657,19 @@
                 <label style="font-size:0.75rem; font-weight:700; opacity:0.6; display:block; margin-bottom:8px;">OYUN
                     HIZI</label>
                 <input type="range" id="speedRangeMob" min="50" max="350" value="350" step="10"
-                    style="width: 100%; cursor: pointer; accent-color: var(--gold);"
+                    style="width: 100%; cursor: pointer; accent-color: var(--gold); margin-bottom: 20px;"
                     oninput="document.getElementById('speedRange').value = this.value; updateSpeedDisp()">
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <span style="font-size:0.75rem; font-weight:700; opacity:0.6;">3D TAHTA</span>
+                    <div class="rule-toggle on" id="toggle3DMob" onclick="toggle3DEffect()"
+                        style="transform:scale(0.8)"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <span style="font-size:0.75rem; font-weight:700; opacity:0.6;">SES EFEKTLERİ</span>
+                    <div class="rule-toggle on" id="toggleSoundMob" onclick="toggleSoundEffect()"
+                        style="transform:scale(0.8)"></div>
+                </div>
             </div>
             <div class="modal-buttons" style="margin-top:20px;">
                 <button class="btn btn-secondary" style="width:100%"
@@ -2555,8 +2796,9 @@
 
         function openIconPicker(playerNum) {
             currentPickingPlayer = playerNum;
-            filterIcons('all', document.querySelector('#iconCategories .active'));
-            document.getElementById('iconModal').style.display = 'flex';
+            const allBtn = document.querySelector('#iconCategories .icon-category-btn') || { classList: { add: () => { } } };
+            filterIcons('all', allBtn);
+            document.getElementById('iconModal').classList.add('active');
         }
 
         function filterIcons(cat, btn) {
@@ -2565,13 +2807,13 @@
 
             // UI Toggle
             document.querySelectorAll('.icon-category-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if (btn && btn.classList) btn.classList.add('active');
 
             let list = [];
             if (cat === 'all') {
                 Object.values(CATEGORIZED_ICONS).forEach(l => list = list.concat(l));
             } else {
-                list = CATEGORIZED_ICONS[cat];
+                list = CATEGORIZED_ICONS[cat] || [];
             }
 
             // Remove duplicates
@@ -2581,10 +2823,16 @@
                 const opt = document.createElement('div');
                 opt.className = 'icon-opt-big';
                 opt.textContent = icon;
-                if (Object.values(selectedIcons).includes(icon)) {
-                    opt.style.opacity = '0.3';
+
+                // Real-time check if icon is already used by another player
+                const isUsed = Object.entries(selectedIcons).some(([p, i]) => i === icon && parseInt(p) !== currentPickingPlayer);
+
+                if (isUsed) {
+                    opt.style.opacity = '0.2';
+                    opt.style.filter = 'grayscale(1)';
                     opt.style.pointerEvents = 'none';
                 }
+
                 opt.onclick = () => {
                     selectIcon(currentPickingPlayer, icon);
                     closeModal('iconModal');
@@ -2608,7 +2856,48 @@
             document.getElementById(`theme-${themeName}`).classList.add('selected');
         }
 
-        const SQ = [{ id: 0, name: "BAŞLA", type: "go" }, { id: 1, name: "Akdeniz Cd.", type: "property", color: "#8B4513", price: 60, rent: [2, 10, 30, 90, 160, 250], hc: 50, g: "brown" }, { id: 2, name: "Sandık", type: "chest" }, { id: 3, name: "Marmara Sk.", type: "property", color: "#8B4513", price: 60, rent: [4, 20, 60, 180, 320, 450], hc: 50, g: "brown" }, { id: 4, name: "Gelir Vergisi", type: "tax", amount: 200 }, { id: 5, name: "Haydarpaşa", type: "railroad", price: 200, rent: [25, 50, 100, 200] }, { id: 6, name: "Ege Blv.", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" }, { id: 7, name: "Şans", type: "chance" }, { id: 8, name: "Karadeniz Cd.", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" }, { id: 9, name: "Trakya Sk.", type: "property", color: "#87CEEB", price: 120, rent: [8, 40, 100, 300, 450, 600], hc: 50, g: "lightblue" }, { id: 10, name: "HAPİS", type: "jail" }, { id: 11, name: "Ankara Cd.", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" }, { id: 12, name: "Elektrik Şti.", type: "utility", price: 150 }, { id: 13, name: "İzmir Sk.", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" }, { id: 14, name: "Bursa Blv.", type: "property", color: "#FF69B4", price: 160, rent: [12, 60, 180, 500, 700, 900], hc: 100, g: "pink" }, { id: 15, name: "Sirkeci", type: "railroad", price: 200, rent: [25, 50, 100, 200] }, { id: 16, name: "Antalya Cd.", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" }, { id: 17, name: "Sandık", type: "chest" }, { id: 18, name: "Adana Sk.", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" }, { id: 19, name: "Konya Blv.", type: "property", color: "#FFA500", price: 200, rent: [16, 80, 220, 600, 800, 1000], hc: 100, g: "orange" }, { id: 20, name: "PARK", type: "parking" }, { id: 21, name: "Trabzon Cd.", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" }, { id: 22, name: "Şans", type: "chance" }, { id: 23, name: "Samsun Sk.", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" }, { id: 24, name: "Erzurum Blv.", type: "property", color: "#FF0000", price: 240, rent: [20, 100, 300, 750, 925, 1100], hc: 150, g: "red" }, { id: 25, name: "Ankara İst.", type: "railroad", price: 200, rent: [25, 50, 100, 200] }, { id: 26, name: "Eskişehir Cd.", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" }, { id: 27, name: "Kayseri Sk.", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" }, { id: 28, name: "Su Şti.", type: "utility", price: 150 }, { id: 29, name: "Gaziantep", type: "property", color: "#FFFF00", price: 280, rent: [24, 120, 360, 850, 1025, 1200], hc: 150, g: "yellow" }, { id: 30, name: "HAPİSE GİT", type: "gotojail" }, { id: 31, name: "Bodrum Cd.", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" }, { id: 32, name: "Marmaris Sk.", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" }, { id: 33, name: "Sandık", type: "chest" }, { id: 34, name: "Fethiye Blv.", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" }, { id: 35, name: "İstanbul İst.", type: "railroad", price: 200, rent: [25, 50, 100, 200] }, { id: 36, name: "Şans", type: "chance" }, { id: 37, name: "Nişantaşı", type: "property", color: "#0000CD", price: 350, rent: [35, 175, 500, 1100, 1300, 1500], hc: 200, g: "darkblue" }, { id: 38, name: "Lüks Vergisi", type: "tax", amount: 100 }, { id: 39, name: "Bağdat Cd.", type: "property", color: "#0000CD", price: 400, rent: [50, 200, 600, 1400, 1700, 2000], hc: 200, g: "darkblue" }];
+        const SQ = [
+            { id: 0, name: "BAŞLA", type: "go" },
+            { id: 1, name: "Şırnak", type: "property", color: "#8B4513", price: 60, rent: [2, 10, 30, 90, 160, 250], hc: 50, g: "brown" },
+            { id: 2, name: "Sandık", type: "chest" },
+            { id: 3, name: "Hakkari", type: "property", color: "#8B4513", price: 60, rent: [4, 20, 60, 180, 320, 450], hc: 50, g: "brown" },
+            { id: 4, name: "Gelir Vergisi", type: "tax", amount: 200 },
+            { id: 5, name: "Marmaray", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+            { id: 6, name: "Erzurum", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" },
+            { id: 7, name: "Şans", type: "chance" },
+            { id: 8, name: "Trabzon", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" },
+            { id: 9, name: "Samsun", type: "property", color: "#87CEEB", price: 120, rent: [8, 40, 100, 300, 450, 600], hc: 50, g: "lightblue" },
+            { id: 10, name: "HAPİS", type: "jail" },
+            { id: 11, name: "Diyarbakır", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" },
+            { id: 12, name: "Elektrik Şti.", type: "utility", price: 150 },
+            { id: 13, name: "Şanlıurfa", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" },
+            { id: 14, name: "Malatya", type: "property", color: "#FF69B4", price: 160, rent: [12, 60, 180, 500, 700, 900], hc: 100, g: "pink" },
+            { id: 15, name: "Sirkeci", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+            { id: 16, name: "Çanakkale", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" },
+            { id: 17, name: "Sandık", type: "chest" },
+            { id: 18, name: "Edirne", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" },
+            { id: 19, name: "Balıkesir", type: "property", color: "#FFA500", price: 200, rent: [16, 80, 220, 600, 800, 1000], hc: 100, g: "orange" },
+            { id: 20, name: "PARK", type: "parking" },
+            { id: 21, name: "Konya", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" },
+            { id: 22, name: "Şans", type: "chance" },
+            { id: 23, name: "Kayseri", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" },
+            { id: 24, name: "Eskişehir", type: "property", color: "#FF0000", price: 240, rent: [20, 100, 300, 750, 925, 1100], hc: 150, g: "red" },
+            { id: 25, name: "Ankara İst.", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+            { id: 26, name: "Adana", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" },
+            { id: 27, name: "Mersin", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" },
+            { id: 28, name: "Su Şti.", type: "utility", price: 150 },
+            { id: 29, name: "Gaziantep", type: "property", color: "#FFFF00", price: 280, rent: [24, 120, 360, 850, 1025, 1200], hc: 150, g: "yellow" },
+            { id: 30, name: "HAPİSE GİT", type: "gotojail" },
+            { id: 31, name: "Bursa", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" },
+            { id: 32, name: "Antalya", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" },
+            { id: 33, name: "Sandık", type: "chest" },
+            { id: 34, name: "İzmir", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" },
+            { id: 35, name: "İstanbul İst.", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+            { id: 36, name: "Şans", type: "chance" },
+            { id: 37, name: "Ankara", type: "property", color: "#0000CD", price: 350, rent: [35, 175, 500, 1100, 1300, 1500], hc: 200, g: "darkblue" },
+            { id: 38, name: "Lüks Vergisi", type: "tax", amount: 100 },
+            { id: 39, name: "İstanbul", type: "property", color: "#0000CD", price: 400, rent: [50, 200, 600, 1400, 1700, 2000], hc: 200, g: "darkblue" }
+        ];
         const GR = { brown: [1, 3], lightblue: [6, 8, 9], pink: [11, 13, 14], orange: [16, 18, 19], red: [21, 23, 24], yellow: [26, 27, 29], green: [31, 32, 34], darkblue: [37, 39], railroad: [5, 15, 25, 35], utility: [12, 28] };
         let CHANCE = [{ t: "Başlangıca git, 200₺ al!", a: "goto", to: 0, c: 200 }, { t: "Haydarpaşa'ya git.", a: "goto", to: 5 }, { t: "3 kare geri.", a: "move", s: -3 }, { t: "Hapise git!", a: "jail" }, { t: "50₺ kazan!", a: "get", m: 50 }, { t: "15₺ ceza.", a: "pay", m: 15 }, { t: "150₺ kazan!", a: "get", m: 150 }, { t: "Tamir: Ev 25₺, Otel 100₺", a: "repair", h: 25, o: 100 }, { t: "Ücretsiz Hapisten Çıkış Kartı!", a: "jailfree" }];
         let CHEST = [{ t: "Başlangıca git, 200₺ al!", a: "goto", to: 0, c: 200 }, { t: "Banka hatası: 200₺!", a: "get", m: 200 }, { t: "Doktor: 50₺", a: "pay", m: 50 }, { t: "Hisse: 50₺", a: "get", m: 50 }, { t: "Hapise git!", a: "jail" }, { t: "Tatil: 100₺", a: "get", m: 100 }, { t: "Vergi iadesi: 20₺", a: "get", m: 20 }, { t: "Miras: 100₺", a: "get", m: 100 }, { t: "Ücretsiz Hapisten Çıkış Kartı!", a: "jailfree" }];
@@ -2664,7 +2953,9 @@
         function toggleSoundEffect() {
             SND.enabled = !SND.enabled;
             const btn = document.getElementById('toggleSound');
+            const mobBtn = document.getElementById('toggleSoundMob');
             if (btn) btn.classList.toggle('on', SND.enabled);
+            if (mobBtn) mobBtn.classList.toggle('on', SND.enabled);
             autoSave();
         }
 
@@ -2815,6 +3106,58 @@
                 { id: 26, name: "Sydney", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" }, { id: 27, name: "Melbourne", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" }, { id: 28, name: "Water Works", type: "utility", price: 150 }, { id: 29, name: "Auckland", type: "property", color: "#FFFF00", price: 280, rent: [24, 120, 360, 850, 1025, 1200], hc: 150, g: "yellow" }, { id: 30, name: "GO TO JAIL", type: "gotojail" },
                 { id: 31, name: "Rio de Janeiro", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" }, { id: 32, name: "Buenos Aires", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" }, { id: 33, name: "Chest", type: "chest" }, { id: 34, name: "Santiago", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" }, { id: 35, name: "Short Line", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
                 { id: 36, name: "Chance", type: "chance" }, { id: 37, name: "London", type: "property", color: "#0000CD", price: 350, rent: [35, 175, 500, 1100, 1300, 1500], hc: 200, g: "darkblue" }, { id: 38, name: "Luxury Tax", type: "tax", amount: 100 }, { id: 39, name: "New York", type: "property", color: "#0000CD", price: 400, rent: [50, 200, 600, 1400, 1700, 2000], hc: 200, g: "darkblue" }
+            ],
+            superlig: [
+                { id: 0, name: "BAŞLA", type: "go" },
+                { id: 1, name: "İstanbulspor", type: "property", color: "#8B4513", price: 60, rent: [2, 10, 30, 90, 160, 250], hc: 50, g: "brown" },
+                { id: 2, name: "Sandık", type: "chest" },
+                { id: 3, name: "Pendikspor", type: "property", color: "#8B4513", price: 60, rent: [4, 20, 60, 180, 320, 450], hc: 50, g: "brown" },
+                { id: 4, name: "TFF Kesintisi", type: "tax", amount: 200 },
+                { id: 5, name: "Atatürk Olimpiyat", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 6, name: "Rizespor", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" },
+                { id: 7, name: "VAR", type: "chance" },
+                { id: 8, name: "Ankaragücü", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" },
+                { id: 9, name: "Kasımpaşa", type: "property", color: "#87CEEB", price: 120, rent: [8, 40, 100, 300, 450, 600], hc: 50, g: "lightblue" },
+                { id: 10, name: "CEZA", type: "jail" },
+                { id: 11, name: "Sivasspor", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" },
+                { id: 12, name: "Passolig", type: "utility", price: 150 },
+                { id: 13, name: "Antalyaspor", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" },
+                { id: 14, name: "Alanyaspor", type: "property", color: "#FF69B4", price: 160, rent: [12, 60, 180, 500, 700, 900], hc: 100, g: "pink" },
+                { id: 15, name: "Vodafone Park", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 16, name: "Kayserispor", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" },
+                { id: 17, name: "Sandık", type: "chest" },
+                { id: 18, name: "Konyaspor", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" },
+                { id: 19, name: "Gaziantep FK", type: "property", color: "#FFA500", price: 200, rent: [16, 80, 220, 600, 800, 1000], hc: 100, g: "orange" },
+                { id: 20, name: "MİLLİ ARA", type: "parking" },
+                { id: 21, name: "Adana Demir", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" },
+                { id: 22, name: "VAR", type: "chance" },
+                { id: 23, name: "Başakşehir", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" },
+                { id: 24, name: "Trabzonspor", type: "property", color: "#FF0000", price: 240, rent: [20, 100, 300, 750, 925, 1100], hc: 150, g: "red" },
+                { id: 25, name: "Şükrü Saracoğlu", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 26, name: "Samsunspor", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" },
+                { id: 27, name: "Göztepe", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" },
+                { id: 28, name: "beIN Sports", type: "utility", price: 150 },
+                { id: 29, name: "Hatayspor", type: "property", color: "#FFFF00", price: 280, rent: [24, 120, 360, 850, 1025, 1200], hc: 150, g: "yellow" },
+                { id: 30, name: "KIRMIZI KART", type: "gotojail" },
+                { id: 31, name: "Beşiktaş", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" },
+                { id: 32, name: "Fenerbahçe", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" },
+                { id: 33, name: "Sandık", type: "chest" },
+                { id: 34, name: "Trabzonspor", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" },
+                { id: 35, name: "Nef Stadyumu", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 36, name: "VAR", type: "chance" },
+                { id: 37, name: "ŞAMPİYONLAR LİGİ", type: "property", color: "#0000CD", price: 380, rent: [40, 180, 550, 1200, 1400, 1600], hc: 200, g: "darkblue" },
+                { id: 38, name: "UEFA Cezası", type: "tax", amount: 100 },
+                { id: 39, name: "GALATASARAY", type: "property", color: "#0000CD", price: 450, rent: [60, 250, 700, 1600, 1900, 2200], hc: 200, g: "darkblue" }
+            ],
+            mars: [
+                { id: 0, name: "BAŞLA", type: "go" }, { id: 1, name: "Toz Bulutu", type: "property", color: "#8B4513", price: 60, rent: [2, 10, 30, 90, 160, 250], hc: 50, g: "brown" }, { id: 2, name: "İkmal", type: "chest" }, { id: 3, name: "Kızıl Vadi", type: "property", color: "#8B4513", price: 60, rent: [4, 20, 60, 180, 320, 450], hc: 50, g: "brown" }, { id: 4, name: "Oksijen Vergisi", type: "tax", amount: 200 }, { id: 5, name: "Roket Üssü Alpha", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 6, name: "Olympus Mons", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" }, { id: 7, name: "Sinyal", type: "chance" }, { id: 8, name: "Tharsis Planum", type: "property", color: "#87CEEB", price: 100, rent: [6, 30, 90, 270, 400, 550], hc: 50, g: "lightblue" }, { id: 9, name: "Valles Marineris", type: "property", color: "#87CEEB", price: 120, rent: [8, 40, 100, 300, 450, 600], hc: 50, g: "lightblue" }, { id: 10, name: "KARANTİNA", type: "jail" },
+                { id: 11, name: "Elysium", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" }, { id: 12, name: "Güneş Panelleri", type: "utility", price: 150 }, { id: 13, name: "Utopia Planitia", type: "property", color: "#FF69B4", price: 140, rent: [10, 50, 150, 450, 625, 750], hc: 100, g: "pink" }, { id: 14, name: "Hellas Planitia", type: "property", color: "#FF69B4", price: 160, rent: [12, 60, 180, 500, 700, 900], hc: 100, g: "pink" }, { id: 15, name: "Işınlanma Kapısı", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 16, name: "Curiosity Üssü", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" }, { id: 17, name: "İkmal", type: "chest" }, { id: 18, name: "Perseverance", type: "property", color: "#FFA500", price: 180, rent: [14, 70, 200, 550, 750, 950], hc: 100, g: "orange" }, { id: 19, name: "Zhurong", type: "property", color: "#FFA500", price: 200, rent: [16, 80, 220, 600, 800, 1000], hc: 100, g: "orange" }, { id: 20, name: "YERÇEKİMSİZ ALAN", type: "parking" },
+                { id: 21, name: "Arsia Mons", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" }, { id: 22, name: "Sinyal", type: "chance" }, { id: 23, name: "Pavonis Mons", type: "property", color: "#FF0000", price: 220, rent: [18, 90, 250, 700, 875, 1050], hc: 150, g: "red" }, { id: 24, name: "Ascraeus Mons", type: "property", color: "#FF0000", price: 240, rent: [20, 100, 300, 750, 925, 1100], hc: 150, g: "red" }, { id: 25, name: "Roket Üssü Beta", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 26, name: "Gale Krateri", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" }, { id: 27, name: "Endeavour", type: "property", color: "#FFFF00", price: 260, rent: [22, 110, 330, 800, 975, 1150], hc: 150, g: "yellow" }, { id: 28, name: "Su Sondajı", type: "utility", price: 150 }, { id: 29, name: "Terra Cimmeria", type: "property", color: "#FFFF00", price: 280, rent: [24, 120, 360, 850, 1025, 1200], hc: 150, g: "yellow" }, { id: 30, name: "DÜNYA'YA ATILDI", type: "gotojail" },
+                { id: 31, name: "Buzul Gölü", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" }, { id: 32, name: "Kristal Şehir", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" }, { id: 33, name: "İkmal", type: "chest" }, { id: 34, name: "Dome-1", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" }, { id: 35, name: "Solaris İstasyonu", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
+                { id: 36, name: "Sinyal", type: "chance" }, { id: 37, name: "Kubbe Şehir", type: "property", color: "#0000CD", price: 350, rent: [35, 175, 500, 1100, 1300, 1500], hc: 200, g: "darkblue" }, { id: 38, name: "Meteor Vergisi", type: "tax", amount: 100 }, { id: 39, name: "Mars Başkenti", type: "property", color: "#0000CD", price: 400, rent: [50, 200, 600, 1400, 1700, 2000], hc: 200, g: "darkblue" }
             ]
         };
 
@@ -3204,7 +3547,7 @@
             const c = document.createElement('div');
             c.className = 'board-center';
             c.innerHTML = `
-                <div class="center-logo" style="margin-bottom: 5px;" onclick="location.reload()">MONOPOLX</div>
+                <div class="center-logo">MONOPOLX</div>
                 <div class="dice-container" id="diceContainer">
                     <div class="dice" id="d1" onclick="rollDice()"></div>
                     <div class="dice" id="d2" onclick="rollDice()"></div>
@@ -3542,7 +3885,12 @@
                 icon = "🔥";
             }
 
-            document.getElementById('cardTitle').textContent = title;
+            const cardHeader = document.getElementById('cardTitle');
+            cardHeader.textContent = title;
+            if (title.includes('ŞANS')) cardHeader.style.background = '#ff9800';
+            else if (title.includes('SANDIK')) cardHeader.style.background = '#2196f3';
+            else if (title.includes('CHALLENGE')) cardHeader.style.background = '#ff3d00';
+
             document.getElementById('cardIcon').textContent = icon;
             document.getElementById('cardText').textContent = c.t;
             document.getElementById('cardModal').classList.add('active');
@@ -4070,16 +4418,51 @@
             }
         });
 
-        // Dynamic 3D Board Tilt
+        // Dynamic 3D Board Tilt Logic
+        let tiltEnabled = true;
+
+        function toggle3DEffect() {
+            tiltEnabled = !tiltEnabled;
+            const btn = document.getElementById('toggle3D');
+            const mobBtn = document.getElementById('toggle3DMob');
+            if (btn) btn.classList.toggle('on', tiltEnabled);
+            if (mobBtn) mobBtn.classList.toggle('on', tiltEnabled);
+            if (!tiltEnabled) resetBoardTilt();
+        }
+
+        function resetBoardTilt() {
+            const board = document.querySelector('.board');
+            if (board) {
+                board.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                board.style.transform = `rotateX(5deg) rotateY(0deg)`;
+                setTimeout(() => { board.style.transition = 'transform 0.1s ease-out'; }, 600);
+            }
+        }
+
         document.addEventListener('mousemove', e => {
+            if (!tiltEnabled) return;
             const board = document.querySelector('.board');
             const setup = document.getElementById('setupScreen');
             if (!board || (setup && !setup.classList.contains('hidden'))) return;
 
-            const x = (window.innerWidth / 2 - e.pageX) / 50;
-            const y = (window.innerHeight / 2 - e.pageY) / 50;
-            board.style.transform = `rotateX(${5 + y}deg) rotateY(${-x}deg)`;
+            // Side panel check
+            const panels = document.querySelectorAll('.side-panel');
+            let overPanel = false;
+            panels.forEach(p => {
+                const rect = p.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right) overPanel = true;
+            });
+
+            if (overPanel) {
+                resetBoardTilt();
+            } else {
+                const x = (window.innerWidth / 2 - e.pageX) / 60;
+                const y = (window.innerHeight / 2 - e.pageY) / 60;
+                board.style.transform = `rotateX(${5 + y}deg) rotateY(${-x}deg)`;
+            }
         });
+
+        document.addEventListener('mouseleave', resetBoardTilt);
 
         // Initialize setup screen UI
         window.addEventListener('load', () => {
