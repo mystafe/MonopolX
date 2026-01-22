@@ -3793,8 +3793,8 @@
             document.getElementById('gameContainer').style.display = 'flex';
             buildBoard();
             
-            // 3D efekti başlangıçta kapalı olduğundan tahtayı düz yap
-            resetBoardToFlat();
+            // 3D ayarını arayüzle senkronla (kapalıysa düz kalır)
+            sync3DEffectFromUI();
             
             // İlk güncelleme - DOM oluşturulduktan hemen sonra
             updateOwners();
@@ -4540,33 +4540,42 @@
         }
         function goJail() { const p = G.players[G.cur]; p.pos = 10; p.jail = true; p.jt = 0; G.doubles = 0; log(`🔒 ${p.name} HAPİSTE!`, true); SND.play('jail'); updateUI() }
 
+        function resolvePropId(s, i) {
+            return (s && s.id !== undefined) ? s.id : i;
+        }
         function updateOwners() {
+            if (!window.activeSQ) return;
             window.activeSQ.forEach((s, i) => {
-                const pr = G.props[i];
+                const propId = resolvePropId(s, i);
+                const pr = G.props[propId];
+                const owner = pr ? G.players[pr.owner] : null;
+                const isOwned = !!owner;
+                const isMort = pr && pr.mort;
                 const el = document.getElementById('own-' + i);
                 const info = document.getElementById('own-info-' + i);
                 const sq = document.getElementById('sq-' + i);
                 if (el) {
-                    if (pr) {
-                        el.style.background = COLORS[G.players[pr.owner].color];
-                        el.style.opacity = pr.mort ? '0.3' : '0.6';
+                    if (isOwned) {
+                        el.style.background = COLORS[owner.color];
+                        el.style.opacity = isMort ? '0.3' : '0.6';
                     } else {
                         el.style.background = '';
                         el.style.opacity = '1';
                     }
                 }
                 if (info) {
-                    if (pr) {
-                        info.textContent = G.players[pr.owner].name;
-                        info.style.opacity = pr.mort ? '0.5' : '1';
+                    if (isOwned) {
+                        info.textContent = owner.name;
+                        info.style.opacity = isMort ? '0.5' : '1';
                     } else {
                         info.textContent = '';
+                        info.style.opacity = '1';
                     }
                 }
                 if (sq) {
-                    if (pr) {
+                    if (isOwned) {
                         sq.classList.add('owned');
-                        if (pr.mort) sq.style.filter = 'grayscale(0.5)';
+                        if (isMort) sq.style.filter = 'grayscale(0.5)';
                         else sq.style.filter = 'none';
                     } else {
                         sq.classList.remove('owned');
@@ -4865,6 +4874,7 @@
                 document.getElementById('setupScreen').classList.add('hidden');
                 document.getElementById('gameContainer').style.display = 'flex';
                 buildBoard();
+                sync3DEffectFromUI();
                 document.getElementById('gameLog').innerHTML = data.gameLog || "";
                 updateOwners();
                 updateUI();
@@ -4976,7 +4986,32 @@
                 pn.appendChild(c);
             });
         }
-        function showProp(i) { const s = window.activeSQ[i]; if (!['property', 'railroad', 'utility'].includes(s.type)) return; const pr = G.props[i]; let own = 'Satılık'; if (pr) { const o = G.players[pr.owner]; own = `<span style="color:${COLORS[o.color]}">${o.name}</span>${pr.mort ? ' <span style="color:#f44336">(İpotekli)</span>' : ''}` } document.getElementById('propInfo').innerHTML = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:15px"><div style="width:35px;height:55px;background:${s.color || '#999'};border-radius:6px"></div><div><h3 style="margin:0">${s.name}</h3><p style="margin:4px 0 0;opacity:0.7">Sahibi: ${own}</p></div></div>`; let det = `<p><span>💰 Fiyat:</span><span>${s.price}₺</span></p>`; if (s.type === 'property') { det += `<p><span>Boş kira:</span><span>${s.rent[0]}₺</span></p>`; for (let h = 1; h <= 4; h++)det += `<p><span>${h} Ev:</span><span>${s.rent[h]}₺</span></p>`; det += `<p><span>🏨 Otel:</span><span>${s.rent[5]}₺</span></p><p><span>Ev maliyeti:</span><span>${s.hc}₺</span></p>`; if (pr && pr.houses > 0) det += `<p style="color:var(--gold)"><span>Mevcut:</span><span>${pr.houses === 5 ? '1 Otel' : pr.houses + ' Ev'}</span></p>` } else if (s.type === 'railroad') { for (let r = 1; r <= 4; r++)det += `<p><span>${r} İstasyon:</span><span>${s.rent[r - 1]}₺</span></p>` } else det += `<p><span>1 Şirket:</span><span>Zar×4</span></p><p><span>2 Şirket:</span><span>Zar×10</span></p>`; det += `<p><span>İpotek:</span><span>${Math.floor(s.price / 2)}₺</span></p>`; document.getElementById('propDetails').innerHTML = det; document.getElementById('propModal').classList.add('active') }
+        function showProp(i) {
+            const s = window.activeSQ[i];
+            if (!s || !['property', 'railroad', 'utility'].includes(s.type)) return;
+            const propId = resolvePropId(s, i);
+            const pr = G.props[propId];
+            const owner = pr ? G.players[pr.owner] : null;
+            let own = 'Satılık';
+            if (owner) {
+                own = `<span style="color:${COLORS[owner.color]}">${owner.name}</span>${pr.mort ? ' <span style="color:#f44336">(İpotekli)</span>' : ''}`;
+            }
+            document.getElementById('propInfo').innerHTML = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:15px"><div style="width:35px;height:55px;background:${s.color || '#999'};border-radius:6px"></div><div><h3 style="margin:0">${s.name}</h3><p style="margin:4px 0 0;opacity:0.7">Sahibi: ${own}</p></div></div>`;
+            let det = `<p><span>💰 Fiyat:</span><span>${s.price}₺</span></p>`;
+            if (s.type === 'property') {
+                det += `<p><span>Boş kira:</span><span>${s.rent[0]}₺</span></p>`;
+                for (let h = 1; h <= 4; h++)det += `<p><span>${h} Ev:</span><span>${s.rent[h]}₺</span></p>`;
+                det += `<p><span>🏨 Otel:</span><span>${s.rent[5]}₺</span></p><p><span>Ev maliyeti:</span><span>${s.hc}₺</span></p>`;
+                if (pr && pr.houses > 0) det += `<p style="color:var(--gold)"><span>Mevcut:</span><span>${pr.houses === 5 ? '1 Otel' : pr.houses + ' Ev'}</span></p>`;
+            } else if (s.type === 'railroad') {
+                for (let r = 1; r <= 4; r++)det += `<p><span>${r} İstasyon:</span><span>${s.rent[r - 1]}₺</span></p>`;
+            } else {
+                det += `<p><span>1 Şirket:</span><span>Zar×4</span></p><p><span>2 Şirket:</span><span>Zar×10</span></p>`;
+            }
+            det += `<p><span>İpotek:</span><span>${Math.floor(s.price / 2)}₺</span></p>`;
+            document.getElementById('propDetails').innerHTML = det;
+            document.getElementById('propModal').classList.add('active');
+        }
         function closeModal(id) { document.getElementById(id).classList.remove('active') }
         function log(m, imp = false) { const l = document.getElementById('gameLog'); const e = document.createElement('div'); e.className = 'log-entry' + (imp ? ' important' : ''); e.textContent = m; l.insertBefore(e, l.firstChild); while (l.children.length > 40) l.removeChild(l.lastChild) }
 
@@ -5000,16 +5035,16 @@
         // Dynamic 3D Board Tilt Logic
         let tiltEnabled = false;
 
-        function toggle3DEffect() {
-            tiltEnabled = !tiltEnabled;
+        function set3DEffect(enabled) {
+            tiltEnabled = !!enabled;
             const btn = document.getElementById('toggle3D');
             const mobBtn = document.getElementById('toggle3DMob');
             if (btn) btn.classList.toggle('on', tiltEnabled);
             if (mobBtn) mobBtn.classList.toggle('on', tiltEnabled);
-            
+
             const board = document.querySelector('.board');
             const container = document.querySelector('.board-container');
-            
+
             if (tiltEnabled) {
                 // 3D efekti aç - perspektif ve rotasyon ekle
                 if (container) {
@@ -5025,6 +5060,17 @@
                 // 3D efekti kapat - düz yap
                 resetBoardToFlat();
             }
+        }
+
+        function toggle3DEffect() {
+            set3DEffect(!tiltEnabled);
+        }
+
+        function sync3DEffectFromUI() {
+            const btn = document.getElementById('toggle3D');
+            const mobBtn = document.getElementById('toggle3DMob');
+            const shouldEnable = (btn && btn.classList.contains('on')) || (mobBtn && mobBtn.classList.contains('on'));
+            set3DEffect(shouldEnable);
         }
 
         function resetBoardToFlat() {
