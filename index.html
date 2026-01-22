@@ -105,10 +105,14 @@
             position: relative;
             width: min(92vh, 94vw);
             height: min(92vh, 94vw);
-            perspective: 2000px;
+            perspective: none;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        .board-container.tilt-active {
+            perspective: 2000px;
         }
 
         .board {
@@ -2739,7 +2743,7 @@
         <div class="credit-badge">
             MADE BY <span style="color: var(--gold); font-weight: 800;">MUSTAFA EVLEKSİZ</span>
             <small id="ver1"
-                style="opacity: 0.5; font-size: 0.6rem; margin-left: 10px; font-weight: 900;">v3.5.7</small>
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 10px; font-weight: 900;">v3.6.0</small>
         </div>
     </div>
     <div class="game-wrapper" id="gameContainer" style="display:none">
@@ -2774,7 +2778,7 @@
                     onclick="location.reload()">
                     MONOPOLX</h1>
                 <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">BY MUSTAFA EVLEKSİZ <span id="ver2"
-                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.5.0</span></div>
+                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.6.0</span></div>
             </div>
             <h2 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.3rem; letter-spacing: 2px;">👥
                 OYUNCULAR</h2>
@@ -3792,13 +3796,17 @@
             // 3D efekti başlangıçta kapalı olduğundan tahtayı düz yap
             resetBoardToFlat();
             
-            // Sahiplikleri güncelle - DOM hazır olana kadar bekle
-            setTimeout(() => {
-                updateOwners(); // Random start mülklerini göster
+            // İlk güncelleme - DOM oluşturulduktan hemen sonra
+            updateOwners();
+            updateUI();
+            
+            // İkinci güncelleme - DOM'un tamamen render edilmesinden sonra
+            requestAnimationFrame(() => {
+                updateOwners();
                 updateUI();
                 log(`🎮 Oyun başladı!`, true);
                 checkAI();
-            }, 50);
+            });
         }
 
         function checkAI() {
@@ -5003,13 +5011,16 @@
             const container = document.querySelector('.board-container');
             
             if (tiltEnabled) {
-                // 3D efekti aç - hafif perspektif ver
+                // 3D efekti aç - perspektif ve rotasyon ekle
+                if (container) {
+                    container.classList.add('tilt-active');
+                    container.style.perspective = '2000px';
+                }
                 if (board) {
                     board.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                     board.style.transform = `rotateX(5deg) rotateY(0deg)`;
                     setTimeout(() => { board.style.transition = 'transform 0.1s ease-out'; }, 600);
                 }
-                if (container) container.classList.add('tilt-active');
             } else {
                 // 3D efekti kapat - düz yap
                 resetBoardToFlat();
@@ -5021,10 +5032,13 @@
             const container = document.querySelector('.board-container');
             if (board) {
                 board.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                board.style.transform = `rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
+                board.style.transform = 'none';
                 setTimeout(() => { board.style.transition = 'none'; }, 600);
             }
-            if (container) container.classList.remove('tilt-active');
+            if (container) {
+                container.classList.remove('tilt-active');
+                container.style.perspective = 'none';
+            }
         }
 
         function resetBoardTilt() {
