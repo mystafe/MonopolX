@@ -105,10 +105,14 @@
             position: relative;
             width: min(92vh, 94vw);
             height: min(92vh, 94vw);
-            perspective: 2000px;
+            perspective: none;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        .board-container.tilt-active {
+            perspective: 2000px;
         }
 
         .board {
@@ -3755,32 +3759,39 @@
             G.props = {};
 
             if (G.customRules.randomStart) {
-                // Her oyuncuya 2-3 rastgele mülk dağıt (ilerlemeli mod için 3 daha dengeli)
+                // Her oyuncuya 3 rastgele mülk dağıt
                 const pool = window.activeSQ.filter(s => ['property', 'railroad', 'utility'].includes(s.type)).map(s => s.id);
                 shuffle(pool);
+                
                 G.players.forEach(p => {
+                    const playerProps = [];
                     for (let k = 0; k < 3; k++) {
                         const pid = pool.pop();
                         if (pid === undefined) break;
                         p.props.push(pid);
                         G.props[pid] = { owner: p.id, houses: 0, mort: false };
+                        playerProps.push(window.activeSQ[pid].name);
                     }
+                    console.log(`${p.name} mülkleri:`, playerProps, 'props array:', [...p.props]);
                 });
 
-                // Sadece tam sete sahip olanlara rastgele 1-2 ev ver (Monopol kurallarına uygun ilerleme)
+                // Sadece tam sete sahip olanlara rastgele 1-2 ev ver
                 G.players.forEach(p => {
                     Object.entries(GR).forEach(([g, ids]) => {
                         if (g === 'railroad' || g === 'utility') return;
                         const ownsAll = ids.every(id => G.props[id] && G.props[id].owner === p.id);
                         if (ownsAll) {
-                            const houseCount = Math.floor(Math.random() * 3); // 0, 1, 2 ev
+                            const houseCount = Math.floor(Math.random() * 3);
                             ids.forEach(id => {
                                 G.props[id].houses = houseCount;
                             });
                         }
                     });
                 });
-                log(`🎲 Rastgele mülkler dağıtıldı ve set tamamlayanlara evler verildi!`, true);
+                
+                console.log('G.props:', JSON.stringify(G.props));
+                console.log('Tüm oyuncuların mülkleri:', G.players.map(p => ({ name: p.name, props: p.props })));
+                log(`🎲 Rastgele mülkler dağıtıldı!`, true);
             }
             shuffle(CHANCE);
             shuffle(CHEST);
@@ -3792,13 +3803,23 @@
             // 3D efekti başlangıçta kapalı olduğundan tahtayı düz yap
             resetBoardToFlat();
             
-            // Sahiplikleri güncelle - DOM hazır olana kadar bekle
-            setTimeout(() => {
-                updateOwners(); // Random start mülklerini göster
+            // İlk güncelleme - DOM oluşturulduktan hemen sonra
+            updateOwners();
+            updateUI();
+            
+            // İkinci güncelleme - DOM'un tamamen render edilmesinden sonra
+            requestAnimationFrame(() => {
+                updateOwners();
                 updateUI();
                 log(`🎮 Oyun başladı!`, true);
-                checkAI();
-            }, 50);
+                
+                // Üçüncü güncelleme - kesin emin olmak için
+                setTimeout(() => {
+                    updateOwners();
+                    updateUI();
+                    checkAI();
+                }, 100);
+            });
         }
 
         function checkAI() {
@@ -4533,14 +4554,25 @@
         function goJail() { const p = G.players[G.cur]; p.pos = 10; p.jail = true; p.jt = 0; G.doubles = 0; log(`🔒 ${p.name} HAPİSTE!`, true); SND.play('jail'); updateUI() }
 
         function updateOwners() {
+            console.log('updateOwners çağrıldı, G.props:', Object.keys(G.props).length, 'adet mülk');
+            
+            let ownedCount = 0;
             window.activeSQ.forEach((s, i) => {
                 const pr = G.props[i];
                 const el = document.getElementById('own-' + i);
                 const info = document.getElementById('own-info-' + i);
                 const sq = document.getElementById('sq-' + i);
+                
+                if (pr) {
+                    ownedCount++;
+                    const owner = G.players[pr.owner];
+                    console.log(`Mülk ${i} (${s.name}): sahibi ${owner.name}, renk: ${owner.color}`);
+                }
+                
                 if (el) {
                     if (pr) {
-                        el.style.background = COLORS[G.players[pr.owner].color];
+                        const ownerColor = COLORS[G.players[pr.owner].color];
+                        el.style.background = ownerColor;
                         el.style.opacity = pr.mort ? '0.3' : '0.6';
                     } else {
                         el.style.background = '';
@@ -4566,6 +4598,8 @@
                     }
                 }
             });
+            
+            console.log(`Toplam ${ownedCount} mülk güncellendi`);
         }
         function updateBuildBtn() {
             const p = G.players[G.cur];
@@ -4951,19 +4985,32 @@
         }
         function updatePanel() { 
             const pn = document.getElementById('playersPanel'); 
-            if (!pn) return;
+            if (!pn) {
+                console.warn('playersPanel bulunamadı!');
+                return;
+            }
             pn.innerHTML = ''; 
+            
+            console.log('updatePanel çağrıldı, oyuncu sayısı:', G.players.length);
+            
             G.players.forEach((p, i) => { 
+                console.log(`Oyuncu ${p.name}: props =`, p.props, 'uzunluk:', p.props.length);
+                
                 const c = document.createElement('div'); 
                 c.className = 'player-card' + (i === G.cur ? ' active' : '') + (p.out ? ' bankrupt' : ''); 
                 const dots = p.props.map(id => { 
                     const s = window.activeSQ ? window.activeSQ[id] : null;
                     const pr = G.props[id]; 
-                    if (!s) return ''; // Güvenlik kontrolü
+                    if (!s) {
+                        console.warn(`Kare bulunamadı: id=${id}`);
+                        return '';
+                    }
                     const bgColor = s.color || (s.type === 'railroad' ? '#333' : '#9c27b0');
                     const opacity = (pr && pr.mort) ? 'opacity:0.4;' : '';
+                    console.log(`  - Mülk: ${s.name}, renk: ${bgColor}`);
                     return `<div class="prop-dot" style="background:${bgColor};${opacity}" title="${s.name}"></div>`;
                 }).join(''); 
+                
                 c.innerHTML = `<div class="player-header"><div class="player-token-icon token-${p.color}"></div><div><div class="player-name">${p.name}${p.isAI ? `<span class="ai-badge">${p.difficulty}</span>` : ''}${i === G.cur ? ' 🎯' : ''}</div><div class="player-money">${p.money.toLocaleString('tr-TR')}₺</div></div></div>${p.jail ? `<div style="color:#ff9800;font-size:0.75rem">🔒 Hapiste (${p.jt}/3)</div>` : ''}<div class="player-props">${dots || '<span style="opacity:0.4;font-size:0.7rem">Mülk yok</span>'}</div>`; 
                 pn.appendChild(c);
             });
@@ -5003,13 +5050,16 @@
             const container = document.querySelector('.board-container');
             
             if (tiltEnabled) {
-                // 3D efekti aç - hafif perspektif ver
+                // 3D efekti aç - perspektif ve rotasyon ekle
+                if (container) {
+                    container.classList.add('tilt-active');
+                    container.style.perspective = '2000px';
+                }
                 if (board) {
                     board.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
                     board.style.transform = `rotateX(5deg) rotateY(0deg)`;
                     setTimeout(() => { board.style.transition = 'transform 0.1s ease-out'; }, 600);
                 }
-                if (container) container.classList.add('tilt-active');
             } else {
                 // 3D efekti kapat - düz yap
                 resetBoardToFlat();
@@ -5021,10 +5071,13 @@
             const container = document.querySelector('.board-container');
             if (board) {
                 board.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                board.style.transform = `rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
+                board.style.transform = 'none';
                 setTimeout(() => { board.style.transition = 'none'; }, 600);
             }
-            if (container) container.classList.remove('tilt-active');
+            if (container) {
+                container.classList.remove('tilt-active');
+                container.style.perspective = 'none';
+            }
         }
 
         function resetBoardTilt() {
