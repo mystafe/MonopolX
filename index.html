@@ -1397,6 +1397,43 @@
             --marble-bg: #fdfdfd;
             --paper-bg: #f4e4bc;
             --font-main: 'Montserrat', sans-serif;
+            --transition-smooth: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* AI Speech Bubbles */
+        .speech-bubble {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            background: white;
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            border: 2px solid var(--gold);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--gold);
+        }
+
+        .speech-bubble.active {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
         }
 
         /* Trade Response Popup - Modern Premium Design */
@@ -1607,6 +1644,11 @@
             pointer-events: none;
         }
 
+        .token.moving {
+            transform: scale(1.2) rotate(15deg);
+            z-index: 1001;
+        }
+
         .credit-badge span {
             color: white;
             margin-left: 5px;
@@ -1617,6 +1659,7 @@
             --gold: #7b5b00;
             --bg-dark: #f0f0f0;
             --panel-bg: white;
+            background: url('assets/marble_bg.png') center/cover fixed !important;
         }
 
         body.theme-marble .board {
@@ -1692,6 +1735,7 @@
             --gold: #5d4037;
             --bg-dark: #ccb08a;
             --panel-bg: #f4e4bc;
+            background: url('assets/parchment_bg.png') center/cover fixed !important;
         }
 
         body.theme-parchment .board {
@@ -1751,6 +1795,7 @@
         body.theme-premium {
             --gold: #d4af37;
             --bg-dark: #07070a;
+            background: url('assets/dark_bg.png') center/cover fixed !important;
         }
 
         body.theme-premium .board {
@@ -2839,11 +2884,12 @@
 
 <body>
     <div class="setup-screen" id="setupScreen">
-        <div class="game-header" style="margin-bottom: 40px; text-align: center;">
-            <h1 style="margin-bottom: 5px; animation: glowTitle 3s infinite alternate;">MONOPOLX</h1>
+        <div class="game-header" style="margin-bottom: 30px; text-align: center;">
+            <img src="assets/logo.png" alt="MONOPOLX"
+                style="height: 120px; filter: drop-shadow(0 0 30px rgba(212,175,55,0.4)); animation: logoPulse 4s infinite alternate;">
             <p
-                style="color: var(--gold); letter-spacing: 8px; font-weight: 700; font-size: 0.7rem; opacity: 0.8; text-transform: uppercase;">
-                The Global Estate Revolution</p>
+                style="color: var(--gold); letter-spacing: 12px; font-weight: 800; font-size: 0.8rem; opacity: 0.9; text-transform: uppercase; margin-top: -15px;">
+                THE GLOBAL ESTATE REVOLUTION</p>
         </div>
 
         <div class="setup-container">
@@ -3043,7 +3089,7 @@
         <div class="credit-badge">
             MADE BY <span style="color: var(--gold); font-weight: 800;">MUSTAFA EVLEKSİZ</span>
             <small id="ver1"
-                style="opacity: 0.5; font-size: 0.6rem; margin-left: 10px; font-weight: 900;">v3.6.1</small>
+                style="opacity: 0.5; font-size: 0.6rem; margin-left: 10px; font-weight: 900;">v3.7.0</small>
         </div>
     </div>
     <div class="game-wrapper" id="gameContainer" style="display:none">
@@ -3073,12 +3119,12 @@
         <!-- Sol Panel: Oyuncu Listesi -->
         <div class="side-panel players-side">
             <div
-                style="text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-                <h1 style="font-family: 'Bebas Neue'; font-size: 2.2rem; letter-spacing: 4px; color: var(--gold); margin: 0; cursor:pointer;"
+                style="text-align: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">
+                <img src="assets/logo.png" alt="MONOPOLX" style="height: 55px; cursor:pointer;"
                     onclick="location.reload()">
-                    MONOPOLX</h1>
-                <div style="font-size: 0.6rem; opacity: 0.4; letter-spacing: 1px;">BY MUSTAFA EVLEKSİZ <span id="ver2"
-                        style="font-size: 0.5rem; opacity: 0.5; margin-left: 3px;">v3.6.1</span></div>
+                <div style="font-size: 0.6rem; opacity: 0.5; letter-spacing: 2px; font-weight: 700; margin-top: 5px;">BY
+                    MUSTAFA EVLEKSİZ <span id="ver2"
+                        style="font-size: 0.5rem; opacity: 0.6; margin-left: 3px;">v3.7.0</span></div>
             </div>
             <h2 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.3rem; letter-spacing: 2px;">👥
                 OYUNCULAR</h2>
@@ -3598,7 +3644,7 @@
             { id: 29, name: "Gaziantep", type: "property", color: "#FFFF00", price: 280, rent: [24, 120, 360, 850, 1025, 1200], hc: 150, g: "yellow" },
             { id: 30, name: "HAPİSE GİT", type: "gotojail" },
             { id: 31, name: "Bursa", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" },
-            { id: 32, name: "Antalya", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" },
+            { id: 32, name: "Giresun", type: "property", color: "#228B22", price: 300, rent: [26, 130, 390, 900, 1100, 1275], hc: 200, g: "green" },
             { id: 33, name: "Sandık", type: "chest" },
             { id: 34, name: "İzmir", type: "property", color: "#228B22", price: 320, rent: [28, 150, 450, 1000, 1200, 1400], hc: 200, g: "green" },
             { id: 35, name: "İstanbul İst.", type: "railroad", price: 200, rent: [25, 50, 100, 200] },
@@ -3607,6 +3653,24 @@
             { id: 38, name: "Lüks Vergisi", type: "tax", amount: 100 },
             { id: 39, name: "İstanbul", type: "property", color: "#0000CD", price: 400, rent: [50, 200, 600, 1400, 1700, 2000], hc: 200, g: "darkblue" }
         ];
+
+        const AI_PHRASES = {
+            Tycoon: {
+                buy: ["Bu mülk imparatorluğumun incisi olacak.", "Paranın kokusunu alıyorum...", "Satın alıyorum, çünkü asalet bunu gerektirir."],
+                rent: ["Öderken elin titremesin!", "Benim arsamda yürümenin bir bedeli var.", "Cüzdanını biraz daha açman gerekecek."],
+                jail: ["Avukatlarım ilgileniyor.", "Sadece kısa bir tatil...", "Hücrem bile sizin sarayınızdan lükstür."]
+            },
+            Banker: {
+                buy: ["Stratejik bir yatırım.", "Portföyümü çeşitlendiriyorum.", "Risk analizi olumlu çıktı."],
+                rent: ["Faiziyle birlikte alıyorum.", "İş dünyasında duygulara yer yoktur.", "Muhasebe kayıtlarına işledim."],
+                jail: ["Süreç yönetimi hatası...", "Hukuki bir boşluk bulacağım.", "Nakit akışı devam ediyor."]
+            },
+            Opportunist: {
+                buy: ["Burası tam bir kelepir!", "Şans ayağıma geldi.", "Hemen kapmalıyım!"],
+                rent: ["Bedava peynir sadece farededir...", "Şansın bittiği yerdesin.", "Kismet ayağıma geldi."],
+                jail: ["Bu sefer yakalandık.", "Planlarımı biraz ertelemek zorundayım.", "Tünel kazmaya başladım bile!"]
+            }
+        };
         const GR = { brown: [1, 3], lightblue: [6, 8, 9], pink: [11, 13, 14], orange: [16, 18, 19], red: [21, 23, 24], yellow: [26, 27, 29], green: [31, 32, 34], darkblue: [37, 39], railroad: [5, 15, 25, 35], utility: [12, 28] };
         let CHANCE = [{ t: "Başlangıca git, 200₺ al!", a: "goto", to: 0, c: 200 }, { t: "Haydarpaşa'ya git.", a: "goto", to: 5 }, { t: "3 kare geri.", a: "move", s: -3 }, { t: "Hapise git!", a: "jail" }, { t: "50₺ kazan!", a: "get", m: 50 }, { t: "15₺ ceza.", a: "pay", m: 15 }, { t: "150₺ kazan!", a: "get", m: 150 }, { t: "Tamir: Ev 25₺, Otel 100₺", a: "repair", h: 25, o: 100 }, { t: "Ücretsiz Hapisten Çıkış Kartı!", a: "jailfree" }];
         let CHEST = [{ t: "Başlangıca git, 200₺ al!", a: "goto", to: 0, c: 200 }, { t: "Banka hatası: 200₺!", a: "get", m: 200 }, { t: "Doktor: 50₺", a: "pay", m: 50 }, { t: "Hisse: 50₺", a: "get", m: 50 }, { t: "Hapise git!", a: "jail" }, { t: "Tatil: 100₺", a: "get", m: 100 }, { t: "Vergi iadesi: 20₺", a: "get", m: 20 }, { t: "Miras: 100₺", a: "get", m: 100 }, { t: "Ücretsiz Hapisten Çıkış Kartı!", a: "jailfree" }];
@@ -4345,9 +4409,28 @@
 
 
             if (shouldBuy) {
+                aiSpeak(p, 'buy');
                 buyProp();
             } else {
                 startAuction();
+            }
+        }
+
+        function aiSpeak(p, action) {
+            if (!p || !p.isAI) return;
+            const phrases = AI_PHRASES[p.personality][action];
+            if (!phrases) return;
+            const msg = phrases[Math.floor(Math.random() * phrases.length)];
+
+            const tokenEl = document.querySelector(`.token-${p.color}`);
+            if (tokenEl) {
+                const bubble = tokenEl.querySelector('.speech-bubble') || document.createElement('div');
+                bubble.className = 'speech-bubble';
+                bubble.textContent = msg;
+                if (!tokenEl.contains(bubble)) tokenEl.appendChild(bubble);
+
+                setTimeout(() => bubble.classList.add('active'), 100);
+                setTimeout(() => bubble.classList.remove('active'), 4000);
             }
         }
 
@@ -4363,6 +4446,7 @@
                 }
 
                 if (p.money > 1000 && p.difficulty !== 'easy') {
+                    aiSpeak(p, 'jail');
                     payJail();
                     return;
                 }
@@ -4371,6 +4455,7 @@
                     rollDice();
                 } else {
                     if (p.money >= 50) {
+                        aiSpeak(p, 'jail');
                         payJail();
                     } else { rollDice(); }
                 }
@@ -4754,40 +4839,18 @@
             const p = G.players[G.cur];
             const totalSteps = Math.abs(steps);
             const direction = steps > 0 ? 1 : -1;
-
-            // "Işık Hızı" modu için anında hareket
-            if (document.getElementById('speedRange').value >= 350) {
-                const oldPos = p.pos;
-                p.pos = (p.pos + steps + 40) % 40;
-                if (steps > 0 && p.pos < oldPos) {
-                    const sal = G.customRules.salary;
-                    chgMoney(p, sal);
-                    log(`💰 ${p.name} +${sal}₺ maaş aldı`, true);
-                }
-                updateUI();
-                handleLand(p.pos);
-                return;
-            }
+            const speed = getSpeed();
 
             let currentStep = 0;
             function nextStep() {
                 if (currentStep >= totalSteps) {
-                    setTimeout(() => handleLand(p.pos), 300);
+                    setTimeout(() => handleLand(p.pos), 400);
                     return;
                 }
 
                 currentStep++;
+                const oldPos = p.pos;
                 p.pos = (p.pos + direction + 40) % 40;
-
-                // Visual Jump Effect
-                const b = document.getElementById('tok-' + p.pos);
-                if (b) {
-                    const jumpToken = document.createElement('div');
-                    jumpToken.className = `token token-${p.color} jumping`;
-                    jumpToken.innerHTML = p.icon;
-                    b.appendChild(jumpToken);
-                    setTimeout(() => jumpToken.remove(), 300);
-                }
 
                 if (direction > 0 && p.pos === 0) {
                     const sal = G.customRules.salary;
@@ -4795,20 +4858,17 @@
                     log(`💰 ${p.name} +${sal}₺ maaş aldı`, true);
                 }
 
-                updateUI();
+                // Smooth Glide Logic
+                updateTokens();
 
-                // Jump animation effect
                 const token = document.querySelector(`.token-${p.color}`);
                 if (token) {
-                    token.style.transition = 'none';
-                    token.animate([
-                        { transform: 'translateY(0) scale(1)', offset: 0 },
-                        { transform: 'translateY(-30px) scale(1.3)', offset: 0.5 },
-                        { transform: 'translateY(0) scale(1)', offset: 1 }
-                    ], { duration: getSpeed() * 1.5, easing: 'ease-out' });
+                    token.style.transition = `all ${speed * 1.5}ms cubic-bezier(0.19, 1, 0.22, 1)`;
+                    token.classList.add('moving');
+                    setTimeout(() => token.classList.remove('moving'), speed);
                 }
 
-                setTimeout(nextStep, getSpeed() * 2);
+                setTimeout(nextStep, speed * 2);
             }
             nextStep();
         }
@@ -4878,11 +4938,12 @@
                 if (!ow.out && !pr.mort) {
                     const r = calcRent(s, pr);
                     if (p.money >= r) {
+                        if (ow.isAI) aiSpeak(ow, 'rent');
                         chgMoney(p, -r, 'rent'); chgMoney(ow, r, 'rent');
                         playRentAnim(p.id, ow.id, r);
                         log(`💰 ${p.name} → ${ow.name}: ${r}₺ kira`);
                         toast(`💸 ${ow.name}'e ${r}₺ kira ödediniz.`, 'error');
-                    } else bankrupt(ow.id)
+                    } else bankrupt(p.id, ow.id);
                 }
                 document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
 
@@ -5508,18 +5569,33 @@
             }
         }
         function updateTokens() {
-            document.querySelectorAll('.tokens-box').forEach(b => b.innerHTML = '');
             G.players.forEach(p => {
-                if (p.out) return;
-                const b = document.getElementById('tok-' + p.pos);
-                if (b) {
-                    const t = document.createElement('div');
-                    const isActive = G.players[G.cur].id === p.id;
-                    t.className = `token token-${p.color}` + (isActive ? ' active-token' : '');
-                    t.innerHTML = p.icon;
-                    t.title = p.name;
-                    b.appendChild(t);
+                if (p.out) {
+                    const existing = document.getElementById('token-p' + p.id);
+                    if (existing) existing.remove();
+                    return;
                 }
+
+                let t = document.getElementById('token-p' + p.id);
+                if (!t) {
+                    t = document.createElement('div');
+                    t.id = 'token-p' + p.id;
+                    t.className = `token token-${p.color}`;
+                    t.innerHTML = p.icon + '<div class="speech-bubble"></div>';
+                    document.body.appendChild(t); // Keep tokens at body level for absolute positioning
+                }
+
+                const targetBox = document.getElementById('tok-' + p.pos);
+                if (targetBox) {
+                    const rect = targetBox.getBoundingClientRect();
+                    t.style.position = 'fixed';
+                    t.style.left = (rect.left + rect.width / 2) + 'px';
+                    t.style.top = (rect.top + rect.height / 2) + 'px';
+                    t.style.transform = 'translate(-50%, -50%)' + (G.players[G.cur].id === p.id ? ' scale(1.1)' : '');
+                }
+
+                const isActive = G.players[G.cur].id === p.id;
+                t.classList.toggle('active-token', isActive);
             });
 
             // Sırası olan oyuncunun karesini vurgula
