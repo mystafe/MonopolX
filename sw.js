@@ -2,7 +2,10 @@ const CACHE_NAME = 'monopolx-v3.6.0';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json'
+  './index.css',
+  './game.js',
+  './manifest.json',
+  './favicon.ico'
 ];
 
 self.addEventListener('install', event => {
