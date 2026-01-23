@@ -4898,6 +4898,8 @@
             if (localStorage.getItem('monopolx_autosave')) {
                 document.getElementById('resumeBtn').style.display = 'block';
             }
+            // Ensure 3D is off on fresh load
+            set3DEffect(false);
         }
 
         function updateUI() {
@@ -5075,6 +5077,7 @@
         function sync3DEffectFromUI() {
             const btn = document.getElementById('toggle3D');
             const mobBtn = document.getElementById('toggle3DMob');
+            // A toggle is 'on' only if it has the 'on' class
             const shouldEnable = (btn && btn.classList.contains('on')) || (mobBtn && mobBtn.classList.contains('on'));
             set3DEffect(shouldEnable);
         }
