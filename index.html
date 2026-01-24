@@ -293,10 +293,17 @@
                 </div>
             </div>
             <div class="mobile-header-center">
-                <img src="assets/logo.png" alt="MONOPOLX" id="mobileLogo" onclick="secretCheatClickMobile(event)"
-                    style="height: 40px; cursor:pointer; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); transition: transform 0.3s ease;"
-                    onmouseover="this.style.transform='scale(1.05)'"
-                    onmouseout="this.style.transform='scale(1)'">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                    <img src="assets/logo.png" alt="MONOPOLX" id="mobileLogo" onclick="secretCheatClickMobile(event)"
+                        oncontextmenu="event.preventDefault(); return false;"
+                        style="height: 40px; cursor:pointer; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); transition: transform 0.3s ease;"
+                        onmouseover="this.style.transform='scale(1.05)'"
+                        onmouseout="this.style.transform='scale(1)'">
+                    <div id="mobileTurnIndicator" class="mobile-turn-indicator" style="display:none;">
+                        <span id="mobileTurnText" style="font-size:0.55rem; font-weight:700; color:var(--gold); opacity:0.85; letter-spacing:0.5px;">SIRA: </span>
+                        <span id="mobileTurnPlayer" style="font-size:0.6rem; font-weight:800; color:#fff;">-</span>
+                    </div>
+                </div>
             </div>
             <div style="display:flex; gap:5px;">
                 <button class="btn btn-secondary"

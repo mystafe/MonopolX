@@ -778,6 +778,54 @@
         }
         window.secretCheatClickMobile = secretCheatClickMobile;
 
+        // Mobile logo long press for version pop-up
+        let mobileLogoLongPressTimer = null;
+        function handleMobileLogoLongPress(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            // Show version pop-up
+            const version = 'v0.4.1';
+            const toastMsg = `MONOPOLX ${version}`;
+            toast(toastMsg, 'info');
+        }
+
+        function initMobileLogoLongPress() {
+            const mobileLogo = document.getElementById('mobileLogo');
+            if (!mobileLogo) return;
+
+            mobileLogo.addEventListener('touchstart', function(e) {
+                mobileLogoLongPressTimer = setTimeout(() => {
+                    handleMobileLogoLongPress(e);
+                }, 500); // 500ms long press
+            }, { passive: false });
+
+            mobileLogo.addEventListener('touchend', function() {
+                clearTimeout(mobileLogoLongPressTimer);
+            });
+
+            mobileLogo.addEventListener('touchmove', function() {
+                clearTimeout(mobileLogoLongPressTimer);
+            });
+
+            // Also support mouse long press for testing
+            mobileLogo.addEventListener('mousedown', function(e) {
+                mobileLogoLongPressTimer = setTimeout(() => {
+                    handleMobileLogoLongPress(e);
+                }, 500);
+            });
+
+            mobileLogo.addEventListener('mouseup', function() {
+                clearTimeout(mobileLogoLongPressTimer);
+            });
+
+            mobileLogo.addEventListener('mouseleave', function() {
+                clearTimeout(mobileLogoLongPressTimer);
+            });
+        }
+
         function spawnConfetti() {
             for (let i = 0; i < 40; i++) {
                 const c = document.createElement('div');
@@ -3193,6 +3241,8 @@
             updateLangUI();
             // Initialize panel states
             initPanelStates();
+            // Initialize mobile logo long press
+            initMobileLogoLongPress();
 
             // Listen for resize to re-align tokens
             window.addEventListener('resize', throttle(() => {
@@ -3267,6 +3317,15 @@
                     if (mobName) mobName.textContent = p.name;
                     if (mobMoney) mobMoney.textContent = p.money.toLocaleString() + '₺';
                     if (mobIcon) mobIcon.textContent = p.icon;
+
+                    // Update mobile turn indicator
+                    const mobTurnIndicator = document.getElementById('mobileTurnIndicator');
+                    const mobTurnPlayer = document.getElementById('mobileTurnPlayer');
+                    if (mobTurnIndicator && mobTurnPlayer) {
+                        mobTurnIndicator.style.display = 'flex';
+                        mobTurnPlayer.textContent = p.name.toUpperCase();
+                        mobTurnPlayer.style.color = COLORS[p.color];
+                    }
 
                     const mobRoll = document.getElementById('mobRollBtn');
                     const mobBuy = document.getElementById('mobBuyBtn');

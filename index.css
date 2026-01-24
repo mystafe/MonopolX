@@ -3685,6 +3685,25 @@
                 z-index: 1;
             }
 
+            .mobile-turn-indicator {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                background: rgba(212, 175, 55, 0.15);
+                border: 1px solid rgba(212, 175, 55, 0.3);
+                border-radius: 8px;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+            }
+
+            .mobile-turn-indicator:hover {
+                background: rgba(212, 175, 55, 0.2);
+                border-color: rgba(212, 175, 55, 0.4);
+            }
+
             .mobile-money {
                 color: var(--gold);
                 font-weight: 800;
