@@ -846,8 +846,19 @@
         }
 
         function startGame() {
-            const mapKey = document.getElementById('mapSelect').value;
-            window.activeSQ = getMapSQ(mapKey); // Globally accessible SQ for current game
+            try {
+                const mapSelect = document.getElementById('mapSelect');
+                if (!mapSelect) {
+                    debugError("mapSelect element not found");
+                    return;
+                }
+                const mapKey = mapSelect.value;
+                window.activeSQ = getMapSQ(mapKey); // Globally accessible SQ for current game
+                if (!window.activeSQ || !Array.isArray(window.activeSQ)) {
+                    debugError("Invalid map data for key:", mapKey);
+                    alert('Harita yüklenemedi. Lütfen sayfayı yenileyin.');
+                    return;
+                }
 
             const configs = [
                 { id: 1, name: document.getElementById('p1').value, type: document.getElementById('t1').value, color: 'red', icon: selectedIcons[1], pers: document.getElementById('pers1').value },
@@ -946,35 +957,68 @@
                 });
                 log(`🎲 Rastgele mülkler dağıtıldı ve set tamamlayanlara evler verildi!`, true);
             }
-            shuffle(CHANCE);
-            shuffle(CHEST);
+                shuffle(CHANCE);
+                shuffle(CHEST);
 
-            buildBoard();
-            updateOwners();
-            updateUI();
+                // Show loading state
+                const gameContainer = document.getElementById('gameContainer');
+                if (gameContainer) {
+                    gameContainer.style.opacity = '0.5';
+                    gameContainer.style.pointerEvents = 'none';
+                }
 
-            buildBoard();
-            updateOwners();
-            updateUI();
+                buildBoard();
+                updateOwners();
+                updateUI();
 
-            document.getElementById('setupScreen').classList.add('hidden');
-            document.getElementById('gameContainer').style.display = 'flex';
+                // Remove duplicate calls (optimization)
+                // buildBoard();
+                // updateOwners();
+                // updateUI();
 
-            // Fixed: Force token alignment at start line
-            setTimeout(() => {
-                updateTokens();
-                if (typeof sync3DEffectFromUI === 'function') sync3DEffectFromUI();
-            }, 150);
+                const setupScreen = document.getElementById('setupScreen');
+                const gameContainer = document.getElementById('gameContainer');
+                if (setupScreen) setupScreen.classList.add('hidden');
+                if (gameContainer) gameContainer.style.display = 'flex';
 
-            log(`🎮 Oyun başladı!`, true);
-            checkAI();
+                // Fixed: Force token alignment at start line
+                setTimeout(() => {
+                    try {
+                        updateTokens();
+                        if (typeof sync3DEffectFromUI === 'function') sync3DEffectFromUI();
+                        // Remove loading state
+                        if (gameContainer) {
+                            gameContainer.style.opacity = '1';
+                            gameContainer.style.pointerEvents = 'auto';
+                        }
+                    } catch (e) {
+                        debugError("Token update error:", e);
+                        if (gameContainer) {
+                            gameContainer.style.opacity = '1';
+                            gameContainer.style.pointerEvents = 'auto';
+                        }
+                    }
+                }, 150);
 
-            // Sync settings from setup screen
-            currLang = document.getElementById('setupLang').value;
-            document.getElementById('speedRange').value = document.getElementById('setupSpeed').value;
-            updateSpeedDisp();
-            set3DEffect(document.getElementById('setup3DToggle').classList.contains('on'));
-            updateLangUI();
+                log(`🎮 Oyun başladı!`, true);
+                checkAI();
+
+                // Sync settings from setup screen
+                const setupLang = document.getElementById('setupLang');
+                const setupSpeed = document.getElementById('setupSpeed');
+                const setup3DToggle = document.getElementById('setup3DToggle');
+                if (setupLang) currLang = setupLang.value;
+                const speedRange = document.getElementById('speedRange');
+                if (speedRange && setupSpeed) {
+                    speedRange.value = setupSpeed.value;
+                    updateSpeedDisp();
+                }
+                if (setup3DToggle) set3DEffect(setup3DToggle.classList.contains('on'));
+                updateLangUI();
+            } catch (e) {
+                debugError("startGame error:", e);
+                alert('Oyun başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
+            }
         }
 
         function checkAI() {
@@ -1515,30 +1559,58 @@
         }
 
         function handleLand(pos) {
-            const s = window.activeSQ[pos], p = G.players[G.cur];
-            document.querySelectorAll('.square').forEach(x => x.classList.remove('current'));
-            document.getElementById('sq-' + pos).classList.add('current');
-            if (['property', 'railroad', 'utility'].includes(s.type)) handleProp(s);
-            else if (s.type === 'chance') drawCard(LANGS[currLang].chance_cards, `❓ ${t('chance_title')}`, '❓');
-            else if (s.type === 'chest') drawCard(LANGS[currLang].chest_cards, `📦 ${t('chest_title')}`, '📦');
-            else if (s.type === 'tax') {
-                if (p.money >= s.amount) {
-                    chgMoney(p, -s.amount);
-                    if (G.customRules.parkingPool) G.park += s.amount;
-                    log(t('tax_msg').replace('%s', p.name).replace('%s', s.amount));
-                } else bankrupt();
-                document.getElementById('endBtn').disabled = false;
-                if (p.isAI) aiPostTurn();
-            } else if (s.type === 'gotojail') {
-                goJail(); document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
-            } else if (s.type === 'parking' && G.park > 0) {
-                chgMoney(p, G.park); log(t('park_msg').replace('%s', p.name).replace('%s', G.park), true); G.park = 0;
-                document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
-            } else {
-                document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
+            try {
+                if (!window.activeSQ || !window.activeSQ[pos]) {
+                    debugError("Invalid position:", pos);
+                    return;
+                }
+                const s = window.activeSQ[pos];
+                const p = G.players[G.cur];
+                if (!p) {
+                    debugError("No current player");
+                    return;
+                }
+                
+                document.querySelectorAll('.square').forEach(x => x.classList.remove('current'));
+                const sqEl = document.getElementById('sq-' + pos);
+                if (sqEl) sqEl.classList.add('current');
+                
+                if (['property', 'railroad', 'utility'].includes(s.type)) handleProp(s);
+                else if (s.type === 'chance') drawCard(LANGS[currLang].chance_cards, `❓ ${t('chance_title')}`, '❓');
+                else if (s.type === 'chest') drawCard(LANGS[currLang].chest_cards, `📦 ${t('chest_title')}`, '📦');
+                else if (s.type === 'tax') {
+                    if (p.money >= s.amount) {
+                        chgMoney(p, -s.amount);
+                        if (G.customRules.parkingPool) G.park += s.amount;
+                        log(t('tax_msg').replace('%s', p.name).replace('%s', s.amount));
+                    } else bankrupt();
+                    const endBtn = document.getElementById('endBtn');
+                    if (endBtn) endBtn.disabled = false;
+                    if (p.isAI) aiPostTurn();
+                } else if (s.type === 'gotojail') {
+                    goJail();
+                    const endBtn = document.getElementById('endBtn');
+                    if (endBtn) endBtn.disabled = false;
+                    if (p.isAI) aiPostTurn();
+                } else if (s.type === 'parking' && G.park > 0) {
+                    chgMoney(p, G.park);
+                    log(t('park_msg').replace('%s', p.name).replace('%s', G.park), true);
+                    G.park = 0;
+                    const endBtn = document.getElementById('endBtn');
+                    if (endBtn) endBtn.disabled = false;
+                    if (p.isAI) aiPostTurn();
+                } else {
+                    const endBtn = document.getElementById('endBtn');
+                    if (endBtn) endBtn.disabled = false;
+                    if (p.isAI) aiPostTurn();
+                }
+                if (p.stats) p.stats.lands++;
+                updateUI();
+            } catch (e) {
+                debugError("handleLand error:", e);
+                const endBtn = document.getElementById('endBtn');
+                if (endBtn) endBtn.disabled = false;
             }
-            p.stats.lands++;
-            updateUI();
         }
 
         function handleProp(s) {
@@ -2145,15 +2217,24 @@
         }
 
         function updateUI() {
-            updateTokens();
-            updatePanel();
-            const d = document.getElementById('parkDisp');
-            if (d) d.innerHTML = `🅿️ Park: <b>${G.park || 0}₺</b>`;
-            Object.keys(G.props).forEach(id => updateBld(parseInt(id)));
+            try {
+                updateTokens();
+                updatePanel();
+                const d = document.getElementById('parkDisp');
+                if (d) d.innerHTML = `🅿️ Park: <b>${G.park || 0}₺</b>`;
+                Object.keys(G.props || {}).forEach(id => {
+                    try {
+                        updateBld(parseInt(id));
+                    } catch (e) {
+                        debugError("updateBld error:", e);
+                    }
+                });
 
-            const p = G.players[G.cur];
-            const ctrl = document.querySelector('.controls-vertical');
-            const turnName = document.getElementById('currentPlayerName');
+                const p = G.players[G.cur];
+                if (!p) return;
+                
+                const ctrl = document.querySelector('.controls-vertical');
+                const turnName = document.getElementById('currentPlayerName');
 
             if (p) {
                 if (turnName) {
@@ -2191,9 +2272,14 @@
                     const mobEnd = document.getElementById('mobEndBtn');
 
                     if (mobRoll) mobRoll.disabled = G.rolled || p.isAI;
-                    if (mobBuy) mobBuy.disabled = document.getElementById('buyBtn').disabled;
-                    if (mobEnd) mobEnd.disabled = document.getElementById('endBtn').disabled;
+                    const buyBtn = document.getElementById('buyBtn');
+                    const endBtn = document.getElementById('endBtn');
+                    if (mobBuy && buyBtn) mobBuy.disabled = buyBtn.disabled;
+                    if (mobEnd && endBtn) mobEnd.disabled = endBtn.disabled;
                 }
+            }
+            } catch (e) {
+                debugError("updateUI error:", e);
             }
         }
         function updateTokens() {

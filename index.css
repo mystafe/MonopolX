@@ -186,6 +186,11 @@
             z-index: 100;
             will-change: transform;
             transform: translateZ(0);
+            /* Mobile touch optimizations */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .dice:hover {
@@ -438,6 +443,9 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
             backdrop-filter: blur(5px);
             will-change: transform;
+            /* Mobile touch optimizations */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .square:hover {
@@ -1012,6 +1020,11 @@
             box-shadow: 
                 0 4px 20px rgba(0, 0, 0, 0.15),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            /* Mobile touch optimizations */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         /* Elegant shine effect on hover */
@@ -2736,6 +2749,16 @@
 
         /* MOBILE RESPONSIVE - MASTER DESIGN (Optimized) */
         @media (max-width: 900px) {
+            /* Mobile touch optimizations */
+            * {
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            body {
+                touch-action: pan-y;
+                -webkit-overflow-scrolling: touch;
+            }
+            
             .game-wrapper {
                 flex-direction: column;
                 height: 100vh;
@@ -2744,6 +2767,7 @@
                 gap: 0;
                 background: var(--bg-dark);
                 overflow: hidden;
+                touch-action: pan-y;
             }
 
             /* Hide Desktop Side Panels */
@@ -2943,6 +2967,8 @@
                 font-size: 0.65rem !important;
                 height: 48px;
                 flex: 1;
+                min-height: 44px;
+                touch-action: manipulation;
             }
 
             .btn-roll-mob {
