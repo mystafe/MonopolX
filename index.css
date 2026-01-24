@@ -286,14 +286,14 @@
 
         .setup-card {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 14px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
         .setup-left .setup-card {
-            padding: 16px;
+            padding: 12px;
         }
 
         .setup-card:hover {
@@ -302,20 +302,20 @@
 
         .setup-title {
             color: var(--gold);
-            font-size: 0.85rem;
-            letter-spacing: 2px;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 800;
         }
 
         .setup-left .setup-title {
-            font-size: 0.75rem;
-            margin-bottom: 14px;
-            gap: 8px;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            gap: 6px;
         }
 
         .player-config-grid {
@@ -523,6 +523,9 @@
                 0 1px 2px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .color-bar::after {
@@ -536,33 +539,51 @@
             pointer-events: none;
         }
 
+        .color-bar .square-name {
+            position: relative;
+            z-index: 2;
+            font-weight: 900;
+            font-size: clamp(6px, 1.1vw, 10px);
+            line-height: 1.2;
+            color: #fff;
+            text-shadow: 
+                -1px -1px 0 rgba(0, 0, 0, 0.8), 
+                1px -1px 0 rgba(0, 0, 0, 0.8), 
+                -1px 1px 0 rgba(0, 0, 0, 0.8), 
+                1px 1px 0 rgba(0, 0, 0, 0.8),
+                0 0 4px rgba(0, 0, 0, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.5px;
+            padding: 0 4px;
+            text-align: center;
+        }
+
         .owner-info {
             position: absolute;
-            bottom: 22px;
+            bottom: 0;
             left: 0;
             right: 0;
+            top: 0;
             text-align: center;
             font-size: clamp(5px, 0.85vw, 7px);
             font-weight: 700;
             text-transform: uppercase;
             color: #fff;
             text-shadow: 
-                -1px -1px 0 #000, 
-                1px -1px 0 #000, 
-                -1px 1px 0 #000, 
-                1px 1px 0 #000, 
-                0 0 4px rgba(0, 0, 0, 0.9),
-                0 1px 2px rgba(0, 0, 0, 0.7);
+                -1px -1px 0 rgba(0, 0, 0, 0.9), 
+                1px -1px 0 rgba(0, 0, 0, 0.9), 
+                -1px 1px 0 rgba(0, 0, 0, 0.9), 
+                1px 1px 0 rgba(0, 0, 0, 0.9), 
+                0 0 4px rgba(0, 0, 0, 0.8),
+                0 1px 2px rgba(0, 0, 0, 0.6);
             z-index: 10;
             pointer-events: none;
             letter-spacing: 0.4px;
-            padding: 0 3px;
-            line-height: 1.1;
-            opacity: 0.95;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(2px);
-            border-radius: 3px;
-            margin: 0 2px;
+            padding: 0 4px;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .owner-bar {
@@ -570,7 +591,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 18px;
+            height: 20px;
             transition: all 0.3s ease;
             z-index: 5;
             opacity: 0.9 !important;
@@ -580,6 +601,9 @@
                 inset 0 -2px 4px rgba(0, 0, 0, 0.2),
                 0 -1px 2px rgba(0, 0, 0, 0.1);
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .square-content {
@@ -606,6 +630,11 @@
                 0 0 1px rgba(0, 0, 0, 0.1);
             letter-spacing: 0.4px;
             padding: 0 2px;
+        }
+
+        /* Override for square-name inside color-bar */
+        .color-bar .square-name {
+            margin-bottom: 0;
         }
 
         .square-price {
@@ -2469,14 +2498,14 @@
 
         .theme-preview {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 0;
         }
 
         .theme-card {
             flex: 1;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 6px;
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
             cursor: pointer;
@@ -2496,9 +2525,9 @@
         }
 
         .theme-card div {
-            height: 36px;
-            border-radius: 6px;
-            margin-bottom: 6px;
+            height: 24px;
+            border-radius: 3px;
+            margin-bottom: 4px;
         }
 
 
