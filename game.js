@@ -321,18 +321,6 @@
             if (difficultySelect) difficultySelect.value = level;
             updateDifficultyDisplay();
             
-            const difficultyNames = {
-                '1': '1 - En Kolay',
-                '2': '2 - Kolay',
-                '3': '3 - Normal',
-                '4': '4 - Zor',
-                '5': '5 - En Zor'
-            };
-            const currentDifficultyNameEl = document.getElementById('currentDifficultyName');
-            if (currentDifficultyNameEl) {
-                currentDifficultyNameEl.textContent = difficultyNames[level] || '3 - Normal';
-            }
-            
             document.querySelectorAll('.difficulty-card-modal').forEach(card => {
                 card.classList.remove('selected');
             });
@@ -340,6 +328,120 @@
             if (selectedCard) selectedCard.classList.add('selected');
             
             closeModal('difficultyModal');
+        }
+
+        function openLangModal() {
+            const modal = document.getElementById('langModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function selectLangFromModal(lang) {
+            const langSelect = document.getElementById('setupLang');
+            if (langSelect) langSelect.value = lang;
+            currLang = lang;
+            updateLangUI();
+            
+            const langNames = { tr: '🇹🇷 Türkçe', en: '🇬🇧 English' };
+            const currentLangNameEl = document.getElementById('currentLangName');
+            if (currentLangNameEl) {
+                currentLangNameEl.textContent = langNames[lang] || '🇹🇷 Türkçe';
+            }
+            
+            // Update difficulty label
+            const difficultyLabel = document.querySelector('label[for="difficultyLevel"], .rule-item:has(#difficultyLevel) label');
+            if (difficultyLabel) {
+                difficultyLabel.textContent = lang === 'en' ? 'DIFFICULTY' : 'OYUN ZORLUĞU';
+            }
+            
+            // Update current difficulty name
+            const difficultySelect = document.getElementById('difficultyLevel');
+            if (difficultySelect) {
+                const level = difficultySelect.value;
+                const difficultyNames = {
+                    '1': { tr: 'En Kolay', en: 'Very Easy' },
+                    '2': { tr: 'Kolay', en: 'Easy' },
+                    '3': { tr: 'Normal', en: 'Normal' },
+                    '4': { tr: 'Zor', en: 'Hard' },
+                    '5': { tr: 'En Zor', en: 'Very Hard' }
+                };
+                const currentDifficultyNameEl = document.getElementById('currentDifficultyName');
+                if (currentDifficultyNameEl) {
+                    currentDifficultyNameEl.textContent = difficultyNames[level]?.[lang] || difficultyNames['3'][lang];
+                }
+            }
+            
+            document.querySelectorAll('.lang-card-modal').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.getElementById(`lang-modal-${lang}`);
+            if (selectedCard) selectedCard.classList.add('selected');
+            
+            closeModal('langModal');
+        }
+
+        function openSpeedModal() {
+            const modal = document.getElementById('speedModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function selectSpeedFromModal(speed) {
+            const speedSelect = document.getElementById('setupSpeed');
+            if (speedSelect) speedSelect.value = speed;
+            const speedRange = document.getElementById('speedRange');
+            if (speedRange) speedRange.value = speed;
+            updateSpeedDisp();
+            
+            const speedNames = { 
+                '100': '🐢 Yavaş', 
+                '200': '⚡ Normal', 
+                '300': '🚀 Hızlı', 
+                '400': '⚡ Şimşek' 
+            };
+            const currentSpeedNameEl = document.getElementById('currentSpeedName');
+            if (currentSpeedNameEl) {
+                currentSpeedNameEl.textContent = speedNames[speed] || '⚡ Normal';
+            }
+            
+            document.querySelectorAll('.speed-card-modal').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.getElementById(`speed-modal-${speed}`);
+            if (selectedCard) selectedCard.classList.add('selected');
+            
+            closeModal('speedModal');
+        }
+
+        function initMapSelection() {
+            const mapSelect = document.getElementById('mapSelect');
+            if (mapSelect) {
+                const currentMap = mapSelect.value || 'turkiye';
+                selectMapFromModal(currentMap);
+            }
+            
+            // Initialize lang selection
+            const langSelect = document.getElementById('setupLang');
+            if (langSelect) {
+                selectLangFromModal(langSelect.value || 'tr');
+            }
+            
+            // Initialize speed selection
+            const speedSelect = document.getElementById('setupSpeed');
+            if (speedSelect) {
+                selectSpeedFromModal(speedSelect.value || '200');
+            }
+            
+            // Initialize difficulty selection
+            const difficultySelect = document.getElementById('difficultyLevel');
+            if (difficultySelect) {
+                selectDifficultyFromModal(difficultySelect.value || '3');
+            }
+            
+            // Initialize player type and personality displays
+            for (let i = 1; i <= 4; i++) {
+                updatePlayerTypeDisplay(i);
+                updatePlayerPersDisplay(i);
+                togglePers(i);
+            }
         }
 
         const SQ = [
@@ -1318,20 +1420,51 @@
             const difficultySelect = document.getElementById('difficultyLevel');
             if (!difficultySelect) return;
             
-            const level = parseInt(difficultySelect.value) || 3;
-            const settings = getDifficultySettings(level);
+            const level = difficultySelect.value || '3';
+            const lang = currLang || 'tr';
             
-            const descriptions = {
-                1: 'AI pasif, kira -10%, challenge kartları çok nadir',
-                2: 'AI biraz pasif, kira -5%, challenge kartları nadir',
-                3: 'AI normal, kira normal, challenge kartları nadir',
-                4: 'AI agresif, kira +20%, challenge kartları sık',
-                5: 'AI çok agresif, kira +40%, challenge kartları çok sık, kaos modu'
+            const difficultyNames = {
+                '1': { tr: 'En Kolay', en: 'Very Easy' },
+                '2': { tr: 'Kolay', en: 'Easy' },
+                '3': { tr: 'Normal', en: 'Normal' },
+                '4': { tr: 'Zor', en: 'Hard' },
+                '5': { tr: 'En Zor', en: 'Very Hard' }
             };
             
+            const currentDifficultyNameEl = document.getElementById('currentDifficultyName');
+            if (currentDifficultyNameEl) {
+                currentDifficultyNameEl.textContent = difficultyNames[level]?.[lang] || difficultyNames['3'][lang];
+            }
+            
+            // Update difficulty label
+            const difficultyLabel = document.getElementById('difficultyLabel');
+            if (difficultyLabel) {
+                difficultyLabel.textContent = lang === 'en' ? 'DIFFICULTY' : 'OYUN ZORLUĞU';
+            }
+            
+            // Update modal cards
+            const modalCards = {
+                '1': { tr: 'En Kolay', en: 'Very Easy' },
+                '2': { tr: 'Kolay', en: 'Easy' },
+                '3': { tr: 'Normal', en: 'Normal' },
+                '4': { tr: 'Zor', en: 'Hard' },
+                '5': { tr: 'En Zor', en: 'Very Hard' }
+            };
+            
+            Object.keys(modalCards).forEach(lvl => {
+                const card = document.getElementById(`difficulty-modal-${lvl}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        span.textContent = modalCards[lvl][lang] || modalCards[lvl]['tr'];
+                    }
+                }
+            });
+            
+            // Hide description
             const descriptionEl = document.getElementById('difficultyDescription');
             if (descriptionEl) {
-                descriptionEl.textContent = descriptions[level] || descriptions[3];
+                descriptionEl.style.display = 'none';
             }
         }
 
@@ -2540,7 +2673,7 @@
                 updateTokens();
                 updatePanel();
                 const d = document.getElementById('parkDisp');
-                if (d) d.innerHTML = `🅿️ Park: <b>${G.park || 0}₺</b>`;
+                if (d) d.innerHTML = `<span style="opacity:0.7; font-size:0.75rem; margin-right:6px;">🅿️ Park</span><span style="color:var(--gold); font-weight:700; font-size:0.9rem;">${G.park || 0}₺</span>`;
                 Object.keys(G.props || {}).forEach(id => {
                     try {
                         updateBld(parseInt(id));

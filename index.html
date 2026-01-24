@@ -212,9 +212,9 @@
                         </div>
                         <div class="rule-item" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; grid-column:1/-1; border:none; padding-top:10px;">
                             <div style="flex:1; display:flex; flex-direction:column; align-items:flex-start;">
-                                <label style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">OYUN ZORLUĞU / DIFFICULTY</label>
+                                <label id="difficultyLabel" style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">OYUN ZORLUĞU</label>
                                 <button class="btn-theme-selector" onclick="openDifficultyModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
-                                    <span id="currentDifficultyName">3 - Normal</span>
+                                    <span id="currentDifficultyName">Normal</span>
                                 </button>
                                 <select id="difficultyLevel" style="display:none;" onchange="updateDifficultyDisplay(); selectDifficultyFromModal(this.value);">
                                     <option value="1">1 - En Kolay</option>
@@ -223,12 +223,10 @@
                                     <option value="4">4 - Zor</option>
                                     <option value="5">5 - En Zor</option>
                                 </select>
-                                <div id="difficultyDescription" style="font-size:0.65rem; opacity:0.7; margin-top:6px; line-height:1.3;">
-                                    AI normal, kira normal, challenge kartları nadir
-                                </div>
+                                <div id="difficultyDescription" style="display:none;"></div>
                             </div>
                             <div style="flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; margin-left:20px;">
-                                <label style="font-size:0.75rem; font-weight:800; color:#fff; margin-bottom:5px;">3D TAHTA EFEKTİ</label>
+                                <label style="font-size:0.65rem; opacity:0.6; margin-bottom:5px; font-weight:700; letter-spacing:0.5px;">3D TAHTA EFEKTİ</label>
                                 <div class="rule-toggle" id="setup3DToggle" onclick="this.classList.toggle('on');"></div>
                             </div>
                         </div>
@@ -323,7 +321,7 @@
                 OYUNCULAR</h2>
             <div id="playersPanel" style="display: flex; flex-direction: column; gap: 8px; margin-top:10px;"></div>
             <div id="parkDisp"
-                style="margin-top: auto; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 10px; text-align: center; border: 1px dashed var(--gold);">
+                style="margin-top: auto; padding: 12px 16px; background: rgba(255,255,255,0.03); border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px);">
             </div>
         </div>
 
@@ -575,34 +573,19 @@
             </div>
             <div class="difficulty-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
                 <div class="difficulty-card-modal" id="difficulty-modal-1" onclick="selectDifficultyFromModal('1')">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:1rem; font-weight:600;">1 - En Kolay</span>
-                        <span style="font-size:0.75rem; opacity:0.7;">AI pasif, kira normal</span>
-                    </div>
+                    <span style="font-size:1rem; font-weight:600;">En Kolay</span>
                 </div>
                 <div class="difficulty-card-modal" id="difficulty-modal-2" onclick="selectDifficultyFromModal('2')">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:1rem; font-weight:600;">2 - Kolay</span>
-                        <span style="font-size:0.75rem; opacity:0.7;">AI biraz pasif, kira normal</span>
-                    </div>
+                    <span style="font-size:1rem; font-weight:600;">Kolay</span>
                 </div>
                 <div class="difficulty-card-modal selected" id="difficulty-modal-3" onclick="selectDifficultyFromModal('3')">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:1rem; font-weight:600;">3 - Normal</span>
-                        <span style="font-size:0.75rem; opacity:0.7;">AI normal, kira normal</span>
-                    </div>
+                    <span style="font-size:1rem; font-weight:600;">Normal</span>
                 </div>
                 <div class="difficulty-card-modal" id="difficulty-modal-4" onclick="selectDifficultyFromModal('4')">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:1rem; font-weight:600;">4 - Zor</span>
-                        <span style="font-size:0.75rem; opacity:0.7;">AI agresif, kira +20%</span>
-                    </div>
+                    <span style="font-size:1rem; font-weight:600;">Zor</span>
                 </div>
                 <div class="difficulty-card-modal" id="difficulty-modal-5" onclick="selectDifficultyFromModal('5')">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:1rem; font-weight:600;">5 - En Zor</span>
-                        <span style="font-size:0.75rem; opacity:0.7;">AI çok agresif, kira +40%, kaos</span>
-                    </div>
+                    <span style="font-size:1rem; font-weight:600;">En Zor</span>
                 </div>
             </div>
             <div class="modal-buttons"
