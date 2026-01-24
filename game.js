@@ -977,7 +977,6 @@
                 // updateUI();
 
                 const setupScreen = document.getElementById('setupScreen');
-                const gameContainer = document.getElementById('gameContainer');
                 if (setupScreen) setupScreen.classList.add('hidden');
                 if (gameContainer) gameContainer.style.display = 'flex';
 
@@ -1020,6 +1019,7 @@
                 alert('Oyun başlatılırken bir hata oluştu. Lütfen sayfayı yenileyin.');
             }
         }
+        window.startGame = startGame; // Expose to global scope
 
         function checkAI() {
             if (document.querySelector('.modal-overlay.active')) {
