@@ -2981,6 +2981,52 @@
             }
         }
 
+        function togglePanel(side) {
+            const panel = side === 'left' ? document.getElementById('leftPanel') : document.getElementById('rightPanel');
+            const toggle = side === 'left' ? document.getElementById('toggleLeftPanel') : document.getElementById('toggleRightPanel');
+            
+            if (panel && toggle) {
+                panel.classList.toggle('collapsed');
+                const isCollapsed = panel.classList.contains('collapsed');
+                
+                // Update icon rotation
+                const icon = toggle.querySelector('.panel-toggle-icon');
+                if (icon) {
+                    if (side === 'left') {
+                        icon.textContent = isCollapsed ? '▶' : '◀';
+                    } else {
+                        icon.textContent = isCollapsed ? '◀' : '▶';
+                    }
+                }
+                
+                // Save state
+                localStorage.setItem(`panel_${side}_collapsed`, isCollapsed);
+            }
+        }
+
+        function initPanelStates() {
+            const leftCollapsed = localStorage.getItem('panel_left_collapsed') === 'true';
+            const rightCollapsed = localStorage.getItem('panel_right_collapsed') === 'true';
+            
+            if (leftCollapsed) {
+                document.getElementById('leftPanel')?.classList.add('collapsed');
+                const leftToggle = document.getElementById('toggleLeftPanel');
+                if (leftToggle) {
+                    const icon = leftToggle.querySelector('.panel-toggle-icon');
+                    if (icon) icon.textContent = '▶';
+                }
+            }
+            
+            if (rightCollapsed) {
+                document.getElementById('rightPanel')?.classList.add('collapsed');
+                const rightToggle = document.getElementById('toggleRightPanel');
+                if (rightToggle) {
+                    const icon = rightToggle.querySelector('.panel-toggle-icon');
+                    if (icon) icon.textContent = '◀';
+                }
+            }
+        }
+
         window.onload = () => {
             if (localStorage.getItem('monopolx_autosave')) {
                 document.getElementById('resumeBtn').style.display = 'block';
@@ -2992,6 +3038,8 @@
             initMapSelection();
             // Initialize language UI
             updateLangUI();
+            // Initialize panel states
+            initPanelStates();
 
             // Listen for resize to re-align tokens
             window.addEventListener('resize', throttle(() => {

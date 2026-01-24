@@ -308,7 +308,10 @@
         </div>
 
         <!-- Sol Panel: Oyuncu Listesi -->
-        <div class="side-panel players-side">
+        <button class="panel-toggle panel-toggle-left" id="toggleLeftPanel" onclick="togglePanel('left')" aria-label="Sol paneli göster/gizle" title="Sol Paneli Göster/Gizle">
+            <span class="panel-toggle-icon">◀</span>
+        </button>
+        <div class="side-panel players-side" id="leftPanel">
             <div
                 style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 25px;">
                 <img src="assets/logo.png" alt="MONOPOLX LUXURY GAMING" loading="lazy"
@@ -346,7 +349,10 @@
         </div>
 
         <!-- Sağ Panel: Kontroller ve Log -->
-        <div class="side-panel">
+        <button class="panel-toggle panel-toggle-right" id="toggleRightPanel" onclick="togglePanel('right')" aria-label="Sağ paneli göster/gizle" title="Sağ Paneli Göster/Gizle">
+            <span class="panel-toggle-icon">▶</span>
+        </button>
+        <div class="side-panel" id="rightPanel">
             <h2 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.8rem; letter-spacing: 2px;">🎮
                 KONTROLLER</h2>
             <div class="controls-vertical">
