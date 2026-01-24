@@ -4497,6 +4497,22 @@
                 bottom: 90px;
                 transform: translateX(-50%);
             }
+
+            @keyframes toastIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px) scale(0.9);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            .toast {
+                animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            }
         }
 
         .toast {

@@ -682,7 +682,8 @@
             // Auto remove
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px) scale(0.9)';
+                const isMobile = window.innerWidth <= 900;
+                toast.style.transform = isMobile ? 'translateY(20px) scale(0.9)' : 'translateY(-20px) scale(0.9)';
                 setTimeout(() => toast.remove(), 400);
             }, 3500);
         }
