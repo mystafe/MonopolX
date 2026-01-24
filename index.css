@@ -2261,7 +2261,10 @@
         }
 
         body.theme-cyber .board {
-            background: #050510 !important;
+            background: url('assets/cyber_bg.png') center/cover !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             border: 15px solid #00f2ff !important;
             box-shadow: 0 0 50px rgba(0, 242, 255, 0.4) !important;
         }
@@ -2378,7 +2381,10 @@
         }
 
         body.theme-cyber .board {
-            background: #050510 !important;
+            background: url('assets/cyber_bg.png') center/cover !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             border: 15px solid #00f2ff !important;
             box-shadow: 0 0 50px rgba(0, 242, 255, 0.4) !important;
         }
