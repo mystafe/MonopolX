@@ -4490,6 +4490,15 @@
             pointer-events: none;
         }
 
+        /* Mobile toast positioning - show from bottom */
+        @media (max-width: 900px) {
+            .toast-container {
+                top: auto;
+                bottom: 90px;
+                transform: translateX(-50%);
+            }
+        }
+
         .toast {
             background: rgba(18, 20, 29, 0.9);
             backdrop-filter: blur(20px) saturate(180%);
