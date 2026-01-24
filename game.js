@@ -1939,6 +1939,7 @@
                     p.pos = target.pos;
                     target.pos = oldPos;
                     log(`🌀 ${p.name} ve ${target.name} yer değiştirdi!`, true);
+                    updateUI();
                 }
             } else if (c.a === 'halve') {
                 chgMoney(p, -Math.floor(p.money / 2));
@@ -1995,12 +1996,14 @@
             } else if (c.a === 'lose_three') {
                 if (p.props.length > 0) {
                     const toLose = Math.min(3, p.props.length);
-                    for (let i = 0; i < toLose; i++) {
+                    const lostProps = [];
+                    for (let i = 0; i < toLose && p.props.length > 0; i++) {
                         const rid = p.props[Math.floor(Math.random() * p.props.length)];
+                        lostProps.push(window.activeSQ[rid].name);
                         delete G.props[rid];
                         p.props = p.props.filter(pid => pid !== rid);
                     }
-                    log(`🔥 YANGIN! ${p.name}, ${toLose} mülkünü kaybetti!`, true);
+                    log(`🔥 YANGIN! ${p.name}, ${toLose} mülkünü kaybetti! (${lostProps.join(', ')})`, true);
                     updateOwners();
                 }
             }
