@@ -98,7 +98,79 @@
         function togglePers(pIdx) {
             const t = document.getElementById('t' + pIdx).value;
             const pers = document.getElementById('pers' + pIdx);
+            const persBtn = document.getElementById('persBtn' + pIdx);
             if (pers) pers.style.display = t.startsWith('ai') ? 'block' : 'none';
+            if (persBtn) persBtn.style.display = t.startsWith('ai') ? 'block' : 'none';
+        }
+
+        let currentPlayerTypeModal = null;
+        let currentPlayerPersModal = null;
+
+        function openPlayerTypeModal(playerNum) {
+            currentPlayerTypeModal = playerNum;
+            const modal = document.getElementById('playerTypeModal');
+            if (modal) modal.classList.add('active');
+            // Update selected state
+            const currentType = document.getElementById('t' + playerNum).value;
+            document.querySelectorAll('.player-type-card-modal').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.getElementById(`player-type-${currentType}`);
+            if (selectedCard) selectedCard.classList.add('selected');
+        }
+
+        function selectPlayerTypeFromModal(type) {
+            if (!currentPlayerTypeModal) return;
+            const select = document.getElementById('t' + currentPlayerTypeModal);
+            if (select) {
+                select.value = type;
+                autoName(currentPlayerTypeModal);
+                togglePers(currentPlayerTypeModal);
+                updatePlayerTypeDisplay(currentPlayerTypeModal);
+            }
+            closeModal('playerTypeModal');
+            currentPlayerTypeModal = null;
+        }
+
+        function updatePlayerTypeDisplay(playerNum) {
+            const select = document.getElementById('t' + playerNum);
+            if (!select) return;
+            const type = select.value;
+            const typeNames = {
+                'human': '👤 İnsan',
+                'ai-easy': '🤖 Kolay AI',
+                'ai-medium': '🤖 Orta AI',
+                'ai-hard': '🤖 Zor AI',
+                'none': '--- (Kapalı)'
+            };
+            const currentTypeEl = document.getElementById('currentType' + playerNum);
+            if (currentTypeEl) {
+                currentTypeEl.textContent = typeNames[type] || '👤 İnsan';
+            }
+        }
+
+        function openPlayerPersModal(playerNum) {
+            currentPlayerPersModal = playerNum;
+            const modal = document.getElementById('playerPersModal');
+            if (modal) modal.classList.add('active');
+            // Update selected state
+            const currentPers = document.getElementById('pers' + playerNum).value;
+            document.querySelectorAll('.player-pers-card-modal').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.getElementById(`player-pers-${currentPers}`);
+            if (selectedCard) selectedCard.classList.add('selected');
+        }
+
+        function selectPlayerPersFromModal(pers) {
+            if (!currentPlayerPersModal) return;
+            const select = document.getElementById('pers' + currentPlayerPersModal);
+            if (select) {
+                select.value = pers;
+                updatePlayerPersDisplay(currentPlayerPersModal);
+            }
+            closeModal('playerPersModal');
+            currentPlayerPersModal = null;
         }
 
         function initIconSelectors() {

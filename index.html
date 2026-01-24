@@ -52,15 +52,20 @@
                                 <input type="text" id="p1" value="Mustafa" maxlength="10" placeholder="İsim Girin"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
-                                    <select id="t1" class="player-type-select" style="flex:1"
-                                        onchange="autoName(1);togglePers(1)">
+                                    <button class="btn-theme-selector" onclick="openPlayerTypeModal(1)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentType1">👤 İnsan</span>
+                                    </button>
+                                    <button class="btn-theme-selector" id="persBtn1" onclick="openPlayerPersModal(1)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem; display:none;">
+                                        <span id="currentPers1">🎲 Rastgele</span>
+                                    </button>
+                                    <select id="t1" style="display:none;" onchange="autoName(1);togglePers(1);updatePlayerTypeDisplay(1);">
                                         <option value="human" selected>👤 İnsan</option>
                                         <option value="ai-easy">🤖 Kolay AI</option>
                                         <option value="ai-medium">🤖 Orta AI</option>
                                         <option value="ai-hard">🤖 Zor AI</option>
                                     </select>
-                                    <select id="pers1" class="player-type-select" style="flex:1; display:none;">
-                                        <option value="Random">🎲 Rastgele</option>
+                                    <select id="pers1" style="display:none;">
+                                        <option value="Random" selected>🎲 Rastgele</option>
                                         <option value="Tycoon">💼 Kodaman</option>
                                         <option value="Banker">🏦 Bankacı</option>
                                         <option value="Opportunist">🦊 Fırsatçı</option>
@@ -75,15 +80,20 @@
                                 <input type="text" id="p2" value="Robot-1" maxlength="10"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
-                                    <select id="t2" class="player-type-select" style="flex:1"
-                                        onchange="autoName(2);togglePers(2)">
+                                    <button class="btn-theme-selector" onclick="openPlayerTypeModal(2)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentType2">🤖 Zor AI</span>
+                                    </button>
+                                    <button class="btn-theme-selector" id="persBtn2" onclick="openPlayerPersModal(2)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentPers2">🎲 Rastgele</span>
+                                    </button>
+                                    <select id="t2" style="display:none;" onchange="autoName(2);togglePers(2);updatePlayerTypeDisplay(2);">
                                         <option value="human">👤 İnsan</option>
                                         <option value="ai-easy">🤖 Kolay AI</option>
                                         <option value="ai-medium">🤖 Orta AI</option>
                                         <option value="ai-hard" selected>🤖 Zor AI</option>
                                     </select>
-                                    <select id="pers2" class="player-type-select" style="flex:1;">
-                                        <option value="Random">🎲 Rastgele</option>
+                                    <select id="pers2" style="display:none;">
+                                        <option value="Random" selected>🎲 Rastgele</option>
                                         <option value="Tycoon">💼 Kodaman</option>
                                         <option value="Banker">🏦 Bankacı</option>
                                         <option value="Opportunist">🦊 Fırsatçı</option>
@@ -98,16 +108,21 @@
                                 <input type="text" id="p3" value="Robot-2" maxlength="10"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
-                                    <select id="t3" class="player-type-select" style="flex:1"
-                                        onchange="autoName(3);togglePers(3)">
+                                    <button class="btn-theme-selector" onclick="openPlayerTypeModal(3)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentType3">🤖 Zor AI</span>
+                                    </button>
+                                    <button class="btn-theme-selector" id="persBtn3" onclick="openPlayerPersModal(3)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentPers3">🎲 Rastgele</span>
+                                    </button>
+                                    <select id="t3" style="display:none;" onchange="autoName(3);togglePers(3);updatePlayerTypeDisplay(3);">
                                         <option value="none">--- (Kapalı)</option>
                                         <option value="human">👤 İnsan</option>
                                         <option value="ai-easy">🤖 Kolay AI</option>
                                         <option value="ai-medium">🤖 Orta AI</option>
                                         <option value="ai-hard" selected>🤖 Zor AI</option>
                                     </select>
-                                    <select id="pers3" class="player-type-select" style="flex:1;">
-                                        <option value="Random">🎲 Rastgele</option>
+                                    <select id="pers3" style="display:none;">
+                                        <option value="Random" selected>🎲 Rastgele</option>
                                         <option value="Tycoon">💼 Kodaman</option>
                                         <option value="Banker">🏦 Bankacı</option>
                                         <option value="Opportunist">🦊 Fırsatçı</option>
@@ -122,16 +137,21 @@
                                 <input type="text" id="p4" value="Robot-3" maxlength="10"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
-                                    <select id="t4" class="player-type-select" style="flex:1"
-                                        onchange="autoName(4);togglePers(4)">
+                                    <button class="btn-theme-selector" onclick="openPlayerTypeModal(4)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentType4">🤖 Kolay AI</span>
+                                    </button>
+                                    <button class="btn-theme-selector" id="persBtn4" onclick="openPlayerPersModal(4)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
+                                        <span id="currentPers4">🎲 Rastgele</span>
+                                    </button>
+                                    <select id="t4" style="display:none;" onchange="autoName(4);togglePers(4);updatePlayerTypeDisplay(4);">
                                         <option value="none">--- (Kapalı)</option>
                                         <option value="human">👤 İnsan</option>
                                         <option value="ai-easy" selected>🤖 Kolay AI</option>
                                         <option value="ai-medium">🤖 Orta AI</option>
                                         <option value="ai-hard">🤖 Zor AI</option>
                                     </select>
-                                    <select id="pers4" class="player-type-select" style="flex:1;">
-                                        <option value="Random">🎲 Rastgele</option>
+                                    <select id="pers4" style="display:none;">
+                                        <option value="Random" selected>🎲 Rastgele</option>
                                         <option value="Tycoon">💼 Kodaman</option>
                                         <option value="Banker">🏦 Bankacı</option>
                                         <option value="Opportunist">🦊 Fırsatçı</option>
@@ -590,6 +610,63 @@
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
                 <button class="btn btn-secondary" style="width:100%" onclick="closeModal('difficultyModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="playerTypeModal" style="z-index: 10000;">
+        <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">👤 Oyuncu Tipi</h2>
+                <button class="btn-close-modal" onclick="closeModal('playerTypeModal')" aria-label="Kapat">✕</button>
+            </div>
+            <div class="player-type-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
+                <div class="player-type-card-modal" id="player-type-human" onclick="selectPlayerTypeFromModal('human')">
+                    <span style="font-size:1rem; font-weight:600;">👤 İnsan</span>
+                </div>
+                <div class="player-type-card-modal" id="player-type-ai-easy" onclick="selectPlayerTypeFromModal('ai-easy')">
+                    <span style="font-size:1rem; font-weight:600;">🤖 Kolay AI</span>
+                </div>
+                <div class="player-type-card-modal" id="player-type-ai-medium" onclick="selectPlayerTypeFromModal('ai-medium')">
+                    <span style="font-size:1rem; font-weight:600;">🤖 Orta AI</span>
+                </div>
+                <div class="player-type-card-modal" id="player-type-ai-hard" onclick="selectPlayerTypeFromModal('ai-hard')">
+                    <span style="font-size:1rem; font-weight:600;">🤖 Zor AI</span>
+                </div>
+                <div class="player-type-card-modal" id="player-type-none" onclick="selectPlayerTypeFromModal('none')">
+                    <span style="font-size:1rem; font-weight:600;">--- (Kapalı)</span>
+                </div>
+            </div>
+            <div class="modal-buttons"
+                style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('playerTypeModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="playerPersModal" style="z-index: 10000;">
+        <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">🎭 Kişilik</h2>
+                <button class="btn-close-modal" onclick="closeModal('playerPersModal')" aria-label="Kapat">✕</button>
+            </div>
+            <div class="player-pers-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
+                <div class="player-pers-card-modal selected" id="player-pers-Random" onclick="selectPlayerPersFromModal('Random')">
+                    <span style="font-size:1rem; font-weight:600;">🎲 Rastgele</span>
+                </div>
+                <div class="player-pers-card-modal" id="player-pers-Tycoon" onclick="selectPlayerPersFromModal('Tycoon')">
+                    <span style="font-size:1rem; font-weight:600;">💼 Kodaman</span>
+                </div>
+                <div class="player-pers-card-modal" id="player-pers-Banker" onclick="selectPlayerPersFromModal('Banker')">
+                    <span style="font-size:1rem; font-weight:600;">🏦 Bankacı</span>
+                </div>
+                <div class="player-pers-card-modal" id="player-pers-Opportunist" onclick="selectPlayerPersFromModal('Opportunist')">
+                    <span style="font-size:1rem; font-weight:600;">🦊 Fırsatçı</span>
+                </div>
+            </div>
+            <div class="modal-buttons"
+                style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('playerPersModal')">Kapat</button>
             </div>
         </div>
     </div>
