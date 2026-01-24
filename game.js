@@ -284,6 +284,7 @@
             const modal = document.getElementById('themeModal');
             if (modal) modal.classList.add('active');
         }
+        window.openThemeModal = openThemeModal;
 
         function selectThemeFromModal(themeName) {
             setTheme(themeName);
@@ -331,6 +332,7 @@
             const modal = document.getElementById('difficultyModal');
             if (modal) modal.classList.add('active');
         }
+        window.openDifficultyModal = openDifficultyModal;
 
         function selectDifficultyFromModal(level) {
             const difficultySelect = document.getElementById('difficultyLevel');
@@ -350,6 +352,7 @@
             const modal = document.getElementById('langModal');
             if (modal) modal.classList.add('active');
         }
+        window.openLangModal = openLangModal;
 
         function selectLangFromModal(lang) {
             const langSelect = document.getElementById('setupLang');
@@ -399,6 +402,7 @@
             const modal = document.getElementById('speedModal');
             if (modal) modal.classList.add('active');
         }
+        window.openSpeedModal = openSpeedModal;
 
         function selectSpeedFromModal(speed) {
             const speedSelect = document.getElementById('setupSpeed');
