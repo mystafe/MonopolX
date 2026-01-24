@@ -1890,6 +1890,22 @@
         /* Responsive for mobile */
         /* Extra small mobile devices */
         @media (max-width: 600px) {
+            .credit-badge {
+                bottom: 8px;
+                right: 12px;
+                font-size: 0.6rem;
+                padding: 5px 12px;
+            }
+
+            .credit-badge span {
+                margin-left: 3px;
+            }
+
+            .credit-badge small {
+                margin-left: 6px !important;
+                font-size: 0.5rem !important;
+            }
+
             .btn-theme-selector {
                 padding: 12px 16px;
                 font-size: 0.85rem;
@@ -1999,20 +2015,22 @@
         /* Branding Badge */
         .credit-badge {
             position: fixed;
-            bottom: 20px;
+            bottom: 10px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            color: var(--gold);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            border: 1px solid var(--gold);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            color: rgba(255, 255, 255, 0.4);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             z-index: 9999;
             pointer-events: none;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
         }
 
         .token.moving {
@@ -2021,8 +2039,13 @@
         }
 
         .credit-badge span {
-            color: white;
-            margin-left: 5px;
+            color: rgba(212, 175, 55, 0.5);
+            margin-left: 4px;
+            font-weight: 600;
+        }
+
+        .credit-badge:hover {
+            opacity: 0.9;
         }
 
         /* Themes Contrast Fixes */
