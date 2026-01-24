@@ -2217,10 +2217,10 @@
 
                 let h = '';
                 if (s.type === 'property' || s.type === 'railroad' || s.type === 'utility') {
-                    h = `<div class="color-bar" style="background:${s.color || '#333'}"><div class="square-name">${s.name}</div></div><div class="buildings" id="bld-${i}"></div><div class="square-content"><div class="square-price">${s.price}₺</div></div><div class="owner-bar" id="own-${i}"><div class="owner-info" id="own-info-${i}"></div></div>`;
+                    h = `<div class="color-bar" style="background:${s.color || '#333'}"><div class="square-name">${s.name}</div></div><div class="buildings" id="bld-${i}"></div><div class="square-content"><div class="square-price">${s.price}</div></div><div class="owner-bar" id="own-${i}"><div class="owner-info" id="own-info-${i}"></div></div>`;
                 } else if (s.type === 'chance' || s.type === 'chest' || s.type === 'tax') {
                     const icon = s.type === 'chance' ? '❓' : (s.type === 'chest' ? '📦' : '💰');
-                    h = `<div class="square-content ${s.type}"><div class="corner-icon">${icon}</div><div class="square-name">${s.name}</div>${s.amount ? `<div class="square-price">${s.amount}₺</div>` : ''}</div>`;
+                    h = `<div class="square-content ${s.type}"><div class="corner-icon">${icon}</div><div class="square-name">${s.name}</div>${s.amount ? `<div class="square-price">${s.amount}</div>` : ''}</div>`;
                 } else {
                     const icons = { go: '➡️', jail: '🔒', parking: '🅿️', gotojail: '👮' };
                     h = `<div class="corner-icon">${icons[s.type] || ''}</div><div class="square-name">${s.name}</div>`;
@@ -2243,10 +2243,10 @@
         function sqHTML(s) {
             const ic = { go: '➡️', jail: '🔒', parking: '🅿️', gotojail: '👮', chance: '❓', chest: '📦', tax: '💰', railroad: '🚂' };
             if (['go', 'jail', 'parking', 'gotojail'].includes(s.type)) return `<div class="square-content"><div class="corner-icon">${ic[s.type]}</div><div class="square-name">${s.name}</div></div>`;
-            if (s.type === 'property') return `<div class="color-bar" style="background:${s.color}"><div class="square-name">${s.name}</div></div><div class="buildings" id="bld-${s.id}"></div><div class="square-content"><div class="square-price">${s.price}₺</div></div><div class="owner-bar" id="own-${s.id}"><div class="owner-info" id="own-info-${s.id}"></div></div>`;
-            if (s.type === 'utility') return `<div class="square-content"><div class="corner-icon">${s.name.includes('Elektrik') ? '💡' : '💧'}</div><div class="square-name">${s.name}</div><div class="square-price">${s.price}₺</div></div><div class="owner-info" id="own-info-${s.id}"></div><div class="owner-bar" id="own-${s.id}"></div>`;
-            if (s.type === 'railroad') return `<div class="square-content"><div class="corner-icon">🚂</div><div class="square-name">${s.name}</div><div class="square-price">${s.price}₺</div></div><div class="owner-info" id="own-info-${s.id}"></div><div class="owner-bar" id="own-${s.id}"></div>`;
-            if (s.type === 'tax') return `<div class="square-content"><div class="corner-icon">💰</div><div class="square-name">${s.name}</div><div class="square-price">${s.amount}₺</div></div>`;
+            if (s.type === 'property') return `<div class="color-bar" style="background:${s.color}"><div class="square-name">${s.name}</div></div><div class="buildings" id="bld-${s.id}"></div><div class="square-content"><div class="square-price">${s.price}</div></div><div class="owner-bar" id="own-${s.id}"><div class="owner-info" id="own-info-${s.id}"></div></div>`;
+            if (s.type === 'utility') return `<div class="square-content"><div class="corner-icon">${s.name.includes('Elektrik') ? '💡' : '💧'}</div><div class="square-name">${s.name}</div><div class="square-price">${s.price}</div></div><div class="owner-info" id="own-info-${s.id}"></div><div class="owner-bar" id="own-${s.id}"></div>`;
+            if (s.type === 'railroad') return `<div class="square-content"><div class="corner-icon">🚂</div><div class="square-name">${s.name}</div><div class="square-price">${s.price}</div></div><div class="owner-info" id="own-info-${s.id}"></div><div class="owner-bar" id="own-${s.id}"></div>`;
+            if (s.type === 'tax') return `<div class="square-content"><div class="corner-icon">💰</div><div class="square-name">${s.name}</div><div class="square-price">${s.amount}</div></div>`;
             return `<div class="square-content"><div class="corner-icon">${ic[s.type] || '📋'}</div><div class="square-name">${s.name}</div></div>`
         }
         function dFace(v) { const p = { 1: [0, 0, 0, 0, 1, 0, 0, 0, 0], 2: [1, 0, 0, 0, 0, 0, 0, 0, 1], 3: [1, 0, 0, 0, 1, 0, 0, 0, 1], 4: [1, 0, 1, 0, 0, 0, 1, 0, 1], 5: [1, 0, 1, 0, 1, 0, 1, 0, 1], 6: [1, 0, 1, 1, 0, 1, 1, 0, 1] }; return p[v].map(x => `<div class="dot ${x ? 'active' : ''}"></div>`).join('') }
