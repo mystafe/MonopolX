@@ -80,6 +80,24 @@
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
         }
 
+        /* Show panel toggles on medium screens */
+        @media (min-width: 768px) and (max-width: 1200px) {
+            .panel-toggle {
+                display: flex !important;
+            }
+
+            .board {
+                min-width: 600px;
+                min-height: 600px;
+            }
+
+            /* Ensure center panel is scrollable */
+            .center-panel {
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
         .panel-toggle:hover {
             background: rgba(18, 20, 29, 0.95);
             border-color: var(--gold);
@@ -2062,19 +2080,31 @@
             }
 
             .mobile-bottom-bar {
-                padding: 10px 8px max(10px, env(safe-area-inset-bottom)) !important;
+                padding: 8px 6px max(8px, env(safe-area-inset-bottom)) !important;
                 gap: 4px !important;
             }
 
             .mobile-bottom-bar .btn {
-                padding: 10px 6px !important;
-                font-size: 0.7rem !important;
-                min-height: 48px;
-                height: 48px;
+                padding: 7px 5px !important;
+                font-size: 0.6rem !important;
+                min-height: 50px;
+                height: 50px;
             }
 
-            .btn-roll-mob {
-                font-size: 0.75rem !important;
+            .mobile-bottom-bar .mob-btn-icon {
+                font-size: 1.1rem;
+            }
+
+            .mobile-bottom-bar .mob-btn-text {
+                font-size: 0.55rem !important;
+            }
+
+            .btn-roll-mob .mob-btn-icon {
+                font-size: 1.3rem;
+            }
+
+            .btn-roll-mob .mob-btn-text {
+                font-size: 0.6rem !important;
             }
 
             .mobile-header {
@@ -3640,10 +3670,18 @@
             }
 
             .mobile-bottom-bar .btn {
-                min-height: 50px;
-                padding: 12px 10px !important;
-                font-size: 0.7rem !important;
+                min-height: 52px;
+                padding: 8px 6px !important;
+                font-size: 0.6rem !important;
                 touch-action: manipulation;
+            }
+
+            .mobile-bottom-bar .mob-btn-icon {
+                font-size: 1.15rem;
+            }
+
+            .mobile-bottom-bar .mob-btn-text {
+                font-size: 0.55rem !important;
             }
 
             /* Better mobile scrolling */
@@ -3768,17 +3806,29 @@
             }
 
             .mobile-bottom-bar .btn {
-                padding: 10px 14px !important;
-                font-size: 0.75rem !important;
+                padding: 7px 5px !important;
+                font-size: 0.6rem !important;
                 border-radius: 12px !important;
-                min-height: 44px;
-                gap: 6px !important;
+                min-height: 48px;
+                gap: 3px !important;
             }
 
-            .mobile-bottom-bar .btn-roll-mob {
-                font-size: 0.8rem !important;
-                font-weight: 900 !important;
-                letter-spacing: 1.5px !important;
+            .mobile-bottom-bar .mob-btn-icon {
+                font-size: 1.1rem;
+            }
+
+            .mobile-bottom-bar .mob-btn-text {
+                font-size: 0.55rem !important;
+            }
+
+            .mobile-bottom-bar .btn-roll-mob .mob-btn-icon {
+                font-size: 1.3rem;
+            }
+
+            .mobile-bottom-bar .btn-roll-mob .mob-btn-text {
+                font-size: 0.6rem !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.3px !important;
             }
 
             .center-logo {
@@ -3808,43 +3858,104 @@
                 background: rgba(18, 20, 29, 0.98);
                 backdrop-filter: blur(20px) saturate(180%);
                 -webkit-backdrop-filter: blur(20px) saturate(180%);
-                padding: 12px 10px max(12px, env(safe-area-inset-bottom));
+                padding: 10px 8px max(10px, env(safe-area-inset-bottom));
                 z-index: 1000;
                 border-top: 1px solid rgba(255, 255, 255, 0.15);
                 justify-content: space-around;
                 align-items: center;
-                gap: 6px;
+                gap: 5px;
                 box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
             }
 
             .mobile-bottom-bar .btn {
-                padding: 12px 10px !important;
-                font-size: 0.75rem !important;
-                height: 52px;
+                padding: 8px 6px !important;
+                font-size: 0.65rem !important;
+                height: 56px;
                 flex: 1;
-                min-height: 52px;
+                min-height: 56px;
                 touch-action: manipulation;
-                font-weight: 800 !important;
-                border-radius: 14px !important;
+                font-weight: 700 !important;
+                border-radius: 12px !important;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+                flex-direction: column;
+                gap: 3px !important;
+                letter-spacing: 0.5px !important;
+                line-height: 1.2;
+            }
+
+            /* Mobile button icon and text styling */
+            .mobile-bottom-bar .mob-btn-icon {
+                font-size: 1.2rem;
+                line-height: 1;
+                display: block;
+            }
+
+            .mobile-bottom-bar .mob-btn-text {
+                font-size: 0.6rem !important;
+                font-weight: 600 !important;
+                line-height: 1;
+                display: block;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+                opacity: 0.95;
+            }
+
+            /* Compact buttons (trade, build) */
+            .mobile-bottom-bar .btn-mob-compact {
+                flex: 0.9 !important;
+                min-width: 0;
             }
 
             /* Mobil bottom bar'da "Turu Atla" butonunu daha belirgin yap */
             .mobile-bottom-bar #mobEndBtn {
                 background: linear-gradient(135deg, #ef5350 0%, #e53935 50%, #c62828 100%) !important;
                 box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4) !important;
-                font-size: 0.8rem !important;
-                min-width: 60px;
+                flex: 0.9 !important;
+            }
+
+            .mobile-bottom-bar #mobEndBtn .mob-btn-text {
+                color: white !important;
+                font-weight: 700 !important;
             }
 
             .btn-roll-mob {
-                flex: 1.8 !important;
+                flex: 1.4 !important;
                 background: linear-gradient(135deg, var(--gold), #aa8a2e) !important;
                 color: #000 !important;
-                font-size: 0.8rem !important;
-                font-weight: 900 !important;
+                font-weight: 800 !important;
                 box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
                 min-width: 0;
+            }
+
+            .btn-roll-mob .mob-btn-icon {
+                font-size: 1.4rem;
+            }
+
+            .btn-roll-mob .mob-btn-text {
+                color: #000 !important;
+                font-weight: 800 !important;
+                font-size: 0.65rem !important;
+            }
+
+            /* Secondary buttons (trade, build) styling */
+            .mobile-bottom-bar .btn-secondary.btn-mob-compact {
+                background: linear-gradient(135deg, rgba(100, 100, 120, 0.4) 0%, rgba(80, 80, 100, 0.5) 100%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                color: rgba(255, 255, 255, 0.9) !important;
+            }
+
+            .mobile-bottom-bar .btn-secondary.btn-mob-compact:active {
+                background: linear-gradient(135deg, rgba(120, 120, 140, 0.5) 0%, rgba(100, 100, 120, 0.6) 100%) !important;
+            }
+
+            /* Action button (buy) styling */
+            .mobile-bottom-bar .btn-action.btn-mob-compact {
+                background: linear-gradient(135deg, #4caf50 0%, #43a047 50%, #2e7d32 100%) !important;
+                color: white !important;
+            }
+
+            .mobile-bottom-bar .btn-action.btn-mob-compact .mob-btn-text {
+                color: white !important;
             }
 
             /* Mobile performance optimizations */

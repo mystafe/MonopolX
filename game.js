@@ -99,7 +99,8 @@
             const t = document.getElementById('t' + pIdx).value;
             const pers = document.getElementById('pers' + pIdx);
             const persBtn = document.getElementById('persBtn' + pIdx);
-            if (pers) pers.style.display = t.startsWith('ai') ? 'block' : 'none';
+            // Keep pers select hidden - it's only used for value storage
+            // Only show the button for AI players
             if (persBtn) persBtn.style.display = t.startsWith('ai') ? 'block' : 'none';
         }
 
@@ -1295,9 +1296,23 @@
             if (endBtn) endBtn.innerHTML = `⏭️ ${t('endTurn')}`;
 
             // Mobile buttons
-            if (mobRollBtn) mobRollBtn.innerHTML = `🎲 ${t('roll')}`;
-            if (mobBuyBtn) mobBuyBtn.innerHTML = `🏠 ${t('buy')}`;
-            if (mobEndBtn) mobEndBtn.innerHTML = `⏭️`;
+            const mobTradeBtn = document.getElementById('mobTradeBtn');
+            const mobBuildBtn = document.getElementById('mobBuildBtn');
+            if (mobRollBtn) {
+                mobRollBtn.innerHTML = `<span class="mob-btn-icon">🎲</span><span class="mob-btn-text">${t('roll')}</span>`;
+            }
+            if (mobBuyBtn) {
+                mobBuyBtn.innerHTML = `<span class="mob-btn-icon">🏠</span><span class="mob-btn-text">${t('buy')}</span>`;
+            }
+            if (mobEndBtn) {
+                mobEndBtn.innerHTML = `<span class="mob-btn-icon">⏭️</span><span class="mob-btn-text">${t('endTurn')}</span>`;
+            }
+            if (mobTradeBtn) {
+                mobTradeBtn.innerHTML = `<span class="mob-btn-icon">🔄</span><span class="mob-btn-text">${t('trade')}</span>`;
+            }
+            if (mobBuildBtn) {
+                mobBuildBtn.innerHTML = `<span class="mob-btn-icon">🏗️</span><span class="mob-btn-text">${t('house')}</span>`;
+            }
 
             // Jail controls
             const jailPayBtn = document.querySelector('#jailControls .btn-action');
@@ -3003,6 +3018,7 @@
                 localStorage.setItem(`panel_${side}_collapsed`, isCollapsed);
             }
         }
+        window.togglePanel = togglePanel;
 
         function initPanelStates() {
             const leftCollapsed = localStorage.getItem('panel_left_collapsed') === 'true';
