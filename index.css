@@ -2084,15 +2084,40 @@
                 height: clamp(18px, 4vw, 26px) !important;
             }
 
-            /* Optimize square text for readability */
+            /* Optimize square text for readability - smaller fonts on mobile */
             .square-name {
-                font-size: clamp(5px, 0.9vw, 8px) !important;
-                line-height: 1.1 !important;
+                font-size: clamp(3.5px, 0.7vw, 6px) !important;
+                line-height: 1.0 !important;
+                letter-spacing: 0.1px !important;
+            }
+
+            .color-bar .square-name {
+                font-size: clamp(3.5px, 0.7vw, 6px) !important;
+                line-height: 1.0 !important;
+                letter-spacing: 0.1px !important;
             }
 
             .square-price {
-                font-size: clamp(5px, 0.85vw, 7px) !important;
+                font-size: clamp(4px, 0.75vw, 6px) !important;
                 padding: 2px 4px !important;
+            }
+
+            .owner-info {
+                font-size: clamp(3px, 0.6vw, 5px) !important;
+                letter-spacing: 0.1px !important;
+            }
+
+            .owner-bar {
+                height: 14px !important;
+            }
+
+            .corner-icon {
+                font-size: clamp(8px, 1.8vw, 16px) !important;
+            }
+
+            /* Reduce building indicators size */
+            .buildings {
+                font-size: clamp(6px, 1.2vw, 10px) !important;
             }
 
             .credit-badge {
@@ -3868,6 +3893,33 @@
                 max-height: calc(100vh - 126px);
                 flex-shrink: 0;
                 box-sizing: border-box;
+            }
+
+            /* Smaller fonts for board on mobile */
+            .square-name {
+                font-size: clamp(4px, 0.8vw, 7px) !important;
+                line-height: 1.1 !important;
+                letter-spacing: 0.2px !important;
+            }
+
+            .color-bar .square-name {
+                font-size: clamp(4px, 0.8vw, 7px) !important;
+                line-height: 1.1 !important;
+                letter-spacing: 0.2px !important;
+            }
+
+            .square-price {
+                font-size: clamp(5px, 0.9vw, 8px) !important;
+                padding: 3px 6px !important;
+            }
+
+            .owner-info {
+                font-size: clamp(4px, 0.7vw, 6px) !important;
+                letter-spacing: 0.2px !important;
+            }
+
+            .owner-bar {
+                height: 16px !important;
             }
 
             .board {
