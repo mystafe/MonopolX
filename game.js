@@ -1012,7 +1012,13 @@
                     speedRange.value = setupSpeed.value;
                     updateSpeedDisp();
                 }
-                if (setup3DToggle) set3DEffect(setup3DToggle.classList.contains('on'));
+                // 3D efekt varsayılan olarak kapalı
+                if (setup3DToggle) {
+                    const shouldEnable = setup3DToggle.classList.contains('on');
+                    set3DEffect(shouldEnable);
+                } else {
+                    set3DEffect(false);
+                }
                 updateLangUI();
             } catch (e) {
                 debugError("startGame error:", e);
