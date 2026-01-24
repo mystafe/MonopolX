@@ -1271,6 +1271,39 @@
             rollDice();
         }
 
+        function getDifficultySettings(level) {
+            const levelNum = parseInt(level) || 3;
+            const settings = {
+                1: { aiAggressiveness: 0.2, rentMultiplier: 0.9, challengeChance: 0.05, extraChaos: false },
+                2: { aiAggressiveness: 0.4, rentMultiplier: 0.95, challengeChance: 0.08, extraChaos: false },
+                3: { aiAggressiveness: 0.6, rentMultiplier: 1.0, challengeChance: 0.12, extraChaos: false },
+                4: { aiAggressiveness: 0.8, rentMultiplier: 1.2, challengeChance: 0.2, extraChaos: false },
+                5: { aiAggressiveness: 1.0, rentMultiplier: 1.4, challengeChance: 0.3, extraChaos: true }
+            };
+            return settings[levelNum] || settings[3];
+        }
+
+        function updateDifficultyDisplay() {
+            const difficultySelect = document.getElementById('difficultyLevel');
+            if (!difficultySelect) return;
+            
+            const level = parseInt(difficultySelect.value) || 3;
+            const settings = getDifficultySettings(level);
+            
+            const descriptions = {
+                1: 'AI pasif, kira -10%, challenge kartları çok nadir',
+                2: 'AI biraz pasif, kira -5%, challenge kartları nadir',
+                3: 'AI normal, kira normal, challenge kartları nadir',
+                4: 'AI agresif, kira +20%, challenge kartları sık',
+                5: 'AI çok agresif, kira +40%, challenge kartları çok sık, kaos modu'
+            };
+            
+            const descriptionEl = document.getElementById('difficultyDescription');
+            if (descriptionEl) {
+                descriptionEl.textContent = descriptions[level] || descriptions[3];
+            }
+        }
+
         function updateSpeedDisp() {
             const v = document.getElementById('speedRange').value;
             const lbl = document.getElementById('speedVal');
