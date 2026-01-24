@@ -2314,12 +2314,14 @@
                     if (isOwned) {
                         el.style.background = COLORS[owner.color];
                         el.style.opacity = isMort ? '0.3' : '0.8';
+                        el.style.display = 'flex';
                         if (sq) {
                             sq.style.boxShadow = `inset 0 0 0 3px ${COLORS[owner.color]}`;
                         }
                     } else {
                         el.style.background = '';
                         el.style.opacity = '0';
+                        el.style.display = 'none';
                         if (sq) sq.style.boxShadow = 'none';
                     }
                 }
