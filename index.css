@@ -1926,8 +1926,8 @@
                 margin-top: 15px !important;
             }
 
-            .setup-left:last-child > div {
-                grid-template-columns: 1fr !important;
+            .setup-right #resumeBtn {
+                margin-top: 15px !important;
             }
 
             .btn-start-game {
