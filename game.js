@@ -2253,10 +2253,27 @@
 
                 if (ctrl) {
                     if (p.isAI) {
-                        ctrl.style.opacity = '0.7';
-                        ctrl.style.pointerEvents = 'none';
+                        // AI sırasında sadece bilgilendirme overlay'i göster, ama butonları engelleme
+                        ctrl.style.opacity = '0.85';
+                        // pointerEvents'i kaldırdık - kullanıcı "Turu Atla" butonunu kullanabilir
                         if (aiOverlay) aiOverlay.classList.add('active');
                         if (aiWaitName) aiWaitName.textContent = p.name;
+                        
+                        // "Turu Atla" butonunu AI sırasında da görünür ve kullanılabilir yap
+                        const endBtn = document.getElementById('endBtn');
+                        const mobEndBtn = document.getElementById('mobEndBtn');
+                        if (endBtn) {
+                            endBtn.style.opacity = '1';
+                            endBtn.style.pointerEvents = 'auto';
+                            endBtn.style.position = 'relative';
+                            endBtn.style.zIndex = '101';
+                        }
+                        if (mobEndBtn) {
+                            mobEndBtn.style.opacity = '1';
+                            mobEndBtn.style.pointerEvents = 'auto';
+                            mobEndBtn.style.position = 'relative';
+                            mobEndBtn.style.zIndex = '101';
+                        }
                     } else {
                         ctrl.style.opacity = '1';
                         ctrl.style.pointerEvents = 'auto';
@@ -2281,7 +2298,17 @@
                     const buyBtn = document.getElementById('buyBtn');
                     const endBtn = document.getElementById('endBtn');
                     if (mobBuy && buyBtn) mobBuy.disabled = buyBtn.disabled;
-                    if (mobEnd && endBtn) mobEnd.disabled = endBtn.disabled;
+                    
+                    // "Turu Atla" butonu AI sırasında da görünür ve kullanılabilir olmalı
+                    if (mobEnd && endBtn) {
+                        mobEnd.disabled = endBtn.disabled;
+                        // AI sırasında bile buton görünür olsun
+                        if (p.isAI) {
+                            mobEnd.style.opacity = '1';
+                            mobEnd.style.pointerEvents = 'auto';
+                            mobEnd.style.zIndex = '102';
+                        }
+                    }
                 }
             }
             } catch (e) {

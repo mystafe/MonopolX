@@ -970,19 +970,40 @@
         .ai-waiting-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 100;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 99;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-radius: 12px;
             display: none;
+            pointer-events: none;
         }
 
         .ai-waiting-overlay.active {
             display: flex;
+        }
+
+        /* AI sırasında "Turu Atla" butonunu her zaman görünür yap */
+        .controls-vertical #endBtn {
+            position: relative;
+            z-index: 101;
+            background: linear-gradient(135deg, #ef5350 0%, #e53935 50%, #c62828 100%) !important;
+        }
+
+        .mobile-bottom-bar #mobEndBtn {
+            position: relative;
+            z-index: 101;
+            background: linear-gradient(135deg, #ef5350 0%, #e53935 50%, #c62828 100%) !important;
+        }
+
+        /* AI overlay'i butonları engellemesin */
+        .ai-waiting-overlay.active ~ #endBtn,
+        .controls-vertical #endBtn {
+            pointer-events: auto !important;
+            opacity: 1 !important;
         }
 
         .loading-dots:after {
@@ -1729,6 +1750,40 @@
         }
 
         /* Responsive for mobile */
+        /* Extra small mobile devices */
+        @media (max-width: 600px) {
+            .mobile-bottom-bar {
+                padding: 10px 8px max(10px, env(safe-area-inset-bottom)) !important;
+                gap: 4px !important;
+            }
+
+            .mobile-bottom-bar .btn {
+                padding: 10px 6px !important;
+                font-size: 0.7rem !important;
+                min-height: 48px;
+                height: 48px;
+            }
+
+            .btn-roll-mob {
+                font-size: 0.75rem !important;
+            }
+
+            .mobile-header {
+                height: 52px !important;
+                min-height: 52px !important;
+                padding: 0 10px !important;
+            }
+
+            #mobCurrentName {
+                font-size: 0.8rem !important;
+                max-width: 80px;
+            }
+
+            .mobile-money {
+                font-size: 0.75rem !important;
+            }
+        }
+
         @media (max-width: 600px) {
             .trade-response-popup {
                 padding: 25px 30px;
@@ -3115,23 +3170,33 @@
             }
 
             .mobile-bottom-bar .btn {
-                padding: 10px 8px !important;
-                font-size: 0.7rem !important;
-                height: 50px;
+                padding: 12px 10px !important;
+                font-size: 0.75rem !important;
+                height: 52px;
                 flex: 1;
-                min-height: 50px;
+                min-height: 52px;
                 touch-action: manipulation;
                 font-weight: 800 !important;
-                border-radius: 12px !important;
+                border-radius: 14px !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            /* Mobil bottom bar'da "Turu Atla" butonunu daha belirgin yap */
+            .mobile-bottom-bar #mobEndBtn {
+                background: linear-gradient(135deg, #ef5350 0%, #e53935 50%, #c62828 100%) !important;
+                box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4) !important;
+                font-size: 0.8rem !important;
+                min-width: 60px;
             }
 
             .btn-roll-mob {
-                flex: 1.6 !important;
+                flex: 1.8 !important;
                 background: linear-gradient(135deg, var(--gold), #aa8a2e) !important;
                 color: #000 !important;
-                font-size: 0.75rem !important;
+                font-size: 0.8rem !important;
                 font-weight: 900 !important;
                 box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4) !important;
+                min-width: 0;
             }
 
             /* Mobile performance optimizations */
@@ -3156,6 +3221,25 @@
                 .board {
                     will-change: transform;
                     transform: translateZ(0);
+                }
+
+                /* AI overlay mobilde daha az opak */
+                .ai-waiting-overlay {
+                    background: rgba(0, 0, 0, 0.3) !important;
+                    backdrop-filter: blur(1px) !important;
+                }
+
+                /* Mobilde butonlar her zaman görünür */
+                .mobile-bottom-bar .btn {
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
+                }
+
+                /* AI sırasında bile mobil butonlar görünür */
+                .mobile-bottom-bar #mobEndBtn {
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
+                    z-index: 102 !important;
                 }
             }
 
