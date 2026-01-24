@@ -716,6 +716,9 @@
         // Secret Cheat Code - 5 clicks on KAYITLAR gives 500₺ to Player 1
         let secretClickCount = 0;
         let secretClickTimer = null;
+        let mobileLogoClickCount = 0;
+        let mobileLogoClickTimer = null;
+        
         function secretCheatClick() {
             secretClickCount++;
 
@@ -741,6 +744,39 @@
                 }
             }
         }
+
+        // Mobile logo cheat click - same functionality as desktop
+        function secretCheatClickMobile(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            mobileLogoClickCount++;
+
+            // Reset counter after 3 seconds of no clicks
+            clearTimeout(mobileLogoClickTimer);
+            mobileLogoClickTimer = setTimeout(() => {
+                mobileLogoClickCount = 0;
+            }, 3000);
+
+            if (mobileLogoClickCount >= 5) {
+                mobileLogoClickCount = 0;
+
+                // Check if game is active and player 1 exists
+                if (G.players && G.players.length > 0) {
+                    const player1 = G.players[0];
+                    if (!player1.out) {
+                        chgMoney(player1, 500);
+                        log(`🎁 GİZLİ BONUS! ${player1.name} 500₺ kazandı!`, true);
+                        spawnConfetti();
+                        updateUI();
+                        autoSave();
+                    }
+                }
+            }
+        }
+        window.secretCheatClickMobile = secretCheatClickMobile;
 
         function spawnConfetti() {
             for (let i = 0; i < 40; i++) {
