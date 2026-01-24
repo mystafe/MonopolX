@@ -940,7 +940,7 @@
                 salary: parseInt(document.getElementById('ruleSalary').value) || 200,
                 parkingPool: document.getElementById('toggleParkPool').classList.contains('on'),
                 randomStart: document.getElementById('toggleRandomStart').classList.contains('on'),
-                challengeMode: document.getElementById('challengeMode').checked
+                difficultyLevel: parseInt(document.getElementById('difficultyLevel').value) || 3
             };
 
             // const availableIcons = shuffle([...TOKEN_ICONS]); // No longer needed, using selectedIcons
@@ -1118,19 +1118,25 @@
             const price = s.price;
             let shouldBuy = false;
 
-            // AI Karar Mantığı + Kişilik Etkisi
-            let safeMargin = 150;
-            if (p.personality === 'Banker') safeMargin = 500;
-            if (p.personality === 'Tycoon') safeMargin = 0;
+            // Get difficulty settings
+            const difficulty = G.customRules.difficultyLevel || 3;
+            const settings = getDifficultySettings(difficulty);
+            
+            // AI Karar Mantığı + Kişilik Etkisi + Zorluk Seviyesi
+            let baseSafeMargin = 150;
+            if (p.personality === 'Banker') baseSafeMargin = 500;
+            if (p.personality === 'Tycoon') baseSafeMargin = 0;
+            
+            // Adjust safe margin based on difficulty (lower = more aggressive)
+            const safeMargin = Math.floor(baseSafeMargin * (1 - settings.aiAggressiveness * 0.5));
 
             if (p.difficulty === 'easy') {
-                shouldBuy = pool >= price && Math.random() > 0.5;
+                shouldBuy = pool >= price && Math.random() > (0.5 + settings.aiAggressiveness * 0.2);
             } else if (p.difficulty === 'medium') {
                 shouldBuy = pool >= price + safeMargin;
             } else if (p.difficulty === 'hard') {
-                shouldBuy = pool >= price + (p.personality === 'Banker' ? 300 : -50);
+                shouldBuy = pool >= price + (p.personality === 'Banker' ? Math.floor(300 * (1 - settings.aiAggressiveness * 0.3)) : -50);
             }
-
 
             if (shouldBuy) {
                 aiSpeak(p, 'buy');
@@ -1226,9 +1232,12 @@
             });
 
 
-            // AI Takas Başlatma Kontrolü (Sık olmasın)
+            // AI Takas Başlatma Kontrolü (Zorluk seviyesine göre)
             let tradePending = false;
-            if (Math.random() < 0.2) {
+            const difficulty = G.customRules.difficultyLevel || 3;
+            const settings = getDifficultySettings(difficulty);
+            const tradeChance = 0.1 + (settings.aiAggressiveness * 0.3); // 0.1 to 0.4
+            if (Math.random() < tradeChance) {
                 tradePending = aiInitiateTrade(p);
             }
 
@@ -1703,6 +1712,10 @@
                         playRentAnim(p.id, ow.id, r);
                         log(t('rent_log').replace('%s', p.name).replace('%s', ow.name).replace('%s', r));
                         toast(t('rent_toast').replace('%s', ow.name).replace('%s', r), 'error');
+                        // Reset temporary double rent after payment
+                        if (G.tempDoubleRent) {
+                            G.tempDoubleRent = false;
+                        }
                     } else bankrupt(p.id, ow.id);
                 }
                 document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
@@ -1713,7 +1726,38 @@
                 document.getElementById('endBtn').disabled = false; updateBuildBtn(); if (p.isAI) aiPostTurn();
             }
         }
-        function calcRent(s, pr) { const ow = G.players[pr.owner]; if (s.type === 'railroad') return s.rent[ow.props.filter(x => window.activeSQ[x].type === 'railroad').length - 1]; if (s.type === 'utility') { const c = ow.props.filter(x => window.activeSQ[x].type === 'utility').length; const d = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1; return c === 2 ? d * 10 : d * 4 } if (pr.houses === 5) return s.rent[5]; if (pr.houses > 0) return s.rent[pr.houses]; const g = GR[s.g]; const all = g.every(x => G.props[x] && G.props[x].owner === pr.owner); return all ? s.rent[0] * 2 : s.rent[0] }
+        function calcRent(s, pr) { 
+            const ow = G.players[pr.owner]; 
+            let baseRent = 0;
+            
+            if (s.type === 'railroad') {
+                baseRent = s.rent[ow.props.filter(x => window.activeSQ[x].type === 'railroad').length - 1];
+            } else if (s.type === 'utility') { 
+                const c = ow.props.filter(x => window.activeSQ[x].type === 'utility').length; 
+                const d = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1; 
+                baseRent = c === 2 ? d * 10 : d * 4;
+            } else {
+                if (pr.houses === 5) baseRent = s.rent[5];
+                else if (pr.houses > 0) baseRent = s.rent[pr.houses];
+                else {
+                    const g = GR[s.g]; 
+                    const all = g.every(x => G.props[x] && G.props[x].owner === pr.owner); 
+                    baseRent = all ? s.rent[0] * 2 : s.rent[0];
+                }
+            }
+            
+            // Apply difficulty multiplier
+            const difficulty = G.customRules.difficultyLevel || 3;
+            const settings = getDifficultySettings(difficulty);
+            let finalRent = Math.floor(baseRent * settings.rentMultiplier);
+            
+            // Apply temporary double rent if active
+            if (G.tempDoubleRent) {
+                finalRent = Math.floor(finalRent * 2);
+            }
+            
+            return finalRent;
+        }
         function buyProp() {
             const p = G.players[G.cur], s = window.activeSQ[G.pending];
             const propId = s.id;
@@ -1798,8 +1842,10 @@
             let c = deck.shift();
             deck.push(c);
 
-            // Challenge Mode Logic
-            if (G.customRules.challengeMode && Math.random() < 0.3) {
+            // Difficulty Level Challenge Logic
+            const difficulty = G.customRules.difficultyLevel || 3;
+            const settings = getDifficultySettings(difficulty);
+            if (Math.random() < settings.challengeChance) {
                 const challenges = [
                     { t: "KAOS! Bir rakibinle piyon yerlerinizi takas edin!", a: "swap" },
                     { t: "İFLASIN EŞİĞİ! Nakit paranın yarısını kaybet!", a: "halve" },
@@ -1807,6 +1853,19 @@
                     { t: "EMLAK KRİZİ! Rastgele bir mülkünü bankaya geri ver!", a: "lose_prop" },
                     { t: "PİYANGO! Diğer tüm oyunculardan 100₺ al!", a: "lottery" }
                 ];
+                
+                // En zor seviye için ekstra kaos kartları
+                if (settings.extraChaos && Math.random() < 0.3) {
+                    const extraChaos = [
+                        { t: "💥 MEGA KAOS! Tüm oyuncular yer değiştirsin!", a: "mega_swap" },
+                        { t: "⚡ ŞİMŞEK! Rastgele bir rakibin tüm parasını al!", a: "steal_all" },
+                        { t: "🌪️ FIRTINA! Tüm mülklerin kirası 2 katına çıksın!", a: "double_rent" },
+                        { t: "💀 KARANLIK! Tüm oyuncular hapse gitsin!", a: "jail_all" },
+                        { t: "🔥 YANGIN! Rastgele 3 mülkünü kaybet!", a: "lose_three" }
+                    ];
+                    challenges.push(...extraChaos);
+                }
+                
                 c = challenges[Math.floor(Math.random() * challenges.length)];
                 title = "🔥 CHALLENGE";
                 icon = "🔥";
@@ -1901,6 +1960,49 @@
                         chgMoney(p, amt);
                     }
                 });
+            } else if (c.a === 'mega_swap') {
+                // Tüm oyuncular rastgele yer değiştir
+                const positions = G.players.map(pl => pl.pos);
+                shuffle(positions);
+                G.players.forEach((pl, idx) => {
+                    pl.pos = positions[idx];
+                });
+                log(`🌀 MEGA KAOS! Tüm oyuncular yer değiştirdi!`, true);
+                updateUI();
+            } else if (c.a === 'steal_all') {
+                const targets = G.players.filter(op => op.id !== p.id && !op.out);
+                if (targets.length) {
+                    const target = targets[Math.floor(Math.random() * targets.length)];
+                    const stolen = target.money;
+                    chgMoney(target, -stolen);
+                    chgMoney(p, stolen);
+                    log(`⚡ ${p.name}, ${target.name}'in tüm parasını çaldı! (${stolen}₺)`, true);
+                }
+            } else if (c.a === 'double_rent') {
+                // Bu tur için tüm kiralar 2 katına çıkar (geçici)
+                G.tempDoubleRent = true;
+                log(`🌪️ FIRTINA! Bu tur tüm kiralar 2 katına çıktı!`, true);
+            } else if (c.a === 'jail_all') {
+                G.players.forEach(pl => {
+                    if (pl.id !== p.id && !pl.out) {
+                        pl.pos = 10;
+                        pl.jail = true;
+                        pl.jt = 0;
+                    }
+                });
+                log(`💀 KARANLIK! Tüm rakipler hapse gitti!`, true);
+                updateUI();
+            } else if (c.a === 'lose_three') {
+                if (p.props.length > 0) {
+                    const toLose = Math.min(3, p.props.length);
+                    for (let i = 0; i < toLose; i++) {
+                        const rid = p.props[Math.floor(Math.random() * p.props.length)];
+                        delete G.props[rid];
+                        p.props = p.props.filter(pid => pid !== rid);
+                    }
+                    log(`🔥 YANGIN! ${p.name}, ${toLose} mülkünü kaybetti!`, true);
+                    updateOwners();
+                }
             }
             document.getElementById('endBtn').disabled = false;
             updateUI();
@@ -2279,6 +2381,9 @@
             }
             // Ensure 3D is off on fresh load
             set3DEffect(false);
+            // Initialize difficulty display
+            updateDifficultyDisplay();
+            initMapSelection();
 
             // Listen for resize to re-align tokens
             window.addEventListener('resize', throttle(() => {
