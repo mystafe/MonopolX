@@ -232,7 +232,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding: 20px;
             overflow-y: auto;
             background: #020205;
             transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s, background 0.5s ease;
@@ -263,25 +264,28 @@
             backdrop-filter: blur(40px) saturate(180%);
             -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-radius: 32px;
-            padding: 32px;
+            padding: 28px;
             border: 1px solid rgba(255, 215, 0, 0.15);
             box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
             position: relative;
             z-index: 5;
-            max-height: 90vh;
-            overflow-y: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            align-items: start;
         }
 
         .setup-left {
             display: flex;
             flex-direction: column;
             gap: 14px;
+            align-items: stretch;
         }
 
         .setup-right {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            align-items: stretch;
         }
 
         .setup-card {
@@ -1938,12 +1942,19 @@
                 font-size: 2rem !important;
             }
 
-            .setup-left:last-child {
-                margin-top: 15px !important;
+            .setup-container {
+                padding: 20px !important;
+                margin-top: 10px !important;
+                margin-bottom: 10px !important;
             }
 
-            .setup-right #resumeBtn {
-                margin-top: 15px !important;
+            .game-header {
+                margin-bottom: 15px !important;
+                padding-top: 5px !important;
+            }
+
+            .game-header img {
+                height: 80px !important;
             }
 
             .btn-start-game {
