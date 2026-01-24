@@ -2197,11 +2197,19 @@
             const totalSteps = Math.abs(steps);
             const direction = steps > 0 ? 1 : -1;
             const speed = getSpeed();
+            
+            // Detect mobile device for optimized animations
+            const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            // Optimize speed for mobile
+            const mobileSpeed = isMobile ? Math.max(speed * 0.6, 100) : speed;
+            const animationSpeed = prefersReducedMotion ? 50 : mobileSpeed;
 
             let currentStep = 0;
             function nextStep() {
                 if (currentStep >= totalSteps) {
-                    setTimeout(() => handleLand(p.pos), 400);
+                    setTimeout(() => handleLand(p.pos), prefersReducedMotion ? 100 : 400);
                     return;
                 }
 
@@ -2215,17 +2223,28 @@
                     log(t('salary_msg').replace('%s', p.name).replace('%s', sal), true);
                 }
 
-                // Smooth Glide Logic
+                // Smooth Glide Logic with mobile optimization
                 updateTokens();
 
                 const token = document.querySelector(`.token-${p.color}`);
                 if (token) {
-                    token.style.transition = `all ${speed * 1.5}ms cubic-bezier(0.19, 1, 0.22, 1)`;
-                    token.classList.add('moving');
-                    setTimeout(() => token.classList.remove('moving'), speed);
+                    // Use optimized transition for mobile
+                    const transitionDuration = isMobile ? `${animationSpeed * 0.8}ms` : `${speed * 1.5}ms`;
+                    const easing = isMobile ? 'cubic-bezier(0.4, 0, 0.2, 1)' : 'cubic-bezier(0.19, 1, 0.22, 1)';
+                    
+                    token.style.transition = `transform ${transitionDuration} ${easing}, left ${transitionDuration} ${easing}, top ${transitionDuration} ${easing}`;
+                    
+                    // Force GPU acceleration
+                    token.style.willChange = 'transform, left, top';
+                    token.style.transform = 'translateZ(0)';
+                    
+                    if (!prefersReducedMotion) {
+                        token.classList.add('moving');
+                        setTimeout(() => token.classList.remove('moving'), animationSpeed);
+                    }
                 }
 
-                setTimeout(nextStep, speed * 2);
+                setTimeout(nextStep, prefersReducedMotion ? 50 : (isMobile ? animationSpeed * 1.5 : speed * 2));
             }
             nextStep();
         }
@@ -3160,6 +3179,9 @@
             const layer = document.getElementById('tokensLayer');
             if (!layer) return;
 
+            // Detect mobile for optimization
+            const isMobile = window.innerWidth <= 768;
+            
             G.players.forEach(p => {
                 if (p.out) {
                     const existing = document.getElementById('token-p' + p.id);
@@ -3178,12 +3200,25 @@
 
                 const pos = getPos(p.pos);
                 // Grid is 11x11, so center of a cell is (cell - 0.5) / 11
-                t.style.left = ((pos.c - 0.5) / 11 * 100) + '%';
-                t.style.top = ((pos.r - 0.5) / 11 * 100) + '%';
+                const leftPercent = ((pos.c - 0.5) / 11 * 100);
+                const topPercent = ((pos.r - 0.5) / 11 * 100);
+                
+                // Use transform for better performance on mobile
+                if (isMobile) {
+                    // On mobile, use transform for smoother animations
+                    t.style.left = leftPercent + '%';
+                    t.style.top = topPercent + '%';
+                    t.style.willChange = 'transform, left, top';
+                } else {
+                    t.style.left = leftPercent + '%';
+                    t.style.top = topPercent + '%';
+                }
 
-                // Add minor scale for active player
+                // Add minor scale for active player with GPU acceleration
                 const isActive = G.players[G.cur].id === p.id;
-                t.style.transform = `translate(-50%, -50%) ${isActive ? 'scale(1.15)' : 'scale(1)'}`;
+                const scale = isActive ? 1.15 : 1;
+                t.style.transform = `translate(-50%, -50%) scale(${scale}) translateZ(0)`;
+                t.style.webkitTransform = `translate(-50%, -50%) scale(${scale}) translateZ(0)`;
                 t.classList.toggle('active-token', isActive);
             });
 
