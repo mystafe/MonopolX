@@ -2318,6 +2318,16 @@
             border: 1px solid rgba(255, 215, 0, 0.1);
         }
 
+        body.theme-premium .setup-screen {
+            background: transparent !important;
+        }
+
+        body.theme-premium .setup-screen::before {
+            background: url('assets/premium_bg.png') center/cover !important;
+            opacity: 0.85 !important;
+            filter: brightness(0.4) saturate(1.0) !important;
+        }
+
         /* Cyberpunk Night Theme */
         body.theme-cyber {
             --gold: #00f2ff;
