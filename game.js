@@ -117,6 +117,11 @@
             });
             const selectedCard = document.getElementById(`player-type-${currentType}`);
             if (selectedCard) selectedCard.classList.add('selected');
+            // Show/hide 'none' option based on player number (only for players 3 and 4)
+            const noneOption = document.getElementById('player-type-none');
+            if (noneOption) {
+                noneOption.style.display = (playerNum >= 3) ? 'flex' : 'none';
+            }
         }
 
         function selectPlayerTypeFromModal(type) {
