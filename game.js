@@ -1196,24 +1196,26 @@
                 }
             });
             
-            // Update speed modal options
-            const speedOptions = {
-                '100': t('speed_slow'),
-                '200': t('speed_normal'),
-                '300': t('speed_fast'),
-                '400': t('speed_lightning')
+            // Update speed modal options dynamically
+            const speedOptionsData = {
+                '100': { emoji: '🐢', text: t('speed_slow') },
+                '200': { emoji: '⚡', text: t('speed_normal') },
+                '300': { emoji: '🚀', text: t('speed_fast') },
+                '400': { emoji: '⚡', text: t('speed_lightning') }
             };
             
-            document.querySelectorAll('.speed-card-modal span').forEach((span, idx) => {
-                const speedValues = ['100', '200', '300', '400'];
-                if (speedValues[idx]) {
-                    const emoji = span.textContent.match(/[🐢⚡🚀]/)?.[0] || '';
-                    span.textContent = `${emoji} ${speedOptions[speedValues[idx]]}`;
+            Object.keys(speedOptionsData).forEach(speed => {
+                const card = document.getElementById(`speed-modal-${speed}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        span.textContent = `${speedOptionsData[speed].emoji} ${speedOptionsData[speed].text}`;
+                    }
                 }
             });
             
-            // Update difficulty modal options
-            const difficultyOptions = {
+            // Update difficulty modal options dynamically
+            const difficultyOptionsData = {
                 '1': t('difficulty_very_easy'),
                 '2': t('difficulty_easy'),
                 '3': t('difficulty_normal'),
@@ -1221,40 +1223,52 @@
                 '5': t('difficulty_very_hard')
             };
             
-            document.querySelectorAll('.difficulty-card-modal span').forEach((span, idx) => {
-                const difficultyValues = ['1', '2', '3', '4', '5'];
-                if (difficultyValues[idx]) {
-                    span.textContent = difficultyOptions[difficultyValues[idx]];
+            Object.keys(difficultyOptionsData).forEach(level => {
+                const card = document.getElementById(`difficulty-modal-${level}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        span.textContent = difficultyOptionsData[level];
+                    }
                 }
             });
             
             // Update player type modal options
-            document.querySelectorAll('.player-type-card-modal span').forEach(span => {
-                const text = span.textContent.trim();
-                if (text.includes('İnsan') || text.includes('Human')) {
-                    span.textContent = `👤 ${t('human')}`;
-                } else if (text.includes('Kolay AI') || text.includes('Easy AI')) {
-                    span.textContent = `🤖 ${t('ai_easy')}`;
-                } else if (text.includes('Orta AI') || text.includes('Medium AI')) {
-                    span.textContent = `🤖 ${t('ai_medium')}`;
-                } else if (text.includes('Zor AI') || text.includes('Hard AI')) {
-                    span.textContent = `🤖 ${t('ai_hard')}`;
-                } else if (text.includes('Kapalı') || text.includes('Closed')) {
-                    span.textContent = `--- (${t('closed_option')})`;
+            const playerTypeOptionsData = {
+                'human': { emoji: '👤', text: t('human') },
+                'ai-easy': { emoji: '🤖', text: t('ai_easy') },
+                'ai-medium': { emoji: '🤖', text: t('ai_medium') },
+                'ai-hard': { emoji: '🤖', text: t('ai_hard') },
+                'none': { emoji: '---', text: `(${t('closed_option')})` }
+            };
+            
+            Object.keys(playerTypeOptionsData).forEach(type => {
+                const card = document.getElementById(`player-type-${type}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        const opt = playerTypeOptionsData[type];
+                        span.textContent = type === 'none' ? `${opt.emoji} ${opt.text}` : `${opt.emoji} ${opt.text}`;
+                    }
                 }
             });
             
             // Update personality modal options
-            document.querySelectorAll('.player-pers-card-modal span').forEach(span => {
-                const text = span.textContent.trim();
-                if (text.includes('Rastgele') || text.includes('Random')) {
-                    span.textContent = `🎲 ${t('random')}`;
-                } else if (text.includes('Kodaman') || text.includes('Tycoon')) {
-                    span.textContent = `💼 ${t('ai_tycoon')}`;
-                } else if (text.includes('Bankacı') || text.includes('Banker')) {
-                    span.textContent = `🏦 ${t('ai_banker')}`;
-                } else if (text.includes('Fırsatçı') || text.includes('Opportunist')) {
-                    span.textContent = `🦊 ${t('ai_opportunist')}`;
+            const personalityOptionsData = {
+                'Random': { emoji: '🎲', text: t('random') },
+                'Tycoon': { emoji: '💼', text: t('ai_tycoon') },
+                'Banker': { emoji: '🏦', text: t('ai_banker') },
+                'Opportunist': { emoji: '🦊', text: t('ai_opportunist') }
+            };
+            
+            Object.keys(personalityOptionsData).forEach(pers => {
+                const card = document.getElementById(`player-pers-${pers}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        const opt = personalityOptionsData[pers];
+                        span.textContent = `${opt.emoji} ${opt.text}`;
+                    }
                 }
             });
             
@@ -1263,82 +1277,6 @@
             if (madeByText) {
                 madeByText.textContent = t('made_by');
             }
-            
-            // Update speed modal options dynamically
-            const speedOptions = {
-                '100': { emoji: '🐢', text: t('speed_slow') },
-                '200': { emoji: '⚡', text: t('speed_normal') },
-                '300': { emoji: '🚀', text: t('speed_fast') },
-                '400': { emoji: '⚡', text: t('speed_lightning') }
-            };
-            
-            Object.keys(speedOptions).forEach(speed => {
-                const card = document.getElementById(`speed-modal-${speed}`);
-                if (card) {
-                    const span = card.querySelector('span');
-                    if (span) {
-                        span.textContent = `${speedOptions[speed].emoji} ${speedOptions[speed].text}`;
-                    }
-                }
-            });
-            
-            // Update difficulty modal options dynamically
-            const difficultyOptions = {
-                '1': t('difficulty_very_easy'),
-                '2': t('difficulty_easy'),
-                '3': t('difficulty_normal'),
-                '4': t('difficulty_hard'),
-                '5': t('difficulty_very_hard')
-            };
-            
-            Object.keys(difficultyOptions).forEach(level => {
-                const card = document.getElementById(`difficulty-modal-${level}`);
-                if (card) {
-                    const span = card.querySelector('span');
-                    if (span) {
-                        span.textContent = difficultyOptions[level];
-                    }
-                }
-            });
-            
-            // Update player type modal options
-            const playerTypeOptions = {
-                'human': { emoji: '👤', text: t('human') },
-                'ai-easy': { emoji: '🤖', text: t('ai_easy') },
-                'ai-medium': { emoji: '🤖', text: t('ai_medium') },
-                'ai-hard': { emoji: '🤖', text: t('ai_hard') },
-                'none': { emoji: '---', text: `(${t('closed_option')})` }
-            };
-            
-            Object.keys(playerTypeOptions).forEach(type => {
-                const card = document.getElementById(`player-type-${type}`);
-                if (card) {
-                    const span = card.querySelector('span');
-                    if (span) {
-                        const opt = playerTypeOptions[type];
-                        span.textContent = type === 'none' ? `${opt.emoji} ${opt.text}` : `${opt.emoji} ${opt.text}`;
-                    }
-                }
-            });
-            
-            // Update personality modal options
-            const personalityOptions = {
-                'Random': { emoji: '🎲', text: t('random') },
-                'Tycoon': { emoji: '💼', text: t('ai_tycoon') },
-                'Banker': { emoji: '🏦', text: t('ai_banker') },
-                'Opportunist': { emoji: '🦊', text: t('ai_opportunist') }
-            };
-            
-            Object.keys(personalityOptions).forEach(pers => {
-                const card = document.getElementById(`player-pers-${pers}`);
-                if (card) {
-                    const span = card.querySelector('span');
-                    if (span) {
-                        const opt = personalityOptions[pers];
-                        span.textContent = `${opt.emoji} ${opt.text}`;
-                    }
-                }
-            });
 
             // Update game UI buttons
             const rollBtn = document.getElementById('rollBtn');
