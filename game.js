@@ -853,6 +853,7 @@
                 mortgage: "İPOTEK",
                 trade: "TAKAS YAP",
                 endTurn: "TURU BİTİR",
+                nextTurn: "SONRAKİ TURA GEÇ",
                 thinking: "düşünüyor...",
                 jail: "HAPİS",
                 jailPay: "CEZA ÖDE",
@@ -1008,6 +1009,7 @@
                 mortgage: "MORTGAGE",
                 trade: "TRADE",
                 endTurn: "END TURN",
+                nextTurn: "NEXT TURN",
                 thinking: "thinking...",
                 jail: "JAIL",
                 jailPay: "PAY FINE",
@@ -1461,6 +1463,8 @@
             if (auctionBtn) auctionBtn.innerHTML = `🔨 ${t('auction')}`;
             if (buildBtn) buildBtn.innerHTML = `🏗️ ${t('house')}`;
             if (endBtn) endBtn.innerHTML = `⏭️ ${t('endTurn')}`;
+            const nextTurnBtn = document.getElementById('nextTurnBtn');
+            if (nextTurnBtn) nextTurnBtn.innerHTML = `⏭️`;
 
             // Mobile buttons
             const mobTradeBtn = document.getElementById('mobTradeBtn');
@@ -1772,6 +1776,13 @@
                         if (gameContainer) {
                             gameContainer.style.opacity = '1';
                             gameContainer.style.pointerEvents = 'auto';
+                        }
+                        // Scroll board to top on mobile
+                        if (window.innerWidth <= 900) {
+                            const centerPanel = document.querySelector('.center-panel');
+                            if (centerPanel) {
+                                centerPanel.scrollTop = 0;
+                            }
                         }
                     } catch (e) {
                         debugError("Token update error:", e);
@@ -2200,6 +2211,7 @@
                     <div class="dice" id="d1" onclick="rollDice()"></div>
                     <div class="dice" id="d2" onclick="rollDice()"></div>
                 </div>
+                <button class="btn btn-next-turn-center" id="nextTurnBtnCenter" onclick="endTurn()" style="display: none;" aria-label="Sonraki tura geç">⏭️</button>
             `;
             b.appendChild(c);
 
@@ -2318,11 +2330,28 @@
                         }
                         log(t('double_roll_again').replace('%s', p.name), true);
                         G.rolled = false;
-                        document.getElementById('endBtn').disabled = true;
+                        const endBtn = document.getElementById('endBtn');
+                        const nextTurnBtn = document.getElementById('nextTurnBtn');
+                        const nextTurnBtnCenter = document.getElementById('nextTurnBtnCenter');
+                        const diceContainer = document.getElementById('diceContainer');
+                        if (endBtn) endBtn.disabled = true;
+                        if (nextTurnBtn && !p.isAI) nextTurnBtn.style.display = 'none';
+                        if (nextTurnBtnCenter && !p.isAI) nextTurnBtnCenter.style.display = 'none';
+                        if (diceContainer && !p.isAI) diceContainer.classList.remove('passive');
                         if (window.innerWidth <= 900) {
                             const mobEnd = document.getElementById('mobEndBtn');
                             if (mobEnd) mobEnd.disabled = true;
                         }
+                        // Re-enable roll button for double
+                        const rollBtn = document.getElementById('rollBtn');
+                        const d1 = document.getElementById('d1');
+                        const d2 = document.getElementById('d2');
+                        if (rollBtn && !p.isAI) {
+                            rollBtn.disabled = false;
+                            rollBtn.classList.remove('passive');
+                        }
+                        if (d1 && !p.isAI) d1.style.pointerEvents = 'auto';
+                        if (d2 && !p.isAI) d2.style.pointerEvents = 'auto';
                     } else {
                         G.doubles = 0;
                         G.rolled = true;
@@ -2520,12 +2549,19 @@
                         }
                     } else bankrupt(p.id, ow.id);
                 }
-                document.getElementById('endBtn').disabled = false; if (p.isAI) aiPostTurn();
+                document.getElementById('endBtn').disabled = false;
+                // Ensure UI is updated to show next turn button if applicable
+                updateUI();
+                if (p.isAI) aiPostTurn();
 
             } else {
                 log(t('land_own').replace('%s', p.name).replace('%s', s.name));
                 toast(t('land_own').replace('%s', p.name).replace('%s', s.name), 'info');
-                document.getElementById('endBtn').disabled = false; updateBuildBtn(); if (p.isAI) aiPostTurn();
+                document.getElementById('endBtn').disabled = false;
+                updateBuildBtn();
+                // Ensure UI is updated to show next turn button if applicable
+                updateUI();
+                if (p.isAI) aiPostTurn();
             }
         }
         function calcRent(s, pr) { 
@@ -3086,12 +3122,41 @@
             do { G.cur = (G.cur + 1) % G.players.length } while (G.players[G.cur].out);
 
             const p = G.players[G.cur];
-            document.getElementById('rollBtn').disabled = false;
+            const rollBtn = document.getElementById('rollBtn');
+            const nextTurnBtn = document.getElementById('nextTurnBtn');
+            const nextTurnBtnCenter = document.getElementById('nextTurnBtnCenter');
+            const endBtn = document.getElementById('endBtn');
+            const diceContainer = document.getElementById('diceContainer');
+            const d1 = document.getElementById('d1');
+            const d2 = document.getElementById('d2');
+            
+            if (rollBtn) {
+                rollBtn.disabled = false;
+                rollBtn.classList.remove('passive');
+            }
+            if (nextTurnBtn) {
+                nextTurnBtn.style.display = 'none';
+            }
+            if (nextTurnBtnCenter) {
+                nextTurnBtnCenter.style.display = 'none';
+            }
+            if (diceContainer) {
+                diceContainer.classList.remove('passive');
+            }
+            if (d1) {
+                d1.style.pointerEvents = 'auto';
+            }
+            if (d2) {
+                d2.style.pointerEvents = 'auto';
+            }
+            if (endBtn) {
+                endBtn.disabled = true;
+                endBtn.style.display = 'block';
+            }
             document.getElementById('buyBtn').disabled = true;
             document.getElementById('auctionBtn').disabled = true;
             document.getElementById('auctionBtn').style.display = 'none';
             document.getElementById('buildBtn').disabled = true;
-            document.getElementById('endBtn').disabled = true;
 
             // Show jail controls if in jail
             const jc = document.getElementById('jailControls');
@@ -3244,6 +3309,16 @@
             initPanelStates();
             // Initialize mobile logo long press
             initMobileLogoLongPress();
+            
+            // Scroll board to top on mobile after a short delay to ensure board is rendered
+            setTimeout(() => {
+                if (window.innerWidth <= 900) {
+                    const centerPanel = document.querySelector('.center-panel');
+                    if (centerPanel) {
+                        centerPanel.scrollTop = 0;
+                    }
+                }
+            }, 100);
 
             // Listen for resize to re-align tokens
             window.addEventListener('resize', throttle(() => {
@@ -3307,6 +3382,86 @@
                         ctrl.style.opacity = '1';
                         ctrl.style.pointerEvents = 'auto';
                         if (aiOverlay) aiOverlay.classList.remove('active');
+                    }
+
+                    // Human player specific: Show passive dice button and next turn button when dice is rolled and no more rolls available
+                    if (!p.isAI) {
+                        const rollBtn = document.getElementById('rollBtn');
+                        const nextTurnBtn = document.getElementById('nextTurnBtn');
+                        const nextTurnBtnCenter = document.getElementById('nextTurnBtnCenter');
+                        const endBtn = document.getElementById('endBtn');
+                        const diceContainer = document.getElementById('diceContainer');
+                        const d1 = document.getElementById('d1');
+                        const d2 = document.getElementById('d2');
+                        
+                        if (rollBtn && nextTurnBtn && endBtn) {
+                            // Check if dice is rolled and no more rolls available
+                            const diceRolledAndNoMoreRolls = G.rolled && rollBtn.disabled;
+                            
+                            // Check if turn can be ended (buy/build actions are optional, not binding)
+                            const canEndTurn = !endBtn.disabled;
+                            
+                            // Show next turn button if:
+                            // 1. Dice is rolled and no more rolls available
+                            // 2. Turn can be ended (buy/build are optional, user can skip them)
+                            // 3. Not in jail (jail has special controls)
+                            // Note: Buy and build actions are not binding - user can skip them
+                            if (diceRolledAndNoMoreRolls && canEndTurn && !p.jail) {
+                                rollBtn.classList.add('passive');
+                                nextTurnBtn.style.display = 'none'; // Hide right panel button
+                                endBtn.style.display = 'none';
+                                
+                                // Show center button and make dice passive
+                                if (nextTurnBtnCenter) {
+                                    nextTurnBtnCenter.style.display = 'flex';
+                                }
+                                if (diceContainer) {
+                                    diceContainer.classList.add('passive');
+                                }
+                                if (d1) {
+                                    d1.style.pointerEvents = 'none';
+                                }
+                                if (d2) {
+                                    d2.style.pointerEvents = 'none';
+                                }
+                            } else {
+                                rollBtn.classList.remove('passive');
+                                nextTurnBtn.style.display = 'none';
+                                endBtn.style.display = 'block';
+                                
+                                // Hide center button and make dice active
+                                if (nextTurnBtnCenter) {
+                                    nextTurnBtnCenter.style.display = 'none';
+                                }
+                                if (diceContainer) {
+                                    diceContainer.classList.remove('passive');
+                                }
+                                if (d1) {
+                                    d1.style.pointerEvents = 'auto';
+                                }
+                                if (d2) {
+                                    d2.style.pointerEvents = 'auto';
+                                }
+                            }
+                        }
+                    } else {
+                        // AI players: hide next turn button
+                        const nextTurnBtn = document.getElementById('nextTurnBtn');
+                        const nextTurnBtnCenter = document.getElementById('nextTurnBtnCenter');
+                        const diceContainer = document.getElementById('diceContainer');
+                        if (nextTurnBtn) {
+                            nextTurnBtn.style.display = 'none';
+                        }
+                        if (nextTurnBtnCenter) {
+                            nextTurnBtnCenter.style.display = 'none';
+                        }
+                        if (diceContainer) {
+                            diceContainer.classList.remove('passive');
+                        }
+                        const rollBtn = document.getElementById('rollBtn');
+                        if (rollBtn) {
+                            rollBtn.classList.remove('passive');
+                        }
                     }
                 }
 

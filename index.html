@@ -182,18 +182,18 @@
                 </div>
                 
                 <button class="btn btn-start-game"
-                    style="width:100%; height: 70px; font-size: 1.2rem; letter-spacing: 2px; font-weight: 900; margin-top:auto;"
+                    style="width:100%; height: 60px; font-size: 1.1rem; letter-spacing: 1.8px; font-weight: 900; margin-top:auto;"
                     onclick="startGame()" aria-label="Yeni oyuna başla" id="startGameBtn">YENİ OYUNA BAŞLA</button>
             </div>
 
-            <div class="setup-right" style="border-left: 1px solid rgba(255,255,255,0.05); padding-left:30px;">
+            <div class="setup-right" style="border-left: 1px solid rgba(255,255,255,0.05); padding-left:24px;">
                 <div class="setup-card">
                     <h3 class="setup-title" id="generalSettingsTitle">⚙️ GENEL AYARLAR</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                         <div class="rule-item" style="flex-direction:column; align-items:flex-start; border:none;">
-                            <label id="langLabelText" style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">DİL /
+                            <label id="langLabelText" style="font-size:0.55rem; opacity:0.6; margin-bottom:4px; font-weight:800;">DİL /
                                 LANG</label>
-                            <button class="btn-theme-selector" onclick="openLangModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
+                            <button class="btn-theme-selector" onclick="openLangModal()" style="width:100%; height:36px; padding:6px 12px; font-size:0.8rem;">
                                 <span id="currentLangName">Türkçe</span>
                             </button>
                             <select id="setupLang" style="display:none;" onchange="currLang = this.value; updateLangUI(); selectLangFromModal(this.value);">
@@ -202,9 +202,9 @@
                             </select>
                         </div>
                         <div class="rule-item" style="flex-direction:column; align-items:flex-start; border:none;">
-                            <label id="speedLabelText" style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">HIZ /
+                            <label id="speedLabelText" style="font-size:0.55rem; opacity:0.6; margin-bottom:4px; font-weight:800;">HIZ /
                                 SPEED</label>
-                            <button class="btn-theme-selector" onclick="openSpeedModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
+                            <button class="btn-theme-selector" onclick="openSpeedModal()" style="width:100%; height:36px; padding:6px 12px; font-size:0.8rem;">
                                 <span id="currentSpeedName">Normal</span>
                             </button>
                             <select id="setupSpeed" style="display:none;" onchange="document.getElementById('speedRange').value = this.value; updateSpeedDisp(); selectSpeedFromModal(this.value);">
@@ -214,10 +214,10 @@
                                 <option value="400">Şimşek</option>
                             </select>
                         </div>
-                        <div class="rule-item" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; grid-column:1/-1; border:none; padding-top:10px;">
+                        <div class="rule-item" style="display:flex; flex-direction:row; justify-content:space-between; align-items:center; grid-column:1/-1; border:none; padding-top:8px;">
                             <div style="flex:1; display:flex; flex-direction:column; align-items:flex-start;">
-                                <label id="difficultyLabel" style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">OYUN ZORLUĞU</label>
-                                <button class="btn-theme-selector" onclick="openDifficultyModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
+                                <label id="difficultyLabel" style="font-size:0.55rem; opacity:0.6; margin-bottom:4px; font-weight:800;">OYUN ZORLUĞU</label>
+                                <button class="btn-theme-selector" onclick="openDifficultyModal()" style="width:100%; height:36px; padding:6px 12px; font-size:0.8rem;">
                                     <span id="currentDifficultyName">Normal</span>
                                 </button>
                                 <select id="difficultyLevel" style="display:none;" onchange="updateDifficultyDisplay(); selectDifficultyFromModal(this.value);">
@@ -229,8 +229,8 @@
                                 </select>
                                 <div id="difficultyDescription" style="display:none;"></div>
                             </div>
-                            <div style="flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; margin-left:20px;">
-                                <label id="board3DLabel" style="font-size:0.65rem; opacity:0.6; margin-bottom:5px; font-weight:700; letter-spacing:0.5px;">3D TAHTA EFEKTİ</label>
+                            <div style="flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; margin-left:16px;">
+                                <label id="board3DLabel" style="font-size:0.6rem; opacity:0.6; margin-bottom:4px; font-weight:700; letter-spacing:0.5px;">3D TAHTA EFEKTİ</label>
                                 <div class="rule-toggle" id="setup3DToggle" onclick="this.classList.toggle('on');"></div>
                             </div>
                         </div>
@@ -247,7 +247,7 @@
 
                 <div class="setup-card">
                     <h3 class="setup-title" id="gameRulesTitle">⚖️ OYUN KURALLARI</h3>
-                    <div class="rules-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="rules-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <div class="rule-item">
                             <label id="startingMoneyLabel" style="font-size:0.6rem; opacity:0.6;">BAŞLANGIÇ $</label>
                             <input type="number" id="ruleStartMoney" value="1500" step="500" class="rule-input"
@@ -271,7 +271,7 @@
                 </div>
                 
                 <button id="resumeBtn" class="btn btn-resume-game"
-                    style="width:100%; height:70px; font-size: 0.95rem; letter-spacing: 1.2px; font-weight: 700; display:none; margin-top:auto;"
+                    style="width:100%; height:60px; font-size: 0.9rem; letter-spacing: 1px; font-weight: 700; display:none; margin-top:auto;"
                     onclick="loadGame()">ÖNCEKİ OYUNA DEVAM ET</button>
             </div>
         </div>
@@ -378,7 +378,10 @@
                     <div id="currentPlayerName" style="font-weight:700; color:var(--gold); font-size:1.1rem;">-
                     </div>
                 </div>
-                <button class="btn btn-roll" id="rollBtn" onclick="rollDice()" aria-label="Zar at">🎲 ZAR AT</button>
+                <div id="rollButtonContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;">
+                    <button class="btn btn-roll" id="rollBtn" onclick="rollDice()" aria-label="Zar at">🎲 ZAR AT</button>
+                    <button class="btn btn-end btn-next-turn" id="nextTurnBtn" onclick="endTurn()" style="display: none !important;" aria-label="Sonraki tura geç"></button>
+                </div>
                 <div id="jailControls" style="display:none; flex-direction: column; gap: 8px; margin-bottom: 8px;">
                     <button class="btn btn-action" onclick="payJail()">💸 CEZA ÖDE (50₺)</button>
                     <button class="btn btn-secondary" id="useJailCardBtn" onclick="useJailCard()" disabled>🎫 KART
