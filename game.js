@@ -2213,7 +2213,7 @@
             // Listen for resize to re-align tokens
             window.addEventListener('resize', throttle(() => {
                 if (G.players && G.players.length > 0) updateTokens();
-            });
+            }, 250));
         }
 
         function updateUI() {
