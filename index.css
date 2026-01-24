@@ -2257,7 +2257,12 @@
         }
 
         body.theme-cyber #bg-canvas {
-            background: radial-gradient(circle at center, #0a0a20, #000);
+            background-image: url('assets/cyber_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: repeat;
+            filter: blur(4px) brightness(0.5) saturate(0.8);
+            opacity: 0.4;
         }
 
         body.theme-cyber .board {
@@ -2377,7 +2382,12 @@
         }
 
         body.theme-cyber #bg-canvas {
-            background: radial-gradient(circle at center, #0a0a20, #000);
+            background-image: url('assets/cyber_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: repeat;
+            filter: blur(4px) brightness(0.5) saturate(0.8);
+            opacity: 0.4;
         }
 
         body.theme-cyber .board {
