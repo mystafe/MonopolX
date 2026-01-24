@@ -34,12 +34,23 @@
         // GLOBAL FUNCTIONS - ATTACH TO WINDOW FOR RELIABILITY
         window.openStats = function () {
             const stats = document.getElementById('statsContent');
+            const statsLog = document.getElementById('statsLogContent');
             if (!stats) return;
+            
+            // Clear previous content
             stats.innerHTML = '';
+            
+            // Detect mobile for compact layout
+            const isMobile = window.innerWidth <= 768;
+            const cardPadding = isMobile ? '8px' : '10px';
+            const cardGap = isMobile ? '6px' : '10px';
+            const fontSize = isMobile ? '0.7rem' : '0.75rem';
+            const moneyFontSize = isMobile ? '0.75rem' : '0.85rem';
+            
             G.players.forEach(p => {
                 if (p.out) return;
                 const card = document.createElement('div');
-                card.style.cssText = 'background:rgba(20,20,30,0.98); padding:10px; border-radius:10px; border:1px solid ' + COLORS[p.color] + '44; margin-bottom:8px; box-shadow:0 4px 15px rgba(0,0,0,0.4);';
+                card.style.cssText = `background:rgba(20,20,30,0.98); padding:${cardPadding}; border-radius:8px; border:1px solid ${COLORS[p.color]}44; margin-bottom:${cardGap}; box-shadow:0 2px 10px rgba(0,0,0,0.3);`;
 
                 const propGroups = {};
                 p.props.forEach(id => {
@@ -51,22 +62,32 @@
 
                 let propHTML = '';
                 Object.keys(propGroups).forEach(color => {
-                    propHTML += '<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:8px;">';
+                    propHTML += '<div style="display:flex; flex-wrap:wrap; gap:3px; margin-top:6px;">';
                     propGroups[color].forEach(name => {
-                        propHTML += '<span style="background:' + color + '; color:' + ((color === '#fff' || color === '#ffeb3b') ? '#000' : '#fff') + '; padding:2px 5px; border-radius:3px; font-size:0.5rem; font-weight:800; border:1px solid rgba(255,255,255,0.1);">' + name + '</span>';
+                        const propFontSize = isMobile ? '0.45rem' : '0.5rem';
+                        propHTML += '<span style="background:' + color + '; color:' + ((color === '#fff' || color === '#ffeb3b') ? '#000' : '#fff') + '; padding:2px 4px; border-radius:3px; font-size:' + propFontSize + '; font-weight:800; border:1px solid rgba(255,255,255,0.1);">' + name + '</span>';
                     });
                     propHTML += '</div>';
                 });
 
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-weight:900; color:${COLORS[p.color]}; font-size:0.75rem;">${p.icon} ${p.name.toUpperCase()}</span>
-                        <span style="font-weight:900; color:var(--gold); font-size:0.85rem;">${p.money.toLocaleString()}₺</span>
+                        <span style="font-weight:900; color:${COLORS[p.color]}; font-size:${fontSize};">${p.icon} ${p.name.toUpperCase()}</span>
+                        <span style="font-weight:900; color:var(--gold); font-size:${moneyFontSize};">${p.money.toLocaleString()}₺</span>
                     </div>
-                    ${propHTML || '<div style="opacity:0.4; font-size:0.6rem; margin-top:5px;">Mülk yok</div>'}
+                    ${propHTML || '<div style="opacity:0.4; font-size:0.55rem; margin-top:4px;">Mülk yok</div>'}
                 `;
                 stats.appendChild(card);
             });
+            
+            // Copy game log to stats modal
+            if (statsLog) {
+                const gameLog = document.getElementById('gameLog');
+                if (gameLog) {
+                    statsLog.innerHTML = gameLog.innerHTML;
+                }
+            }
+            
             document.getElementById('statsModal').classList.add('active');
         };
 
@@ -1252,6 +1273,10 @@
             const statsModalTitle = document.getElementById('statsModalTitle');
             if (statsModalTitle) {
                 statsModalTitle.textContent = `📊 ${t('stats')}`;
+            }
+            const statsLogTitle = document.getElementById('statsLogTitle');
+            if (statsLogTitle) {
+                statsLogTitle.textContent = `📝 ${t('log_header')}`;
             }
             
             // Update speed modal options dynamically
