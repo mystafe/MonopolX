@@ -11,7 +11,11 @@
         if (window.location.protocol.startsWith('http')) {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
+                    navigator.serviceWorker.register('sw.js').catch(err => {
+                        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                            console.log('SW reg error:', err);
+                        }
+                    });
                 });
             }
             const link = document.createElement('link');
@@ -31,7 +35,7 @@
     <div class="setup-screen" id="setupScreen">
         <div class="game-header" style="margin-bottom: 30px; text-align: center; position: relative; z-index: 10;">
             <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
-                <img src="assets/logo.png" alt="MONOPOLX"
+                <img src="assets/logo.png" alt="MONOPOLX" loading="eager"
                     style="height: 100px; filter: drop-shadow(0 0 30px rgba(212,175,55,0.4)); animation: logoPulse 6s infinite alternate;">
                 <div style="text-align: left;">
                     <h1
@@ -261,7 +265,7 @@
                 </div>
                 <button class="btn btn-roll"
                     style="width:100%; height: 60px; font-size: 1.2rem; letter-spacing: 2px; margin-top: 10px;"
-                    onclick="startGame()">OYUNA BAŞLA</button>
+                    onclick="startGame()" aria-label="Oyuna başla">OYUNA BAŞLA</button>
 
                 <button id="resumeBtn" class="btn btn-secondary"
                     style="width:100%; margin-top:12px; height:50px; border-radius:15px; display:none;"
@@ -303,10 +307,10 @@
         <div class="side-panel players-side">
             <div
                 style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 25px;">
-                <img src="assets/logo.png" alt="MONOPOLX"
+                <img src="assets/logo.png" alt="MONOPOLX" loading="lazy"
                     style="width: 200px; height: auto; cursor:pointer; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transition: transform 0.3s ease;"
                     onclick="location.reload()" onmouseover="this.style.transform='scale(1.05)'"
-                    onmouseout="this.style.transform='scale(1)'">
+                    onmouseout="this.style.transform='scale(1)'" role="button" tabindex="0" aria-label="Ana sayfaya dön">
                 <div
                     style="font-size: 0.65rem; opacity: 0.7; letter-spacing: 3px; font-weight: 800; margin-top: 10px; color: var(--gold); text-transform: uppercase;">
                     <span id="ver2"
@@ -355,20 +359,20 @@
                     <div id="currentPlayerName" style="font-weight:700; color:var(--gold); font-size:1.1rem;">-
                     </div>
                 </div>
-                <button class="btn btn-roll" id="rollBtn" onclick="rollDice()">🎲 ZAR AT</button>
+                <button class="btn btn-roll" id="rollBtn" onclick="rollDice()" aria-label="Zar at">🎲 ZAR AT</button>
                 <div id="jailControls" style="display:none; flex-direction: column; gap: 8px; margin-bottom: 8px;">
                     <button class="btn btn-action" onclick="payJail()">💸 CEZA ÖDE (50₺)</button>
                     <button class="btn btn-secondary" id="useJailCardBtn" onclick="useJailCard()" disabled>🎫 KART
                         KULLAN</button>
                 </div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <button class="btn btn-action" id="buyBtn" onclick="buyProp()" disabled>🏠 AL</button>
+                    <button class="btn btn-action" id="buyBtn" onclick="buyProp()" disabled aria-label="Mülk satın al">🏠 AL</button>
                     <button class="btn btn-action" id="auctionBtn" onclick="startAuction()" disabled
                         style="display:none">🔨 İhale</button>
                     <button class="btn btn-action" id="buildBtn" onclick="openBuild()" disabled>🏗️ EV</button>
                     <button class="btn btn-secondary" onclick="openMortgage()">💰 İPOTEK</button>
                 </div>
-                <button class="btn btn-secondary" style="width:100%" onclick="openTrade()">🔄 TAKAS YAP</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="openTrade()" aria-label="Takas yap">🔄 TAKAS YAP</button>
                 <div class="ui-settings"
                     style="margin-bottom:10px; background:rgba(255,255,255,0.04); padding:8px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -421,7 +425,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-end" id="endBtn" onclick="endTurn()" disabled>⏭️ TURU BİTİR</button>
+                <button class="btn btn-end" id="endBtn" onclick="endTurn()" disabled aria-label="Turu bitir">⏭️ TURU BİTİR</button>
             </div>
             <h2 id="logHeader"
                 style="font-family: 'Bebas Neue'; color: var(--gold); font-size: 1.8rem; letter-spacing: 2px; margin-top:10px; cursor:pointer; user-select:none;"

@@ -181,13 +181,15 @@
                 inset 0 3px 6px rgba(255, 255, 255, 0.9),
                 inset 0 -3px 6px rgba(139, 105, 20, 0.15);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
             position: relative;
             z-index: 100;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .dice:hover {
-            transform: scale(1.15) translateY(-3px);
+            transform: scale(1.15) translateY(-3px) translateZ(0);
             box-shadow:
                 0 10px 30px rgba(0, 0, 0, 0.5),
                 0 0 0 4px rgba(212, 175, 55, 0.5),
@@ -201,6 +203,7 @@
 
         .dice.rolling {
             animation: rollDice 0.5s ease-out;
+            will-change: transform;
         }
 
         @keyframes rollDice {
@@ -432,8 +435,9 @@
             overflow: visible;
             cursor: pointer;
             font-size: clamp(7px, 1.3vw, 11px);
-            transition: all 0.25s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
             backdrop-filter: blur(5px);
+            will-change: transform;
         }
 
         .square:hover {
@@ -453,6 +457,7 @@
         .square.current {
             animation: currentPulse 1.5s ease-in-out infinite;
             z-index: 10;
+            will-change: box-shadow, outline;
         }
 
         @keyframes currentPulse {
@@ -636,10 +641,12 @@
             align-items: center;
             justify-content: center;
             font-size: clamp(14px, 2.2vw, 18px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
             user-select: none;
             z-index: 50;
             position: relative;
+            will-change: transform;
+            transform: translateZ(0);
         }
 
         .token::after {

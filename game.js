@@ -1,3 +1,36 @@
+        // Production mode check
+        const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+        const debugLog = (...args) => {
+            if (!isProduction) console.log(...args);
+        };
+        const debugError = (...args) => {
+            if (!isProduction) console.error(...args);
+        };
+
+        // Performance utilities
+        const debounce = (func, wait) => {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        };
+
+        const throttle = (func, limit) => {
+            let inThrottle;
+            return function(...args) {
+                if (!inThrottle) {
+                    func.apply(this, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            };
+        };
+
         // GLOBAL FUNCTIONS - ATTACH TO WINDOW FOR RELIABILITY
         window.openStats = function () {
             const stats = document.getElementById('statsContent');
@@ -1320,7 +1353,7 @@
 
         function rollDice() {
             if (G.rolled) {
-                console.log("Dice already rolled for this turn.");
+                debugLog("Dice already rolled for this turn.");
                 return;
             }
             if (document.querySelector('.modal-overlay.active')) return;
@@ -2041,7 +2074,7 @@
                 };
 
                 localStorage.setItem('monopolx_autosave', JSON.stringify(data));
-            } catch (e) { console.error("AutoSave failed", e); }
+            } catch (e) { debugError("AutoSave failed", e); }
         }
 
         function loadGame() {
@@ -2093,7 +2126,7 @@
                     checkAI();
                 }
             } catch (e) {
-                console.error("Load failed", e);
+                debugError("Load failed", e);
                 alert("Kayıt dosyası yüklenirken hata oluştu. Lütfen konsolu kontrol edin.");
             }
         }
@@ -2106,7 +2139,7 @@
             set3DEffect(false);
 
             // Listen for resize to re-align tokens
-            window.addEventListener('resize', () => {
+            window.addEventListener('resize', throttle(() => {
                 if (G.players && G.players.length > 0) updateTokens();
             });
         }
