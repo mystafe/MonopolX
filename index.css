@@ -1908,6 +1908,32 @@
                 height: 40px !important;
             }
 
+            .map-modal-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+
+            .map-card-modal {
+                padding: 14px;
+                min-height: 90px;
+            }
+
+            .map-card-modal div {
+                font-size: 2rem !important;
+            }
+
+            .btn-start-game {
+                height: 56px !important;
+                font-size: 1rem !important;
+                letter-spacing: 1px !important;
+            }
+
+            .btn-resume-game {
+                height: 50px !important;
+                font-size: 0.9rem !important;
+                letter-spacing: 1px !important;
+            }
+
             .mobile-bottom-bar {
                 padding: 10px 8px max(10px, env(safe-area-inset-bottom)) !important;
                 gap: 4px !important;
@@ -2631,6 +2657,99 @@
         .btn-close-modal:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
+        }
+
+        .map-card-modal {
+            padding: 16px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .map-card-modal:hover {
+            transform: translateY(-3px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .map-card-modal.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.08);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .map-card-modal.selected span {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .btn-start-game {
+            background: linear-gradient(135deg, #ffd700 0%, #f4d03f 25%, #f9e79f 50%, #f4d03f 75%, #d4af37 100%);
+            color: #000;
+            box-shadow: 
+                0 8px 32px rgba(212, 175, 55, 0.4),
+                0 4px 16px rgba(212, 175, 55, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                inset 0 -2px 4px rgba(139, 105, 20, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            position: relative;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-start-game:hover {
+            box-shadow: 
+                0 12px 40px rgba(212, 175, 55, 0.6),
+                0 6px 20px rgba(212, 175, 55, 0.4),
+                inset 0 2px 6px rgba(255, 255, 255, 0.5),
+                inset 0 -2px 6px rgba(139, 105, 20, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            background: linear-gradient(135deg, #ffed4e 0%, #ffd700 25%, #f9e79f 50%, #ffd700 75%, #f4d03f 100%);
+        }
+
+        .btn-start-game:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .btn-resume-game {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
+            color: var(--gold);
+            box-shadow: 
+                0 6px 24px rgba(212, 175, 55, 0.25),
+                0 3px 12px rgba(212, 175, 55, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            border: 1.5px solid rgba(212, 175, 55, 0.3);
+            border-radius: 14px;
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-resume-game:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.15) 100%);
+            border-color: var(--gold);
+            box-shadow: 
+                0 8px 30px rgba(212, 175, 55, 0.35),
+                0 4px 15px rgba(212, 175, 55, 0.25),
+                inset 0 2px 4px rgba(255, 255, 255, 0.25),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .btn-resume-game:active {
+            transform: translateY(0) scale(0.99);
         }
 
 

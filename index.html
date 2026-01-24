@@ -144,22 +144,23 @@
 
                 <div class="setup-card">
                     <h3 class="setup-title">🗺️ HARİTA SEÇİMİ</h3>
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <select id="mapSelect" class="player-type-select"
-                            style="flex:1; height:48px; border-color:rgba(212, 175, 55, 0.15); background:rgba(212, 175, 55, 0.05);">
-                            <option value="turkiye" selected>🇹🇷 Türkiye Turu</option>
-                            <option value="superlig">⚽ Süper Lig</option>
-                            <option value="istanbul">🏙️ İstanbul Boğazı</option>
-                            <option value="world">🗺️ Global Cities</option>
-                            <option value="mars">🚀 Mars Kolonisi</option>
-                        </select>
-                        <div style="background:rgba(255, 61, 0, 0.08); padding:10px 14px; border-radius:14px; border:1px solid rgba(255, 61, 0, 0.2); display:flex; align-items:center; gap:10px;"
-                            title="🔥 CHALLENGE MODE: AI rakipler daha agresif oynar ve kira bedelleri %20 daha yüksektir.">
-                            <input type="checkbox" id="challengeMode" style="width:20px; height:20px; cursor:pointer;"
-                                checked>
-                            <label for="challengeMode"
-                                style="font-size:0.75rem; font-weight:900; color:#ff3d00; cursor:pointer; letter-spacing:1px;">CHALLENGE</label>
-                        </div>
+                    <button class="btn-theme-selector" onclick="openMapModal()">
+                        <span id="currentMapName">🇹🇷 Türkiye Turu</span>
+                        <span style="opacity:0.6; font-size:0.75rem;">Harita Seç</span>
+                    </button>
+                    <select id="mapSelect" style="display:none;">
+                        <option value="turkiye" selected>🇹🇷 Türkiye Turu</option>
+                        <option value="superlig">⚽ Süper Lig</option>
+                        <option value="istanbul">🏙️ İstanbul Boğazı</option>
+                        <option value="world">🗺️ Global Cities</option>
+                        <option value="mars">🚀 Mars Kolonisi</option>
+                    </select>
+                    <div style="background:rgba(255, 61, 0, 0.08); padding:10px 14px; border-radius:14px; border:1px solid rgba(255, 61, 0, 0.2); display:flex; align-items:center; gap:10px; margin-top:10px;"
+                        title="🔥 CHALLENGE MODE: AI rakipler daha agresif oynar ve kira bedelleri %20 daha yüksektir.">
+                        <input type="checkbox" id="challengeMode" style="width:20px; height:20px; cursor:pointer;"
+                            checked>
+                        <label for="challengeMode"
+                            style="font-size:0.75rem; font-weight:900; color:#ff3d00; cursor:pointer; letter-spacing:1px;">CHALLENGE</label>
                     </div>
                 </div>
             </div>
@@ -227,12 +228,12 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-roll"
-                    style="width:100%; height: 60px; font-size: 1.2rem; letter-spacing: 2px; margin-top: 10px;"
-                    onclick="startGame()" aria-label="Oyuna başla">OYUNA BAŞLA</button>
+                <button class="btn btn-start-game"
+                    style="width:100%; height: 64px; font-size: 1.1rem; letter-spacing: 1.5px; margin-top: 10px; font-weight: 800;"
+                    onclick="startGame()" aria-label="Yeni oyuna başla" id="startGameBtn">YENİ OYUNA BAŞLA</button>
 
-                <button id="resumeBtn" class="btn btn-secondary"
-                    style="width:100%; margin-top:12px; height:50px; border-radius:15px; display:none;"
+                <button id="resumeBtn" class="btn btn-resume-game"
+                    style="width:100%; margin-top:12px; height:56px; font-size: 1rem; letter-spacing: 1.5px; font-weight: 700; display:none;"
                     onclick="loadGame()">ÖNCEKİ OYUNA DEVAM ET</button>
             </div>
         </div>
@@ -443,6 +444,41 @@
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
                 <button class="btn btn-secondary" style="width:100%" onclick="closeModal('themeModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="mapModal" style="z-index: 10000;">
+        <div class="modal" style="max-width: 600px; width: 95%; z-index: 10001;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">🗺️ Harita Seç</h2>
+                <button class="btn-close-modal" onclick="closeModal('mapModal')" aria-label="Kapat">✕</button>
+            </div>
+            <div class="map-modal-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:20px;">
+                <div class="map-card-modal selected" id="map-modal-turkiye" onclick="selectMapFromModal('turkiye')">
+                    <div style="font-size:2.5rem; margin-bottom:8px;">🇹🇷</div>
+                    <span style="font-size:0.85rem; font-weight:600;">Türkiye Turu</span>
+                </div>
+                <div class="map-card-modal" id="map-modal-superlig" onclick="selectMapFromModal('superlig')">
+                    <div style="font-size:2.5rem; margin-bottom:8px;">⚽</div>
+                    <span style="font-size:0.85rem; font-weight:600;">Süper Lig</span>
+                </div>
+                <div class="map-card-modal" id="map-modal-istanbul" onclick="selectMapFromModal('istanbul')">
+                    <div style="font-size:2.5rem; margin-bottom:8px;">🏙️</div>
+                    <span style="font-size:0.85rem; font-weight:600;">İstanbul Boğazı</span>
+                </div>
+                <div class="map-card-modal" id="map-modal-world" onclick="selectMapFromModal('world')">
+                    <div style="font-size:2.5rem; margin-bottom:8px;">🗺️</div>
+                    <span style="font-size:0.85rem; font-weight:600;">Global Cities</span>
+                </div>
+                <div class="map-card-modal" id="map-modal-mars" onclick="selectMapFromModal('mars')">
+                    <div style="font-size:2.5rem; margin-bottom:8px;">🚀</div>
+                    <span style="font-size:0.85rem; font-weight:600;">Mars Kolonisi</span>
+                </div>
+            </div>
+            <div class="modal-buttons"
+                style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('mapModal')">Kapat</button>
             </div>
         </div>
     </div>

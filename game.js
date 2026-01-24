@@ -197,6 +197,43 @@
             closeModal('themeModal');
         }
 
+        function openMapModal() {
+            const modal = document.getElementById('mapModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function selectMapFromModal(mapKey) {
+            // Update hidden select element for compatibility
+            const mapSelect = document.getElementById('mapSelect');
+            if (mapSelect) {
+                mapSelect.value = mapKey;
+            }
+            
+            // Update current map name in button
+            const mapNames = {
+                turkiye: '🇹🇷 Türkiye Turu',
+                superlig: '⚽ Süper Lig',
+                istanbul: '🏙️ İstanbul Boğazı',
+                world: '🗺️ Global Cities',
+                mars: '🚀 Mars Kolonisi'
+            };
+            const currentMapNameEl = document.getElementById('currentMapName');
+            if (currentMapNameEl) {
+                currentMapNameEl.textContent = mapNames[mapKey] || '🇹🇷 Türkiye Turu';
+            }
+            
+            // Update selected state in modal
+            document.querySelectorAll('.map-card-modal').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.getElementById(`map-modal-${mapKey}`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            closeModal('mapModal');
+        }
+
         const SQ = [
             { id: 0, name: "BAŞLA", type: "go" },
             { id: 1, name: "Şırnak", type: "property", color: "#8B4513", price: 60, rent: [2, 10, 30, 90, 160, 250], hc: 50, g: "brown" },
@@ -452,7 +489,7 @@
         const TOKEN_ICONS = ['🚗', '🎩', '🐕', '🚢', '🦖', '👞', '🧺', '🐈'];
         const LANGS = {
             tr: {
-                start: "OYUNA BAŞLA",
+                start: "YENİ OYUNA BAŞLA",
                 resume: "ÖNCEKİ OYUNA DEVAM ET",
                 roll: "ZAR AT",
                 buy: "SATIN AL",
@@ -567,7 +604,7 @@
                 auction_log: "🔨 %s açık artırmada!"
             },
             en: {
-                start: "START GAME",
+                start: "START NEW GAME",
                 resume: "RESUME PREVIOUS GAME",
                 roll: "ROLL DICE",
                 buy: "BUY",
@@ -699,7 +736,7 @@
 
         function updateLangUI() {
             // Update setup screen
-            const startBtn = document.querySelector('button[onclick="startGame()"]');
+            const startBtn = document.getElementById('startGameBtn');
             if (startBtn) startBtn.textContent = t('start');
             const resBtn = document.getElementById('resumeBtn');
             if (resBtn) resBtn.textContent = t('resume');
