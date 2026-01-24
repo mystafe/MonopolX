@@ -612,7 +612,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 6px 3px 4px 3px;
+            padding: 4px 3px 6px 3px;
             text-align: center;
             position: relative;
             z-index: 2;
@@ -2252,11 +2252,14 @@
         }
 
         body.theme-royal #bg-canvas {
-            background: radial-gradient(circle at center, #7a1010, #1a0505);
+            background-image: url('assets/royal_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: repeat;
         }
 
         body.theme-royal .board {
-            --board-bg: #4a0000;
+            --board-bg: url('assets/royal_bg.png') center/cover;
             border: 12px solid #ffcc00 !important;
             box-shadow: 0 0 100px rgba(255, 204, 0, 0.3) !important;
         }
@@ -2275,12 +2278,12 @@
 
         body.theme-royal .board-center {
             background-color: #4a0000;
-            background-image: 
+            background-image: url('assets/royal_bg.png'),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 204, 0, 0.04) 2px, rgba(255, 204, 0, 0.04) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 204, 0, 0.04) 2px, rgba(255, 204, 0, 0.04) 4px),
-                radial-gradient(ellipse at center, rgba(74, 0, 0, 0.9) 0%, rgba(58, 0, 0, 0.7) 50%, rgba(26, 5, 5, 0.5) 100%);
-            background-blend-mode: normal, normal, overlay;
-            background-size: 100% 100%, 100% 100%, 100% 100%;
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 204, 0, 0.04) 2px, rgba(255, 204, 0, 0.04) 4px);
+            background-blend-mode: normal, normal, normal;
+            background-size: cover, 100% 100%, 100% 100%;
+            background-position: center, center, center;
             filter: sepia(0.3) contrast(1.15) brightness(0.88) saturate(1.2);
             box-shadow: 
                 inset 0 0 80px rgba(255, 204, 0, 0.25),
@@ -2338,12 +2341,12 @@
 
         body.theme-cyber .board-center {
             background-color: #050510;
-            background-image: 
+            background-image: url('assets/cyber_bg.png'),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 242, 255, 0.05) 2px, rgba(0, 242, 255, 0.05) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 0, 255, 0.03) 2px, rgba(255, 0, 255, 0.03) 4px),
-                radial-gradient(ellipse at center, rgba(10, 10, 32, 0.9) 0%, rgba(5, 5, 20, 0.7) 50%, rgba(0, 0, 10, 0.5) 100%);
-            background-blend-mode: normal, normal, overlay;
-            background-size: 100% 100%, 100% 100%, 100% 100%;
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 0, 255, 0.03) 2px, rgba(255, 0, 255, 0.03) 4px);
+            background-blend-mode: normal, normal, normal;
+            background-size: cover, 100% 100%, 100% 100%;
+            background-position: center, center, center;
             filter: contrast(1.2) brightness(0.9) saturate(1.3);
             box-shadow: 
                 inset 0 0 80px rgba(0, 242, 255, 0.15),
@@ -2375,11 +2378,14 @@
         }
 
         body.theme-nature #bg-canvas {
-            background: radial-gradient(circle at center, #1b2e1b, #0d1a0d);
+            background-image: url('assets/nature_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: repeat;
         }
 
         body.theme-nature .board {
-            --board-bg: #2d4c2d;
+            --board-bg: url('assets/nature_bg.png') center/cover;
             border: 12px solid #4e342e !important;
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5) !important;
         }
@@ -2398,7 +2404,7 @@
 
         body.theme-nature .board-center {
             background-color: #2d4c2d;
-            background-image: 
+            background-image: url('assets/nature_bg.png'), 
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 195, 74, 0.04) 2px, rgba(139, 195, 74, 0.04) 4px),
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(76, 175, 80, 0.03) 2px, rgba(76, 175, 80, 0.03) 4px),
                 radial-gradient(ellipse at center, rgba(45, 76, 45, 0.9) 0%, rgba(27, 46, 27, 0.7) 50%, rgba(13, 26, 13, 0.5) 100%);
