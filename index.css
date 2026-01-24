@@ -2404,12 +2404,12 @@
 
         body.theme-nature .board-center {
             background-color: #2d4c2d;
-            background-image: url('assets/nature_bg.png'), 
+            background-image: url('assets/nature_bg.png'),
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 195, 74, 0.04) 2px, rgba(139, 195, 74, 0.04) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(76, 175, 80, 0.03) 2px, rgba(76, 175, 80, 0.03) 4px),
-                radial-gradient(ellipse at center, rgba(45, 76, 45, 0.9) 0%, rgba(27, 46, 27, 0.7) 50%, rgba(13, 26, 13, 0.5) 100%);
-            background-blend-mode: normal, normal, overlay;
-            background-size: 100% 100%, 100% 100%, 100% 100%;
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(76, 175, 80, 0.03) 2px, rgba(76, 175, 80, 0.03) 4px);
+            background-blend-mode: normal, normal, normal;
+            background-size: cover, 100% 100%, 100% 100%;
+            background-position: center, center, center;
             filter: sepia(0.2) contrast(1.1) brightness(0.92) saturate(1.25);
             box-shadow: 
                 inset 0 0 70px rgba(139, 195, 74, 0.2),
