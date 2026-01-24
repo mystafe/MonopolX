@@ -165,8 +165,10 @@
                         <div class="rule-item" style="flex-direction:column; align-items:flex-start; border:none;">
                             <label style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">DİL /
                                 LANG</label>
-                            <select id="setupLang" class="player-type-select" style="width:100%; height:40px;"
-                                onchange="currLang = this.value; updateLangUI();">
+                            <button class="btn-theme-selector" onclick="openLangModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
+                                <span id="currentLangName">Türkçe</span>
+                            </button>
+                            <select id="setupLang" style="display:none;" onchange="currLang = this.value; updateLangUI(); selectLangFromModal(this.value);">
                                 <option value="tr" selected>Türkçe</option>
                                 <option value="en">English</option>
                             </select>
@@ -174,8 +176,10 @@
                         <div class="rule-item" style="flex-direction:column; align-items:flex-start; border:none;">
                             <label style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">HIZ /
                                 SPEED</label>
-                            <select id="setupSpeed" class="player-type-select" style="width:100%; height:40px;"
-                                onchange="document.getElementById('speedRange').value = this.value; updateSpeedDisp();">
+                            <button class="btn-theme-selector" onclick="openSpeedModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
+                                <span id="currentSpeedName">Normal</span>
+                            </button>
+                            <select id="setupSpeed" style="display:none;" onchange="document.getElementById('speedRange').value = this.value; updateSpeedDisp(); selectSpeedFromModal(this.value);">
                                 <option value="100">Yavaş</option>
                                 <option value="200" selected>Normal</option>
                                 <option value="300">Hızlı</option>
@@ -184,8 +188,10 @@
                         </div>
                         <div class="rule-item" style="grid-column:1/-1; flex-direction:column; align-items:flex-start; border:none;">
                             <label style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">OYUN ZORLUĞU / DIFFICULTY</label>
-                            <select id="difficultyLevel" class="player-type-select" style="width:100%; height:40px;"
-                                onchange="updateDifficultyDisplay();">
+                            <button class="btn-theme-selector" onclick="openDifficultyModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
+                                <span id="currentDifficultyName">3 - Normal</span>
+                            </button>
+                            <select id="difficultyLevel" style="display:none;" onchange="updateDifficultyDisplay(); selectDifficultyFromModal(this.value);">
                                 <option value="1">1 - En Kolay</option>
                                 <option value="2">2 - Kolay</option>
                                 <option value="3" selected>3 - Normal</option>
@@ -235,7 +241,10 @@
                         </div>
                     </div>
                 </div>
-                <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:12px; margin-top:10px;">
+            </div>
+            
+            <div class="setup-left" style="margin-top:20px;">
+                <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:12px;">
                     <button class="btn btn-start-game"
                         style="height: 70px; font-size: 1.2rem; letter-spacing: 2px; font-weight: 900;"
                         onclick="startGame()" aria-label="Yeni oyuna başla" id="startGameBtn">YENİ OYUNA BAŞLA</button>
@@ -488,6 +497,99 @@
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
                 <button class="btn btn-secondary" style="width:100%" onclick="closeModal('mapModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="langModal" style="z-index: 10000;">
+        <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">🌐 Dil Seç / Language</h2>
+                <button class="btn-close-modal" onclick="closeModal('langModal')" aria-label="Kapat">✕</button>
+            </div>
+            <div class="lang-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
+                <div class="lang-card-modal selected" id="lang-modal-tr" onclick="selectLangFromModal('tr')">
+                    <span style="font-size:1rem; font-weight:600;">🇹🇷 Türkçe</span>
+                </div>
+                <div class="lang-card-modal" id="lang-modal-en" onclick="selectLangFromModal('en')">
+                    <span style="font-size:1rem; font-weight:600;">🇬🇧 English</span>
+                </div>
+            </div>
+            <div class="modal-buttons"
+                style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('langModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="speedModal" style="z-index: 10000;">
+        <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">⚡ Hız Seç / Speed</h2>
+                <button class="btn-close-modal" onclick="closeModal('speedModal')" aria-label="Kapat">✕</button>
+            </div>
+            <div class="speed-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
+                <div class="speed-card-modal" id="speed-modal-100" onclick="selectSpeedFromModal('100')">
+                    <span style="font-size:1rem; font-weight:600;">🐢 Yavaş</span>
+                </div>
+                <div class="speed-card-modal selected" id="speed-modal-200" onclick="selectSpeedFromModal('200')">
+                    <span style="font-size:1rem; font-weight:600;">⚡ Normal</span>
+                </div>
+                <div class="speed-card-modal" id="speed-modal-300" onclick="selectSpeedFromModal('300')">
+                    <span style="font-size:1rem; font-weight:600;">🚀 Hızlı</span>
+                </div>
+                <div class="speed-card-modal" id="speed-modal-400" onclick="selectSpeedFromModal('400')">
+                    <span style="font-size:1rem; font-weight:600;">⚡ Şimşek</span>
+                </div>
+            </div>
+            <div class="modal-buttons"
+                style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('speedModal')">Kapat</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="difficultyModal" style="z-index: 10000;">
+        <div class="modal" style="max-width: 500px; width: 95%; z-index: 10001;">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
+                <h2 style="color:var(--gold); margin:0;">⚖️ Oyun Zorluğu / Difficulty</h2>
+                <button class="btn-close-modal" onclick="closeModal('difficultyModal')" aria-label="Kapat">✕</button>
+            </div>
+            <div class="difficulty-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
+                <div class="difficulty-card-modal" id="difficulty-modal-1" onclick="selectDifficultyFromModal('1')">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:1rem; font-weight:600;">1 - En Kolay</span>
+                        <span style="font-size:0.75rem; opacity:0.7;">AI pasif, kira normal</span>
+                    </div>
+                </div>
+                <div class="difficulty-card-modal" id="difficulty-modal-2" onclick="selectDifficultyFromModal('2')">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:1rem; font-weight:600;">2 - Kolay</span>
+                        <span style="font-size:0.75rem; opacity:0.7;">AI biraz pasif, kira normal</span>
+                    </div>
+                </div>
+                <div class="difficulty-card-modal selected" id="difficulty-modal-3" onclick="selectDifficultyFromModal('3')">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:1rem; font-weight:600;">3 - Normal</span>
+                        <span style="font-size:0.75rem; opacity:0.7;">AI normal, kira normal</span>
+                    </div>
+                </div>
+                <div class="difficulty-card-modal" id="difficulty-modal-4" onclick="selectDifficultyFromModal('4')">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:1rem; font-weight:600;">4 - Zor</span>
+                        <span style="font-size:0.75rem; opacity:0.7;">AI agresif, kira +20%</span>
+                    </div>
+                </div>
+                <div class="difficulty-card-modal" id="difficulty-modal-5" onclick="selectDifficultyFromModal('5')">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:1rem; font-weight:600;">5 - En Zor</span>
+                        <span style="font-size:0.75rem; opacity:0.7;">AI çok agresif, kira +40%, kaos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons"
+                style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('difficultyModal')">Kapat</button>
             </div>
         </div>
     </div>

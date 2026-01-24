@@ -1922,7 +1922,11 @@
                 font-size: 2rem !important;
             }
 
-            .setup-right > div:last-child {
+            .setup-left:last-child {
+                margin-top: 15px !important;
+            }
+
+            .setup-left:last-child > div {
                 grid-template-columns: 1fr !important;
             }
 
@@ -2742,6 +2746,41 @@
         .map-card-modal.selected span {
             color: var(--gold);
             font-weight: 700;
+        }
+
+        .lang-card-modal, .speed-card-modal, .difficulty-card-modal {
+            padding: 14px 18px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lang-card-modal:hover, .speed-card-modal:hover, .difficulty-card-modal:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lang-card-modal.selected, .speed-card-modal.selected, .difficulty-card-modal.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.08);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+
+        .lang-card-modal.selected span, .speed-card-modal.selected span, .difficulty-card-modal.selected span {
+            color: var(--gold);
+        }
+
+        .difficulty-card-modal {
+            justify-content: space-between;
+            text-align: left;
         }
 
         .btn-start-game {
