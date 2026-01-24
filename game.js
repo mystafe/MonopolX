@@ -1177,7 +1177,7 @@
                 mapModalTitle.textContent = `🗺️ ${t('map_select_title')}`;
             }
             
-            const themeModalTitle = document.querySelector('#themeModal h2');
+            const themeModalTitle = document.getElementById('themeModalTitle');
             if (themeModalTitle) {
                 themeModalTitle.textContent = `🏛️ ${t('theme_select_title')}`;
             }
