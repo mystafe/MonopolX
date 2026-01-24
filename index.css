@@ -872,12 +872,69 @@
         .controls-vertical {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
+            padding: 12px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
+        }
+
+        /* Compact UI Settings for Web */
+        .ui-settings {
+            padding: 8px !important;
+            margin-bottom: 10px !important;
+            gap: 6px !important;
+        }
+
+        .ui-settings > div {
+            margin-bottom: 8px !important;
+            margin-top: 6px !important;
+        }
+
+        .ui-settings > div:first-child {
+            margin-bottom: 8px !important;
+        }
+
+        .ui-settings span {
+            font-size: 0.65rem !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .ui-settings label {
+            font-size: 0.65rem !important;
+            margin-bottom: 4px !important;
+        }
+
+        .ui-settings input[type="range"] {
+            margin: 4px 0 !important;
+        }
+
+        .ui-settings > div[style*="display:flex"] {
+            margin-top: 6px !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Compact theme selector buttons */
+        .ui-settings > div > div[style*="display:flex"][style*="gap"] {
+            gap: 5px !important;
+        }
+
+        .ui-settings > div > div[style*="display:flex"][style*="gap"] > div[onclick*="setTheme"] {
+            width: 16px !important;
+            height: 16px !important;
+            border-width: 1px !important;
+        }
+
+        /* Compact toggle switches */
+        .ui-settings .rule-toggle {
+            transform: scale(0.75) !important;
+        }
+
+        /* Compact language button */
+        .ui-settings > div > div[onclick*="toggleLang"] {
+            font-size: 0.65rem !important;
+            padding: 2px 6px !important;
         }
 
         .ai-waiting-overlay {

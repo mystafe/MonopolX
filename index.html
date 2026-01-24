@@ -370,53 +370,53 @@
                 </div>
                 <button class="btn btn-secondary" style="width:100%" onclick="openTrade()">🔄 TAKAS YAP</button>
                 <div class="ui-settings"
-                    style="margin-bottom:15px; background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">GÖRÜNÜM
+                    style="margin-bottom:10px; background:rgba(255,255,255,0.04); padding:8px; border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:0.65rem; opacity:0.6; font-weight:700; letter-spacing:0.5px;">GÖRÜNÜM
                             TEMASI</span>
-                        <div style="display:flex; gap:8px;">
+                        <div style="display:flex; gap:5px;">
                             <div onclick="setTheme('premium')"
-                                style="width:18px; height:18px; border-radius:50%; background:#12141d; border:1.5px solid #d4af37; cursor:pointer;"
+                                style="width:16px; height:16px; border-radius:50%; background:#12141d; border:1px solid #d4af37; cursor:pointer;"
                                 title="Premium"></div>
                             <div onclick="setTheme('marble')"
-                                style="width:18px; height:18px; border-radius:50%; background:#f0f0f0; border:1.5px solid #aaa; cursor:pointer;"
+                                style="width:16px; height:16px; border-radius:50%; background:#f0f0f0; border:1px solid #aaa; cursor:pointer;"
                                 title="Marble"></div>
                             <div onclick="setTheme('parchment')"
-                                style="width:18px; height:18px; border-radius:50%; background:#ccb08a; border:1.5px solid #8d6e63; cursor:pointer;"
+                                style="width:16px; height:16px; border-radius:50%; background:#ccb08a; border:1px solid #8d6e63; cursor:pointer;"
                                 title="Paper"></div>
                             <div onclick="setTheme('cyber')"
-                                style="width:18px; height:18px; border-radius:50%; background:#050510; border:1.5px solid #00f2ff; cursor:pointer;"
+                                style="width:16px; height:16px; border-radius:50%; background:#050510; border:1px solid #00f2ff; cursor:pointer;"
                                 title="Cyber"></div>
                             <div onclick="setTheme('nature')"
-                                style="width:18px; height:18px; border-radius:50%; background:#1b2e1b; border:1.5px solid #8bc34a; cursor:pointer;"
+                                style="width:16px; height:16px; border-radius:50%; background:#1b2e1b; border:1px solid #8bc34a; cursor:pointer;"
                                 title="Nature"></div>
                             <div onclick="setTheme('royal')"
-                                style="width:18px; height:18px; border-radius:50%; background:#4a0000; border:1.5px solid #ffcc00; cursor:pointer;"
+                                style="width:16px; height:16px; border-radius:50%; background:#4a0000; border:1px solid #ffcc00; cursor:pointer;"
                                 title="Royal"></div>
                         </div>
                     </div>
                     <label
-                        style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px; display:block; margin-bottom:5px;">HIZ:
+                        style="font-size:0.65rem; opacity:0.6; font-weight:700; letter-spacing:0.5px; display:block; margin-bottom:4px;">HIZ:
                         <span id="speedVal" style="color:var(--gold)">YAVAŞ</span></label>
                     <input type="range" id="speedRange" min="50" max="350" value="50" step="10"
-                        style="width: 100%; cursor: pointer; accent-color: var(--gold);" oninput="updateSpeedDisp()">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">3D TAHTA
+                        style="width: 100%; cursor: pointer; accent-color: var(--gold); margin:4px 0;" oninput="updateSpeedDisp()">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                        <span style="font-size:0.65rem; opacity:0.6; font-weight:700; letter-spacing:0.5px;">3D TAHTA
                             EFEKTİ</span>
-                        <div class="rule-toggle" id="toggle3D" onclick="toggle3DEffect()" style="transform:scale(0.8)">
+                        <div class="rule-toggle" id="toggle3D" onclick="toggle3DEffect()" style="transform:scale(0.75)">
                         </div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">SES
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                        <span style="font-size:0.65rem; opacity:0.6; font-weight:700; letter-spacing:0.5px;">SES
                             EFEKTLERİ</span>
                         <div class="rule-toggle on" id="toggleSound" onclick="toggleSoundEffect()"
-                            style="transform:scale(0.8)"></div>
+                            style="transform:scale(0.75)"></div>
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-                        <span style="font-size:0.7rem; opacity:0.6; font-weight:700; letter-spacing:1px;">DİL /
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                        <span style="font-size:0.65rem; opacity:0.6; font-weight:700; letter-spacing:0.5px;">DİL /
                             LANG</span>
                         <div onclick="toggleLang()"
-                            style="cursor:pointer; font-size:0.7rem; font-weight:700; color:var(--gold); border:1px solid var(--gold); padding:2px 8px; border-radius:4px;"
+                            style="cursor:pointer; font-size:0.65rem; font-weight:700; color:var(--gold); border:1px solid var(--gold); padding:2px 6px; border-radius:4px;"
                             id="langLabel">TR</div>
                     </div>
                 </div>
