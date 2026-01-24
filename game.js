@@ -164,10 +164,37 @@
             document.body.className = ''; // Clear existing themes
             document.body.classList.add(`theme-${themeName}`);
 
-            document.querySelectorAll('.theme-card').forEach(card => {
+            document.querySelectorAll('.theme-card, .theme-card-modal').forEach(card => {
                 card.classList.remove('selected');
             });
-            document.getElementById(`theme-${themeName}`).classList.add('selected');
+            const oldCard = document.getElementById(`theme-${themeName}`);
+            const modalCard = document.getElementById(`theme-modal-${themeName}`);
+            if (oldCard) oldCard.classList.add('selected');
+            if (modalCard) modalCard.classList.add('selected');
+            
+            // Update current theme name in button
+            const themeNames = {
+                premium: 'Premium',
+                marble: 'Marble',
+                parchment: 'Paper',
+                cyber: 'Cyber',
+                nature: 'Nature',
+                royal: 'Royal'
+            };
+            const currentThemeNameEl = document.getElementById('currentThemeName');
+            if (currentThemeNameEl) {
+                currentThemeNameEl.textContent = themeNames[themeName] || 'Premium';
+            }
+        }
+
+        function openThemeModal() {
+            const modal = document.getElementById('themeModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function selectThemeFromModal(themeName) {
+            setTheme(themeName);
+            closeModal('themeModal');
         }
 
         const SQ = [
