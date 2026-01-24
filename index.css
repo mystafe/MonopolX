@@ -36,12 +36,12 @@
             /* Prevent panel from resizing */
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             background: rgba(18, 20, 29, 0.7);
             backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-radius: 20px;
-            padding: 20px;
+            padding: 18px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
@@ -1435,6 +1435,21 @@
             user-select: none;
             -webkit-user-select: none;
         }
+        
+        /* Compact buttons for controls panel */
+        .side-panel .btn {
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            border-radius: 12px;
+        }
+        
+        .side-panel .btn-action,
+        .side-panel .btn-secondary {
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            letter-spacing: 1.2px;
+        }
 
         /* Elegant shine effect on hover */
         .btn::before {
@@ -1650,6 +1665,23 @@
 
         .btn-end:active {
             transform: translateY(0) scale(0.98);
+        }
+        
+        /* Passive state for end button when center button is shown */
+        .btn-end.passive {
+            opacity: 0.5;
+            cursor: default;
+            pointer-events: none;
+        }
+        
+        .btn-end.passive:hover {
+            transform: none;
+            box-shadow: 
+                0 6px 24px rgba(229, 57, 53, 0.4),
+                0 3px 12px rgba(229, 57, 53, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #ef5350 0%, #e53935 50%, #c62828 100%);
         }
 
         /* Rent Animation */

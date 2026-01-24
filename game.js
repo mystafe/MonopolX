@@ -300,6 +300,11 @@
             if (currentThemeNameEl) {
                 currentThemeNameEl.textContent = themeNames[themeName] || 'Premium';
             }
+            // Update game theme name (in-game settings)
+            const currentThemeNameGame = document.getElementById('currentThemeNameGame');
+            if (currentThemeNameGame) {
+                currentThemeNameGame.textContent = themeNames[themeName] || 'Premium';
+            }
             // Update quick settings theme name
             const quickSettingsThemeName = document.getElementById('quickSettingsCurrentThemeName');
             if (quickSettingsThemeName) {
@@ -315,18 +320,23 @@
 
         function selectThemeFromModal(themeName) {
             setTheme(themeName);
+            const themeNames = {
+                premium: 'Premium',
+                marble: 'Marble',
+                parchment: 'Paper',
+                cyber: 'Cyber',
+                nature: 'Nature',
+                royal: 'Royal'
+            };
             // Update quick settings theme name
             const quickSettingsThemeName = document.getElementById('quickSettingsCurrentThemeName');
             if (quickSettingsThemeName) {
-                const themeNames = {
-                    premium: 'Premium',
-                    marble: 'Marble',
-                    parchment: 'Paper',
-                    cyber: 'Cyber',
-                    nature: 'Nature',
-                    royal: 'Royal'
-                };
                 quickSettingsThemeName.textContent = themeNames[themeName] || 'Premium';
+            }
+            // Update game theme name (in-game settings)
+            const currentThemeNameGame = document.getElementById('currentThemeNameGame');
+            if (currentThemeNameGame) {
+                currentThemeNameGame.textContent = themeNames[themeName] || 'Premium';
             }
             closeModal('themeModal');
         }
@@ -3152,6 +3162,9 @@
             if (endBtn) {
                 endBtn.disabled = true;
                 endBtn.style.display = 'block';
+                endBtn.style.opacity = '1';
+                endBtn.style.pointerEvents = 'auto';
+                endBtn.classList.remove('passive');
             }
             document.getElementById('buyBtn').disabled = true;
             document.getElementById('auctionBtn').disabled = true;
@@ -3409,7 +3422,14 @@
                             if (diceRolledAndNoMoreRolls && canEndTurn && !p.jail) {
                                 rollBtn.classList.add('passive');
                                 nextTurnBtn.style.display = 'none'; // Hide right panel button
-                                endBtn.style.display = 'none';
+                                
+                                // Keep end button visible but make it passive when center button is shown
+                                if (endBtn) {
+                                    endBtn.style.display = 'block';
+                                    endBtn.style.opacity = '0.5';
+                                    endBtn.style.pointerEvents = 'none';
+                                    endBtn.classList.add('passive');
+                                }
                                 
                                 // Show center button and make dice passive
                                 if (nextTurnBtnCenter) {
@@ -3427,7 +3447,14 @@
                             } else {
                                 rollBtn.classList.remove('passive');
                                 nextTurnBtn.style.display = 'none';
-                                endBtn.style.display = 'block';
+                                
+                                // Make end button active and visible
+                                if (endBtn) {
+                                    endBtn.style.display = 'block';
+                                    endBtn.style.opacity = '1';
+                                    endBtn.style.pointerEvents = 'auto';
+                                    endBtn.classList.remove('passive');
+                                }
                                 
                                 // Hide center button and make dice active
                                 if (nextTurnBtnCenter) {
