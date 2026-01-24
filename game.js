@@ -279,6 +279,11 @@
             if (currentThemeNameEl) {
                 currentThemeNameEl.textContent = themeNames[themeName] || 'Premium';
             }
+            // Update quick settings theme name
+            const quickSettingsThemeName = document.getElementById('quickSettingsCurrentThemeName');
+            if (quickSettingsThemeName) {
+                quickSettingsThemeName.textContent = themeNames[themeName] || 'Premium';
+            }
         }
 
         function openThemeModal() {
@@ -289,6 +294,19 @@
 
         function selectThemeFromModal(themeName) {
             setTheme(themeName);
+            // Update quick settings theme name
+            const quickSettingsThemeName = document.getElementById('quickSettingsCurrentThemeName');
+            if (quickSettingsThemeName) {
+                const themeNames = {
+                    premium: 'Premium',
+                    marble: 'Marble',
+                    parchment: 'Paper',
+                    cyber: 'Cyber',
+                    nature: 'Nature',
+                    royal: 'Royal'
+                };
+                quickSettingsThemeName.textContent = themeNames[themeName] || 'Premium';
+            }
             closeModal('themeModal');
         }
 
@@ -869,7 +887,10 @@
                 difficulty_easy: "Kolay",
                 difficulty_normal: "Normal",
                 difficulty_hard: "Zor",
-                difficulty_very_hard: "En Zor"
+                difficulty_very_hard: "En Zor",
+                quick_settings_title: "HIZLI AYARLAR",
+                quick_settings_theme_label: "TEMA DEĞİŞTİR",
+                quick_settings_speed_label: "OYUN HIZI"
             },
             en: {
                 start: "START NEW GAME",
@@ -1021,7 +1042,10 @@
                 difficulty_easy: "Easy",
                 difficulty_normal: "Normal",
                 difficulty_hard: "Hard",
-                difficulty_very_hard: "Very Hard"
+                difficulty_very_hard: "Very Hard",
+                quick_settings_title: "QUICK SETTINGS",
+                quick_settings_theme_label: "CHANGE THEME",
+                quick_settings_speed_label: "GAME SPEED"
             }
         };
 
@@ -1189,13 +1213,46 @@
             
             // Update close buttons
             const closeButtons = ['langModalCloseBtn', 'speedModalCloseBtn', 'difficultyModalCloseBtn', 
-                                  'playerTypeModalCloseBtn', 'playerPersModalCloseBtn', 'mapModalCloseBtn'];
+                                  'playerTypeModalCloseBtn', 'playerPersModalCloseBtn', 'mapModalCloseBtn', 
+                                  'quickSettingsCloseBtn', 'statsModalCloseBtn'];
             closeButtons.forEach(btnId => {
                 const btn = document.getElementById(btnId);
                 if (btn) {
                     btn.textContent = t('close_button');
                 }
             });
+
+            // Update quick settings modal
+            const quickSettingsTitle = document.getElementById('quickSettingsTitle');
+            if (quickSettingsTitle) {
+                quickSettingsTitle.textContent = `⚙️ ${t('quick_settings_title')}`;
+            }
+            const quickSettingsThemeLabel = document.getElementById('quickSettingsThemeLabel');
+            if (quickSettingsThemeLabel) {
+                quickSettingsThemeLabel.textContent = t('quick_settings_theme_label');
+            }
+            const quickSettingsSpeedLabel = document.getElementById('quickSettingsSpeedLabel');
+            if (quickSettingsSpeedLabel) {
+                quickSettingsSpeedLabel.textContent = t('quick_settings_speed_label');
+            }
+            const quickSettings3DLabel = document.getElementById('quickSettings3DLabel');
+            if (quickSettings3DLabel) {
+                quickSettings3DLabel.textContent = t('board_3d_effect');
+            }
+            const quickSettingsSoundLabel = document.getElementById('quickSettingsSoundLabel');
+            if (quickSettingsSoundLabel) {
+                quickSettingsSoundLabel.textContent = t('sound');
+            }
+            const quickSettingsLangLabel = document.getElementById('quickSettingsLangLabel');
+            if (quickSettingsLangLabel) {
+                quickSettingsLangLabel.textContent = `${t('lang')} / LANG`;
+            }
+
+            // Update stats modal
+            const statsModalTitle = document.getElementById('statsModalTitle');
+            if (statsModalTitle) {
+                statsModalTitle.textContent = `📊 ${t('stats')}`;
+            }
             
             // Update speed modal options dynamically
             const speedOptionsData = {
