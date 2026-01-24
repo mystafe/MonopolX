@@ -142,15 +142,31 @@
             if (!select) return;
             const type = select.value;
             const typeNames = {
-                'human': '👤 İnsan',
-                'ai-easy': '🤖 Kolay AI',
-                'ai-medium': '🤖 Orta AI',
-                'ai-hard': '🤖 Zor AI',
-                'none': '--- (Kapalı)'
+                'human': `👤 ${t('human')}`,
+                'ai-easy': `🤖 ${t('ai_easy')}`,
+                'ai-medium': `🤖 ${t('ai_medium')}`,
+                'ai-hard': `🤖 ${t('ai_hard')}`,
+                'none': `--- (${t('closed_option')})`
             };
             const currentTypeEl = document.getElementById('currentType' + playerNum);
             if (currentTypeEl) {
-                currentTypeEl.textContent = typeNames[type] || '👤 İnsan';
+                currentTypeEl.textContent = typeNames[type] || `👤 ${t('human')}`;
+            }
+        }
+
+        function updatePlayerPersDisplay(playerNum) {
+            const select = document.getElementById('pers' + playerNum);
+            if (!select) return;
+            const pers = select.value;
+            const persNames = {
+                'Random': `🎲 ${t('random')}`,
+                'Tycoon': `💼 ${t('ai_tycoon')}`,
+                'Banker': `🏦 ${t('ai_banker')}`,
+                'Opportunist': `🦊 ${t('ai_opportunist')}`
+            };
+            const currentPersEl = document.getElementById('currentPers' + playerNum);
+            if (currentPersEl) {
+                currentPersEl.textContent = persNames[pers] || `🎲 ${t('random')}`;
             }
         }
 
@@ -392,14 +408,14 @@
             updateSpeedDisp();
             
             const speedNames = { 
-                '100': '🐢 Yavaş', 
-                '200': '⚡ Normal', 
-                '300': '🚀 Hızlı', 
-                '400': '⚡ Şimşek' 
+                '100': `🐢 ${t('speed_slow')}`, 
+                '200': `⚡ ${t('speed_normal')}`, 
+                '300': `🚀 ${t('speed_fast')}`, 
+                '400': `⚡ ${t('speed_lightning')}` 
             };
             const currentSpeedNameEl = document.getElementById('currentSpeedName');
             if (currentSpeedNameEl) {
-                currentSpeedNameEl.textContent = speedNames[speed] || '⚡ Normal';
+                currentSpeedNameEl.textContent = speedNames[speed] || `⚡ ${t('speed_normal')}`;
             }
             
             document.querySelectorAll('.speed-card-modal').forEach(card => {
@@ -811,7 +827,44 @@
                 land_no_money: "⚠️ Para yetmiyor, açık arttırma?",
                 rent_log: "💰 %s → %s: %s₺ kira",
                 rent_toast: "💸 %s'e %s₺ kira ödediniz.",
-                auction_log: "🔨 %s açık artırmada!"
+                auction_log: "🔨 %s açık artırmada!",
+                player_config_title: "OYUNCU YAPILANDIRMASI",
+                name_placeholder: "İsim Girin",
+                change_label: "DEĞİŞTİR",
+                ai_easy: "Kolay AI",
+                ai_medium: "Orta AI",
+                ai_hard: "Zor AI",
+                random: "Rastgele",
+                closed_option: "Kapalı",
+                map_selection_title: "HARİTA SEÇİMİ",
+                map_select_button: "Harita Seç",
+                general_settings_title: "GENEL AYARLAR",
+                difficulty_label: "OYUN ZORLUĞU",
+                board_3d_effect: "3D TAHTA EFEKTİ",
+                theme_select_button: "Tema Seç",
+                game_rules_title: "OYUN KURALLARI",
+                starting_money_label: "BAŞLANGIÇ $",
+                salary_label: "MAAŞ",
+                park_pool_label: "PARK HAVUZU",
+                random_start_label: "RASTGELE BAŞL.",
+                made_by: "Made by",
+                lang_select_title: "Dil Seç",
+                speed_select_title: "Hız Seç",
+                difficulty_select_title: "Oyun Zorluğu",
+                player_type_title: "Oyuncu Tipi",
+                personality_title: "Kişilik",
+                map_select_title: "Harita Seç",
+                theme_select_title: "Tema Seç",
+                close_button: "Kapat",
+                speed_slow: "Yavaş",
+                speed_normal: "Normal",
+                speed_fast: "Hızlı",
+                speed_lightning: "Şimşek",
+                difficulty_very_easy: "En Kolay",
+                difficulty_easy: "Kolay",
+                difficulty_normal: "Normal",
+                difficulty_hard: "Zor",
+                difficulty_very_hard: "En Zor"
             },
             en: {
                 start: "START NEW GAME",
@@ -926,7 +979,44 @@
                 land_no_money: "⚠️ Not enough money, auction?",
                 rent_log: "💰 %s → %s: %s rent",
                 rent_toast: "💸 Paid %s rent to %s.",
-                auction_log: "🔨 %s in auction!"
+                auction_log: "🔨 %s in auction!",
+                player_config_title: "PLAYER CONFIGURATION",
+                name_placeholder: "Enter Name",
+                change_label: "CHANGE",
+                ai_easy: "Easy AI",
+                ai_medium: "Medium AI",
+                ai_hard: "Hard AI",
+                random: "Random",
+                closed_option: "Closed",
+                map_selection_title: "MAP SELECTION",
+                map_select_button: "Select Map",
+                general_settings_title: "GENERAL SETTINGS",
+                difficulty_label: "DIFFICULTY",
+                board_3d_effect: "3D BOARD EFFECT",
+                theme_select_button: "Select Theme",
+                game_rules_title: "GAME RULES",
+                starting_money_label: "STARTING $",
+                salary_label: "SALARY",
+                park_pool_label: "PARK POOL",
+                random_start_label: "RANDOM START",
+                made_by: "Made by",
+                lang_select_title: "Select Language",
+                speed_select_title: "Select Speed",
+                difficulty_select_title: "Game Difficulty",
+                player_type_title: "Player Type",
+                personality_title: "Personality",
+                map_select_title: "Select Map",
+                theme_select_title: "Select Theme",
+                close_button: "Close",
+                speed_slow: "Slow",
+                speed_normal: "Normal",
+                speed_fast: "Fast",
+                speed_lightning: "Lightning",
+                difficulty_very_easy: "Very Easy",
+                difficulty_easy: "Easy",
+                difficulty_normal: "Normal",
+                difficulty_hard: "Hard",
+                difficulty_very_hard: "Very Hard"
             }
         };
 
@@ -950,6 +1040,301 @@
             if (startBtn) startBtn.textContent = t('start');
             const resBtn = document.getElementById('resumeBtn');
             if (resBtn) resBtn.textContent = t('resume');
+            
+            // Update setup screen titles
+            const playerConfigTitle = document.getElementById('playerConfigTitle');
+            if (playerConfigTitle) {
+                playerConfigTitle.textContent = `👥 ${t('player_config_title')}`;
+            }
+            
+            const mapSelectionTitle = document.getElementById('mapSelectionTitle');
+            if (mapSelectionTitle) {
+                mapSelectionTitle.textContent = `🗺️ ${t('map_selection_title')}`;
+            }
+            
+            const mapSelectButton = document.getElementById('mapSelectButtonText');
+            if (mapSelectButton) {
+                mapSelectButton.textContent = t('map_select_button');
+            }
+            
+            const generalSettingsTitle = document.getElementById('generalSettingsTitle');
+            if (generalSettingsTitle) {
+                generalSettingsTitle.textContent = `⚙️ ${t('general_settings_title')}`;
+            }
+            
+            const themeTitle = document.getElementById('themeTitle');
+            if (themeTitle) {
+                themeTitle.textContent = `🏛️ ${t('theme')}`;
+            }
+            
+            const themeSelectButton = document.getElementById('themeSelectButtonText');
+            if (themeSelectButton) {
+                themeSelectButton.textContent = t('theme_select_button');
+            }
+            
+            const gameRulesTitle = document.getElementById('gameRulesTitle');
+            if (gameRulesTitle) {
+                gameRulesTitle.textContent = `⚖️ ${t('game_rules_title')}`;
+            }
+            
+            // Update labels
+            const langLabel = document.getElementById('langLabelText');
+            if (langLabel) {
+                langLabel.textContent = `${t('lang')} / LANG`;
+            }
+            
+            const speedLabel = document.getElementById('speedLabelText');
+            if (speedLabel) {
+                speedLabel.textContent = `${t('speed')} / SPEED`;
+            }
+            
+            const difficultyLabel = document.getElementById('difficultyLabel');
+            if (difficultyLabel) {
+                difficultyLabel.textContent = t('difficulty_label');
+            }
+            
+            const board3DLabel = document.getElementById('board3DLabel');
+            if (board3DLabel) {
+                board3DLabel.textContent = t('board_3d_effect');
+            }
+            
+            // Update rule labels
+            const startingMoneyLabel = document.getElementById('startingMoneyLabel');
+            if (startingMoneyLabel) {
+                startingMoneyLabel.textContent = t('starting_money_label');
+            }
+            
+            const salaryLabel = document.getElementById('salaryLabel');
+            if (salaryLabel) {
+                salaryLabel.textContent = t('salary_label');
+            }
+            
+            const parkPoolLabel = document.getElementById('parkPoolLabel');
+            if (parkPoolLabel) {
+                parkPoolLabel.textContent = t('park_pool_label');
+            }
+            
+            const randomStartLabel = document.getElementById('randomStartLabel');
+            if (randomStartLabel) {
+                randomStartLabel.textContent = t('random_start_label');
+            }
+            
+            // Update placeholders
+            document.querySelectorAll('input[data-placeholder-tr]').forEach(input => {
+                input.placeholder = currLang === 'tr' ? input.getAttribute('data-placeholder-tr') : input.getAttribute('data-placeholder-en');
+            });
+            
+            // Update token preview labels
+            document.querySelectorAll('.token-preview').forEach(el => {
+                el.setAttribute('data-label', t('change_label'));
+            });
+            
+            // Update player type displays
+            for (let i = 1; i <= 4; i++) {
+                updatePlayerTypeDisplay(i);
+                updatePlayerPersDisplay(i);
+            }
+            
+            // Update speed and difficulty displays
+            const speedSelect = document.getElementById('setupSpeed');
+            if (speedSelect) {
+                selectSpeedFromModal(speedSelect.value || '200');
+            }
+            
+            const difficultySelect = document.getElementById('difficultyLevel');
+            if (difficultySelect) {
+                updateDifficultyDisplay();
+            }
+            
+            // Update modal titles
+            const langModalTitle = document.getElementById('langModalTitle');
+            if (langModalTitle) {
+                langModalTitle.textContent = `🌐 ${t('lang_select_title')} / Language`;
+            }
+            
+            const speedModalTitle = document.getElementById('speedModalTitle');
+            if (speedModalTitle) {
+                speedModalTitle.textContent = `⚡ ${t('speed_select_title')} / Speed`;
+            }
+            
+            const difficultyModalTitle = document.getElementById('difficultyModalTitle');
+            if (difficultyModalTitle) {
+                difficultyModalTitle.textContent = `⚖️ ${t('difficulty_select_title')} / Difficulty`;
+            }
+            
+            const playerTypeModalTitle = document.getElementById('playerTypeModalTitle');
+            if (playerTypeModalTitle) {
+                playerTypeModalTitle.textContent = `👤 ${t('player_type_title')}`;
+            }
+            
+            const playerPersModalTitle = document.getElementById('playerPersModalTitle');
+            if (playerPersModalTitle) {
+                playerPersModalTitle.textContent = `🎭 ${t('personality_title')}`;
+            }
+            
+            const mapModalTitle = document.getElementById('mapModalTitle');
+            if (mapModalTitle) {
+                mapModalTitle.textContent = `🗺️ ${t('map_select_title')}`;
+            }
+            
+            const themeModalTitle = document.querySelector('#themeModal h2');
+            if (themeModalTitle) {
+                themeModalTitle.textContent = `🏛️ ${t('theme_select_title')}`;
+            }
+            
+            // Update close buttons
+            const closeButtons = ['langModalCloseBtn', 'speedModalCloseBtn', 'difficultyModalCloseBtn', 
+                                  'playerTypeModalCloseBtn', 'playerPersModalCloseBtn', 'mapModalCloseBtn'];
+            closeButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.textContent = t('close_button');
+                }
+            });
+            
+            // Update speed modal options
+            const speedOptions = {
+                '100': t('speed_slow'),
+                '200': t('speed_normal'),
+                '300': t('speed_fast'),
+                '400': t('speed_lightning')
+            };
+            
+            document.querySelectorAll('.speed-card-modal span').forEach((span, idx) => {
+                const speedValues = ['100', '200', '300', '400'];
+                if (speedValues[idx]) {
+                    const emoji = span.textContent.match(/[🐢⚡🚀]/)?.[0] || '';
+                    span.textContent = `${emoji} ${speedOptions[speedValues[idx]]}`;
+                }
+            });
+            
+            // Update difficulty modal options
+            const difficultyOptions = {
+                '1': t('difficulty_very_easy'),
+                '2': t('difficulty_easy'),
+                '3': t('difficulty_normal'),
+                '4': t('difficulty_hard'),
+                '5': t('difficulty_very_hard')
+            };
+            
+            document.querySelectorAll('.difficulty-card-modal span').forEach((span, idx) => {
+                const difficultyValues = ['1', '2', '3', '4', '5'];
+                if (difficultyValues[idx]) {
+                    span.textContent = difficultyOptions[difficultyValues[idx]];
+                }
+            });
+            
+            // Update player type modal options
+            document.querySelectorAll('.player-type-card-modal span').forEach(span => {
+                const text = span.textContent.trim();
+                if (text.includes('İnsan') || text.includes('Human')) {
+                    span.textContent = `👤 ${t('human')}`;
+                } else if (text.includes('Kolay AI') || text.includes('Easy AI')) {
+                    span.textContent = `🤖 ${t('ai_easy')}`;
+                } else if (text.includes('Orta AI') || text.includes('Medium AI')) {
+                    span.textContent = `🤖 ${t('ai_medium')}`;
+                } else if (text.includes('Zor AI') || text.includes('Hard AI')) {
+                    span.textContent = `🤖 ${t('ai_hard')}`;
+                } else if (text.includes('Kapalı') || text.includes('Closed')) {
+                    span.textContent = `--- (${t('closed_option')})`;
+                }
+            });
+            
+            // Update personality modal options
+            document.querySelectorAll('.player-pers-card-modal span').forEach(span => {
+                const text = span.textContent.trim();
+                if (text.includes('Rastgele') || text.includes('Random')) {
+                    span.textContent = `🎲 ${t('random')}`;
+                } else if (text.includes('Kodaman') || text.includes('Tycoon')) {
+                    span.textContent = `💼 ${t('ai_tycoon')}`;
+                } else if (text.includes('Bankacı') || text.includes('Banker')) {
+                    span.textContent = `🏦 ${t('ai_banker')}`;
+                } else if (text.includes('Fırsatçı') || text.includes('Opportunist')) {
+                    span.textContent = `🦊 ${t('ai_opportunist')}`;
+                }
+            });
+            
+            // Update credit badge
+            const madeByText = document.getElementById('madeByText');
+            if (madeByText) {
+                madeByText.textContent = t('made_by');
+            }
+            
+            // Update speed modal options dynamically
+            const speedOptions = {
+                '100': { emoji: '🐢', text: t('speed_slow') },
+                '200': { emoji: '⚡', text: t('speed_normal') },
+                '300': { emoji: '🚀', text: t('speed_fast') },
+                '400': { emoji: '⚡', text: t('speed_lightning') }
+            };
+            
+            Object.keys(speedOptions).forEach(speed => {
+                const card = document.getElementById(`speed-modal-${speed}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        span.textContent = `${speedOptions[speed].emoji} ${speedOptions[speed].text}`;
+                    }
+                }
+            });
+            
+            // Update difficulty modal options dynamically
+            const difficultyOptions = {
+                '1': t('difficulty_very_easy'),
+                '2': t('difficulty_easy'),
+                '3': t('difficulty_normal'),
+                '4': t('difficulty_hard'),
+                '5': t('difficulty_very_hard')
+            };
+            
+            Object.keys(difficultyOptions).forEach(level => {
+                const card = document.getElementById(`difficulty-modal-${level}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        span.textContent = difficultyOptions[level];
+                    }
+                }
+            });
+            
+            // Update player type modal options
+            const playerTypeOptions = {
+                'human': { emoji: '👤', text: t('human') },
+                'ai-easy': { emoji: '🤖', text: t('ai_easy') },
+                'ai-medium': { emoji: '🤖', text: t('ai_medium') },
+                'ai-hard': { emoji: '🤖', text: t('ai_hard') },
+                'none': { emoji: '---', text: `(${t('closed_option')})` }
+            };
+            
+            Object.keys(playerTypeOptions).forEach(type => {
+                const card = document.getElementById(`player-type-${type}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        const opt = playerTypeOptions[type];
+                        span.textContent = type === 'none' ? `${opt.emoji} ${opt.text}` : `${opt.emoji} ${opt.text}`;
+                    }
+                }
+            });
+            
+            // Update personality modal options
+            const personalityOptions = {
+                'Random': { emoji: '🎲', text: t('random') },
+                'Tycoon': { emoji: '💼', text: t('ai_tycoon') },
+                'Banker': { emoji: '🏦', text: t('ai_banker') },
+                'Opportunist': { emoji: '🦊', text: t('ai_opportunist') }
+            };
+            
+            Object.keys(personalityOptions).forEach(pers => {
+                const card = document.getElementById(`player-pers-${pers}`);
+                if (card) {
+                    const span = card.querySelector('span');
+                    if (span) {
+                        const opt = personalityOptions[pers];
+                        span.textContent = `${opt.emoji} ${opt.text}`;
+                    }
+                }
+            });
 
             // Update game UI buttons
             const rollBtn = document.getElementById('rollBtn');
@@ -988,7 +1373,7 @@
 
             // Update token preview labels
             document.querySelectorAll('.token-preview').forEach(el => {
-                el.setAttribute('data-label', currLang === 'tr' ? 'DEĞİŞTİR' : 'CHANGE');
+                el.setAttribute('data-label', t('change_label'));
             });
 
             // Trade buttons
@@ -2663,6 +3048,8 @@
             // Initialize difficulty display
             updateDifficultyDisplay();
             initMapSelection();
+            // Initialize language UI
+            updateLangUI();
 
             // Listen for resize to re-align tokens
             window.addEventListener('resize', throttle(() => {

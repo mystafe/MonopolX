@@ -43,13 +43,14 @@
         <div class="setup-container">
             <div class="setup-left">
                 <div class="setup-card">
-                    <h3 class="setup-title">👥 OYUNCU YAPILANDIRMASI</h3>
+                    <h3 class="setup-title" id="playerConfigTitle">👥 OYUNCU YAPILANDIRMASI</h3>
                     <div class="player-config-grid">
                         <div class="player-config-slot" data-p="1">
                             <div class="token-preview token-red" id="preview-p1" data-label="DEĞİŞTİR"
                                 onclick="openIconPicker(1)">🚗</div>
                             <div style="flex:1">
-                                <input type="text" id="p1" value="Mustafa" maxlength="10" placeholder="İsim Girin"
+                                <input type="text" id="p1" value="Mustafa" maxlength="10" placeholder=""
+                                    data-placeholder-tr="İsim Girin" data-placeholder-en="Enter Name"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
                                     <button class="btn-theme-selector" onclick="openPlayerTypeModal(1)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
@@ -78,6 +79,7 @@
                                 onclick="openIconPicker(2)">🎩</div>
                             <div style="flex:1">
                                 <input type="text" id="p2" value="Robot-1" maxlength="10"
+                                    data-placeholder-tr="İsim Girin" data-placeholder-en="Enter Name"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
                                     <button class="btn-theme-selector" onclick="openPlayerTypeModal(2)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
@@ -106,6 +108,7 @@
                                 onclick="openIconPicker(3)">🐕</div>
                             <div style="flex:1">
                                 <input type="text" id="p3" value="Robot-2" maxlength="10"
+                                    data-placeholder-tr="İsim Girin" data-placeholder-en="Enter Name"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
                                     <button class="btn-theme-selector" onclick="openPlayerTypeModal(3)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
@@ -135,6 +138,7 @@
                                 onclick="openIconPicker(4)">🦖</div>
                             <div style="flex:1">
                                 <input type="text" id="p4" value="Robot-3" maxlength="10"
+                                    data-placeholder-tr="İsim Girin" data-placeholder-en="Enter Name"
                                     style="width:100%; margin-bottom:6px; background:transparent; border:none; border-bottom:1.5px solid rgba(212, 175, 55, 0.2); color:white; font-size:0.95rem; padding:4px 0; font-weight: 600; outline: none;">
                                 <div style="display:flex; gap:6px;">
                                     <button class="btn-theme-selector" onclick="openPlayerTypeModal(4)" style="flex:1; height:36px; padding:6px 10px; font-size:0.75rem;">
@@ -163,10 +167,10 @@
                 </div>
 
                 <div class="setup-card">
-                    <h3 class="setup-title">🗺️ HARİTA SEÇİMİ</h3>
+                    <h3 class="setup-title" id="mapSelectionTitle">🗺️ HARİTA SEÇİMİ</h3>
                     <button class="btn-theme-selector" onclick="openMapModal()">
                         <span id="currentMapName">🇹🇷 Türkiye Turu</span>
-                        <span style="opacity:0.6; font-size:0.75rem;">Harita Seç</span>
+                        <span id="mapSelectButtonText" style="opacity:0.6; font-size:0.75rem;">Harita Seç</span>
                     </button>
                     <select id="mapSelect" style="display:none;">
                         <option value="turkiye" selected>🇹🇷 Türkiye Turu</option>
@@ -184,10 +188,10 @@
 
             <div class="setup-right" style="border-left: 1px solid rgba(255,255,255,0.05); padding-left:30px;">
                 <div class="setup-card">
-                    <h3 class="setup-title">⚙️ GENEL AYARLAR</h3>
+                    <h3 class="setup-title" id="generalSettingsTitle">⚙️ GENEL AYARLAR</h3>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                         <div class="rule-item" style="flex-direction:column; align-items:flex-start; border:none;">
-                            <label style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">DİL /
+                            <label id="langLabelText" style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">DİL /
                                 LANG</label>
                             <button class="btn-theme-selector" onclick="openLangModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
                                 <span id="currentLangName">Türkçe</span>
@@ -198,7 +202,7 @@
                             </select>
                         </div>
                         <div class="rule-item" style="flex-direction:column; align-items:flex-start; border:none;">
-                            <label style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">HIZ /
+                            <label id="speedLabelText" style="font-size:0.6rem; opacity:0.6; margin-bottom:5px; font-weight:800;">HIZ /
                                 SPEED</label>
                             <button class="btn-theme-selector" onclick="openSpeedModal()" style="width:100%; height:40px; padding:8px 14px; font-size:0.85rem;">
                                 <span id="currentSpeedName">Normal</span>
@@ -226,7 +230,7 @@
                                 <div id="difficultyDescription" style="display:none;"></div>
                             </div>
                             <div style="flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; margin-left:20px;">
-                                <label style="font-size:0.65rem; opacity:0.6; margin-bottom:5px; font-weight:700; letter-spacing:0.5px;">3D TAHTA EFEKTİ</label>
+                                <label id="board3DLabel" style="font-size:0.65rem; opacity:0.6; margin-bottom:5px; font-weight:700; letter-spacing:0.5px;">3D TAHTA EFEKTİ</label>
                                 <div class="rule-toggle" id="setup3DToggle" onclick="this.classList.toggle('on');"></div>
                             </div>
                         </div>
@@ -234,32 +238,32 @@
                 </div>
 
                 <div class="setup-card">
-                    <h3 class="setup-title">🏛️ GÖRÜNÜM TEMASI</h3>
+                    <h3 class="setup-title" id="themeTitle">🏛️ GÖRÜNÜM TEMASI</h3>
                     <button class="btn-theme-selector" onclick="openThemeModal()">
                         <span id="currentThemeName">Premium</span>
-                        <span style="opacity:0.6; font-size:0.75rem;">Tema Seç</span>
+                        <span id="themeSelectButtonText" style="opacity:0.6; font-size:0.75rem;">Tema Seç</span>
                     </button>
                 </div>
 
                 <div class="setup-card">
-                    <h3 class="setup-title">⚖️ OYUN KURALLARI</h3>
+                    <h3 class="setup-title" id="gameRulesTitle">⚖️ OYUN KURALLARI</h3>
                     <div class="rules-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="rule-item">
-                            <label style="font-size:0.6rem; opacity:0.6;">BAŞLANGIÇ $</label>
+                            <label id="startingMoneyLabel" style="font-size:0.6rem; opacity:0.6;">BAŞLANGIÇ $</label>
                             <input type="number" id="ruleStartMoney" value="1500" step="500" class="rule-input"
                                 style="width:60px;">
                         </div>
                         <div class="rule-item">
-                            <label style="font-size:0.6rem; opacity:0.6;">MAAŞ</label>
+                            <label id="salaryLabel" style="font-size:0.6rem; opacity:0.6;">MAAŞ</label>
                             <input type="number" id="ruleSalary" value="200" step="50" class="rule-input"
                                 style="width:60px;">
                         </div>
                         <div class="rule-item">
-                            <label style="font-size:0.6rem; opacity:0.6;">PARK HAVUZU</label>
+                            <label id="parkPoolLabel" style="font-size:0.6rem; opacity:0.6;">PARK HAVUZU</label>
                             <div class="rule-toggle on" id="toggleParkPool" onclick="this.classList.toggle('on')"></div>
                         </div>
                         <div class="rule-item">
-                            <label style="font-size:0.6rem; opacity:0.6;">RASTGELE BAŞL.</label>
+                            <label id="randomStartLabel" style="font-size:0.6rem; opacity:0.6;">RASTGELE BAŞL.</label>
                             <div class="rule-toggle on" id="toggleRandomStart" onclick="this.classList.toggle('on')">
                             </div>
                         </div>
@@ -273,7 +277,7 @@
         </div>
 
         <div class="credit-badge">
-            <span style="opacity: 0.5;">Made by</span> <span>Mustafa Evleksiz</span>
+            <span id="madeByText" style="opacity: 0.5;">Made by</span> <span>Mustafa Evleksiz</span>
             <small id="ver1"
                 style="opacity: 0.4; font-size: 0.55rem; margin-left: 8px; font-weight: 500;">v0.4.1</small>
         </div>
@@ -485,7 +489,7 @@
         <div class="modal" style="max-width: 600px; width: 95%; z-index: 10001;">
             <div
                 style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
-                <h2 style="color:var(--gold); margin:0;">🗺️ Harita Seç</h2>
+                <h2 id="mapModalTitle" style="color:var(--gold); margin:0;">🗺️ Harita Seç</h2>
                 <button class="btn-close-modal" onclick="closeModal('mapModal')" aria-label="Kapat">✕</button>
             </div>
             <div class="map-modal-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:20px;">
@@ -512,7 +516,7 @@
             </div>
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('mapModal')">Kapat</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('mapModal')" id="mapModalCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
@@ -520,7 +524,7 @@
         <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
             <div
                 style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
-                <h2 style="color:var(--gold); margin:0;">🌐 Dil Seç / Language</h2>
+                <h2 id="langModalTitle" style="color:var(--gold); margin:0;">🌐 Dil Seç / Language</h2>
                 <button class="btn-close-modal" onclick="closeModal('langModal')" aria-label="Kapat">✕</button>
             </div>
             <div class="lang-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
@@ -533,7 +537,7 @@
             </div>
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('langModal')">Kapat</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('langModal')" id="langModalCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
@@ -541,7 +545,7 @@
         <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
             <div
                 style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
-                <h2 style="color:var(--gold); margin:0;">⚡ Hız Seç / Speed</h2>
+                <h2 id="speedModalTitle" style="color:var(--gold); margin:0;">⚡ Hız Seç / Speed</h2>
                 <button class="btn-close-modal" onclick="closeModal('speedModal')" aria-label="Kapat">✕</button>
             </div>
             <div class="speed-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
@@ -560,7 +564,7 @@
             </div>
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('speedModal')">Kapat</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('speedModal')" id="speedModalCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
@@ -568,7 +572,7 @@
         <div class="modal" style="max-width: 500px; width: 95%; z-index: 10001;">
             <div
                 style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
-                <h2 style="color:var(--gold); margin:0;">⚖️ Oyun Zorluğu / Difficulty</h2>
+                <h2 id="difficultyModalTitle" style="color:var(--gold); margin:0;">⚖️ Oyun Zorluğu / Difficulty</h2>
                 <button class="btn-close-modal" onclick="closeModal('difficultyModal')" aria-label="Kapat">✕</button>
             </div>
             <div class="difficulty-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
@@ -590,7 +594,7 @@
             </div>
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('difficultyModal')">Kapat</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('difficultyModal')" id="difficultyModalCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
@@ -598,7 +602,7 @@
         <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
             <div
                 style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
-                <h2 style="color:var(--gold); margin:0;">👤 Oyuncu Tipi</h2>
+                <h2 id="playerTypeModalTitle" style="color:var(--gold); margin:0;">👤 Oyuncu Tipi</h2>
                 <button class="btn-close-modal" onclick="closeModal('playerTypeModal')" aria-label="Kapat">✕</button>
             </div>
             <div class="player-type-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
@@ -620,7 +624,7 @@
             </div>
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('playerTypeModal')">Kapat</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('playerTypeModal')" id="playerTypeModalCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
@@ -628,7 +632,7 @@
         <div class="modal" style="max-width: 400px; width: 95%; z-index: 10001;">
             <div
                 style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:20px;">
-                <h2 style="color:var(--gold); margin:0;">🎭 Kişilik</h2>
+                <h2 id="playerPersModalTitle" style="color:var(--gold); margin:0;">🎭 Kişilik</h2>
                 <button class="btn-close-modal" onclick="closeModal('playerPersModal')" aria-label="Kapat">✕</button>
             </div>
             <div class="player-pers-modal-grid" style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:20px;">
@@ -647,7 +651,7 @@
             </div>
             <div class="modal-buttons"
                 style="margin-top:25px; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
-                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('playerPersModal')">Kapat</button>
+                <button class="btn btn-secondary" style="width:100%" onclick="closeModal('playerPersModal')" id="playerPersModalCloseBtn">Kapat</button>
             </div>
         </div>
     </div>
