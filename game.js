@@ -311,6 +311,37 @@
             closeModal('mapModal');
         }
 
+        function openDifficultyModal() {
+            const modal = document.getElementById('difficultyModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function selectDifficultyFromModal(level) {
+            const difficultySelect = document.getElementById('difficultyLevel');
+            if (difficultySelect) difficultySelect.value = level;
+            updateDifficultyDisplay();
+            
+            const difficultyNames = {
+                '1': '1 - En Kolay',
+                '2': '2 - Kolay',
+                '3': '3 - Normal',
+                '4': '4 - Zor',
+                '5': '5 - En Zor'
+            };
+            const currentDifficultyNameEl = document.getElementById('currentDifficultyName');
+            if (currentDifficultyNameEl) {
+                currentDifficultyNameEl.textContent = difficultyNames[level] || '3 - Normal';
+            }
+            
+            document.querySelectorAll('.difficulty-card-modal').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selectedCard = document.getElementById(`difficulty-modal-${level}`);
+            if (selectedCard) selectedCard.classList.add('selected');
+            
+            closeModal('difficultyModal');
+        }
+
         const SQ = [
             { id: 0, name: "BAŞLA", type: "go" },
             { id: 1, name: "Şırnak", type: "property", color: "#8B4513", price: 60, rent: [2, 10, 30, 90, 160, 250], hc: 50, g: "brown" },
