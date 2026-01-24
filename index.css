@@ -447,34 +447,50 @@
         }
 
         .square {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.88) 100%);
+            border: 1.5px solid rgba(0, 0, 0, 0.12);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: visible;
             cursor: pointer;
             font-size: clamp(7px, 1.3vw, 11px);
-            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-            backdrop-filter: blur(5px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(8px) saturate(120%);
+            -webkit-backdrop-filter: blur(8px) saturate(120%);
             will-change: transform;
             /* Mobile touch optimizations */
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            /* Premium card effect */
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border-radius: 2px;
         }
 
         .square:hover {
             z-index: 100;
-            transform: scale(1.15) translateZ(25px);
+            transform: scale(1.18) translateZ(30px) rotateY(2deg);
             box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(201, 162, 39, 0.3);
-            background: #fff;
+                0 25px 60px rgba(0, 0, 0, 0.5),
+                0 10px 30px rgba(212, 175, 55, 0.4),
+                0 0 0 2px rgba(212, 175, 55, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.95);
+            background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
             border-color: var(--gold);
+            border-width: 2px;
         }
 
         .square.owned {
-            background: linear-gradient(180deg, #ffffff 0%, #fffef8 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 240, 0.95) 100%);
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.12),
+                0 1px 4px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.25);
         }
 
         .square.current {
@@ -498,15 +514,31 @@
         }
 
         .color-bar {
-            height: 28%;
+            height: 30%;
             width: 100%;
-            border-bottom: none;
-            box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+            box-shadow: 
+                inset 0 -3px 6px rgba(0, 0, 0, 0.12),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                0 1px 2px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .owner-info {
             position: absolute;
-            bottom: 22px;
+            bottom: 24px;
             left: 0;
             right: 0;
             text-align: center;
@@ -514,10 +546,17 @@
             font-weight: 900;
             text-transform: uppercase;
             color: #fff;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 4px #000;
+            text-shadow: 
+                -1px -1px 0 #000, 
+                1px -1px 0 #000, 
+                -1px 1px 0 #000, 
+                1px 1px 0 #000, 
+                0 0 6px rgba(0, 0, 0, 0.8),
+                0 2px 4px rgba(0, 0, 0, 0.6);
             z-index: 10;
             pointer-events: none;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
+            padding: 0 2px;
         }
 
         .owner-bar {
@@ -525,16 +564,16 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 18px;
-            /* Slightly taller */
-            transition: all 0.3s;
+            height: 20px;
+            transition: all 0.3s ease;
             z-index: 5;
-            opacity: 0.8 !important;
-            /* Higher opacity */
-            border-top: 1px solid rgba(0, 0, 0, 0.3);
+            opacity: 0.9 !important;
+            border-top: 2px solid rgba(0, 0, 0, 0.25);
             box-shadow:
-                inset 0 2px 4px rgba(255, 255, 255, 0.2),
-                inset 0 -1px 3px rgba(0, 0, 0, 0.15);
+                inset 0 3px 6px rgba(255, 255, 255, 0.25),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                0 -1px 2px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
         }
 
         .square-content {
@@ -543,33 +582,53 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 3px;
+            padding: 4px 3px;
             text-align: center;
             position: relative;
             z-index: 2;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
         }
 
         .square-name {
             font-weight: 900;
             font-size: clamp(6px, 1.1vw, 10px);
-            line-height: 1.15;
+            line-height: 1.2;
             color: #1a1a1a;
-            margin-bottom: 3px;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+            text-shadow: 
+                0 1px 2px rgba(255, 255, 255, 0.9),
+                0 0 1px rgba(0, 0, 0, 0.1);
+            letter-spacing: 0.4px;
+            padding: 0 2px;
         }
 
         .square-price {
             font-size: clamp(7px, 1.2vw, 11px);
             font-weight: 900;
-            color: #1a4a0a;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(45, 80, 22, 0.2));
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid rgba(45, 80, 22, 0.3);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            color: #0d4a0d;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.35) 0%, rgba(56, 142, 60, 0.3) 50%, rgba(45, 80, 22, 0.25) 100%);
+            padding: 3px 7px;
+            border-radius: 6px;
+            border: 1.5px solid rgba(45, 80, 22, 0.4);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.15),
+                inset 0 1px 2px rgba(255, 255, 255, 0.4),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.9);
+            display: inline-block;
+            position: relative;
+        }
+
+        .square-price::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+            border-radius: 6px;
+            pointer-events: none;
         }
 
         .corner {
@@ -578,9 +637,14 @@
             justify-content: center;
             flex-direction: column;
             font-weight: 900;
-            padding: 4px;
+            padding: 6px;
             text-align: center;
             font-size: clamp(6px, 1vw, 9px);
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.15),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
         }
 
         .corner-go {
@@ -616,27 +680,47 @@
 
         .chance {
             background: linear-gradient(145deg, #fff8e1 0%, #ffecb3 50%, #ffe082 100%);
-            border-left: 3px solid #ff6f00 !important;
+            border-left: 4px solid #ff6f00 !important;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset -4px 0 8px rgba(255, 111, 0, 0.2);
         }
 
         .chest {
             background: linear-gradient(145deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
-            border-left: 3px solid #1565c0 !important;
+            border-left: 4px solid #1565c0 !important;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset -4px 0 8px rgba(21, 101, 192, 0.2);
         }
 
         .tax {
             background: linear-gradient(145deg, #fce4ec 0%, #f8bbd9 50%, #f48fb1 100%);
-            border-left: 3px solid #c2185b !important;
+            border-left: 4px solid #c2185b !important;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset -4px 0 8px rgba(194, 24, 91, 0.2);
         }
 
         .railroad {
             background: linear-gradient(145deg, #fafafa 0%, #eeeeee 50%, #e0e0e0 100%);
-            border-left: 3px solid #424242 !important;
+            border-left: 4px solid #424242 !important;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset -4px 0 8px rgba(66, 66, 66, 0.2);
         }
 
         .utility {
             background: linear-gradient(145deg, #f3e5f5 0%, #e1bee7 50%, #ce93d8 100%);
-            border-left: 3px solid #7b1fa2 !important;
+            border-left: 4px solid #7b1fa2 !important;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset -4px 0 8px rgba(123, 31, 162, 0.2);
         }
 
         .tokens-box {
